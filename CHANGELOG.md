@@ -21,3 +21,8 @@ Updated dependencies
 ## 0.0.14
 
 - Add support for new device states
+
+## 0.0.15
+
+- Added App version format changes (includes version_name and version_code)
+- Added `legacy_format {true/false}` cmd arg for app version format chnages

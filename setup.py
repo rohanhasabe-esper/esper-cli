@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 
-VERSION = "0.0.14"
+VERSION = "0.0.15"
 
 f = open('README.md', 'r', encoding='utf-8', errors='ignore')
 LONG_DESCRIPTION = f.read()
@@ -32,7 +32,7 @@ setup(
         'clint>=0.5.1',
         'colorlog>=4.0.2',
         'crayons>=0.2.0',
-        'esperclient>=0.1.2',
+        'esperclient>=0.1.3',
         'jinja2>=2.10.1',
         'pyyaml>=5.4',
         'requests==2.32.2',

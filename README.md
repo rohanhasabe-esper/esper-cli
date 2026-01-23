@@ -6,8 +6,8 @@ This package provides a unified command line interface to the Esper API Services
 Current stable release versions are
 
     API version: 1.0.0
-    SDK version: 0.1.2
-    CLI version: 0.0.14
+    SDK version: 0.1.3
+    CLI version: 0.0.15
 
 ## Requirements
 

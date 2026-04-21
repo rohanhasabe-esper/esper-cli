@@ -23,7 +23,7 @@ setup(
     include_package_data=True,
     entry_points="""
         [console_scripts]
-        espercli = esper.main:main
+        espercli = esper.cli.app:main_entry
     """,
     install_requires=[
         'pip==23.3',
@@ -36,9 +36,12 @@ setup(
         'jinja2>=2.10.1',
         'pyyaml>=5.4',
         'requests==2.32.2',
+        'urllib3<2',
         'tabulate>=0.8.3',
         'tinydb>=3.13.0',
         'tqdm>=4.32.1',
+        'typer>=0.9.0',
+        'rich>=13.0.0',
         'pyOpenSSL==24.1.0'
     ],
 )

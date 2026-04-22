@@ -4,6 +4,8 @@ A command-line tool for the [Esper](https://esper.io) API — manage devices, ap
 
 Built with [Typer](https://typer.tiangolo.com) and [Rich](https://github.com/Textualize/rich) for a modern CLI experience: colour-coded output, tab-completion, inline help on errors, and auto-pagination.
 
+Also ships a **Claude Code skill** (`/esper`) so you can manage your fleet in plain English directly from your AI coding session — no syntax required.
+
 ---
 
 ## Requirements
@@ -342,6 +344,50 @@ $ espercli device lst
 │ unset-active Clear active device   │
 ╰────────────────────────────────────╯
 ```
+
+---
+
+## Claude Code skill (`/esper`)
+
+The repo includes a [Claude Code](https://claude.ai/code) slash command that gives you a natural-language interface to your Esper fleet. Instead of remembering CLI syntax, just describe what you want.
+
+### Setup
+
+**Option A — project skill (automatic when you clone):**
+
+The skill is already at `.claude/commands/esper.md` in this repo. Open the project in Claude Code and `/esper` is available immediately — no install step.
+
+**Option B — user skill (available in every project):**
+
+Copy the skill to your global commands directory so it works outside this repo too:
+
+```sh
+mkdir -p ~/.claude/commands
+cp .claude/commands/esper.md ~/.claude/commands/esper.md
+```
+
+### Usage
+
+Type `/esper` in Claude Code followed by what you want in plain English:
+
+```
+/esper show me all inactive devices
+/esper reboot the warehouse group
+/esper what apps are installed on ezra pixel
+/esper upload build/app-release.apk and set it as the active app
+/esper show battery telemetry for ezra pixel over the last 24 hours
+/esper which devices have version abc-123 installed
+```
+
+Or just `/esper` with no argument — it checks your active context and waits for direction.
+
+### What it does
+
+- Runs `espercli context` first so it knows your active environment, device, and group
+- Translates natural language into the right `espercli` commands and runs them
+- Presents results as a clean summary, not raw CLI output
+- Asks for confirmation before any destructive action (wipe, delete) regardless of how you phrase the request
+- Asks a clarifying question if the target is ambiguous rather than guessing
 
 ---
 

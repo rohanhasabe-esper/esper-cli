@@ -106,6 +106,10 @@ espercli device show <name> --active          # show + set as active device
 
 espercli device set-active --name <name>      # set active device
 espercli device unset-active                  # clear active device
+
+espercli device report <name>                 # HTML dashboard (opens in browser)
+espercli device report <name> --output ./report.html   # write to specific path
+espercli device report <name> --no-open       # write file without opening browser
 ```
 
 ---

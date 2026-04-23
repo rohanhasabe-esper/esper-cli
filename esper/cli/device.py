@@ -1,6 +1,6 @@
 """
 Device commands — replaces esper/controllers/device/device.py.
-`espercli device list/show/set-active/unset-active`
+`espercli device list/show/set-active/unset-active/report`
 """
 import uuid
 from typing import Optional
@@ -8,7 +8,7 @@ from typing import Optional
 import typer
 from esperclient.rest import ApiException
 
-from esper.cli.completions import device_state_complete, group_name_complete, gms_complete
+from esper.cli.completions import device_name_complete, device_state_complete, group_name_complete, gms_complete
 from esper.cli.output import render
 from esper.cli.state import state, validate_creds, parse_error_message
 from esper.controllers.enums import DeviceState, OutputFormat
@@ -286,3 +286,197 @@ def unset_active():
     db.unset_device()
     state.log.debug(f"[device-active] Unset the active device {device.get('name')}")
     render(f"Unset the active device {device.get('name')}")
+
+
+@app.command("report")
+def device_report(
+    device_name: Optional[str] = typer.Argument(
+        None, help="Device name (defaults to active device)",
+    ),
+    output: Optional[str] = typer.Option(
+        None, "--output", "-o",
+        help="Path to write HTML file (default: system temp dir)",
+    ),
+    no_open: bool = typer.Option(
+        False, "--no-open",
+        help="Write the file but do not open it in the browser",
+    ),
+):
+    """
+    Generate a self-contained HTML dashboard for a device and open it in your browser.
+
+    Fetches device details, latest status, 30-day battery & temperature telemetry,
+    recent commands, and installed apps — then renders everything into a single HTML file.
+    """
+    import json
+    import os
+    import sys
+    import tempfile
+    import webbrowser
+    from ast import literal_eval
+    from datetime import datetime, timedelta
+
+    import requests
+    from esper.cli.output import console as _console
+    from esper.cli.report_html import generate_html
+    from esper.ext.telemetry_api import get_telemetry_url
+
+    validate_creds()
+    db = DBWrapper(state.creds)
+    config       = db.get_configure()
+    enterprise_id = db.get_enterprise_id()
+    environment  = config.get("environment", "")
+    api_key      = config.get("api_key", "")
+    device_client = APIClient(config).get_device_api_client()
+
+    # ── Resolve device name ────────────────────────────────────────────────
+    if not device_name:
+        dev = db.get_device()
+        if not dev or not dev.get("name"):
+            render("No device specified and no active device set. "
+                   "Pass a device name or run: espercli device set-active --name NAME")
+            raise typer.Exit(1)
+        device_name = dev["name"]
+
+    with _console.status(f"[dim]Fetching data for [bold]{device_name}[/bold]…[/dim]", spinner="dots"):
+
+        # ── Device details ─────────────────────────────────────────────────
+        try:
+            resp = device_client.get_all_devices(enterprise_id, limit=1, offset=0, name=device_name)
+            if not resp.results:
+                render(f"Device not found: {device_name}")
+                raise typer.Exit(1)
+            dev_obj = resp.results[0]
+        except ApiException as e:
+            render(f"ERROR: {parse_error_message(e)}")
+            raise typer.Exit(1)
+
+        device_id    = dev_obj.id
+        alias        = dev_obj.alias_name or dev_obj.device_name
+        hw_name      = dev_obj.device_name
+        api_level    = dev_obj.api_level
+        is_gms       = dev_obj.is_gms
+        dev_state    = DeviceState(dev_obj.status).name
+
+        # ── Latest status ──────────────────────────────────────────────────
+        status_data: dict = {}
+        try:
+            st_resp = device_client.get_device_event(enterprise_id, device_id, latest_event=1)
+            if st_resp.results:
+                raw = literal_eval(st_resp.results[0].data)
+                pm  = raw.get("powerManagementEvent", {})
+                bs  = pm.get("batteryStatus", {})
+                du  = raw.get("dataUsageStats", {})
+                mem = raw.get("memoryEvents", [])
+                net = raw.get("networkEvent", {})
+                wifi = net.get("wifiNetworkInfo", {})
+                status_data = {
+                    "battery_level":       bs.get("batteryLevel"),
+                    "battery_temperature": bs.get("batteryTemperature"),
+                    "data_download":       du.get("totalDataDownload"),
+                    "data_upload":         du.get("totalDataUpload"),
+                    "memory_storage":      mem[1].get("countInMb") if len(mem) > 1 else None,
+                    "memory_ram":          mem[0].get("countInMb") if len(mem) > 0 else None,
+                    "link_speed":          wifi.get("linkSpeed"),
+                    "signal_strength":     wifi.get("signalStrength"),
+                }
+        except Exception:
+            pass  # status is optional; dashboard still renders without it
+
+        # ── Telemetry: battery level (30 days, daily avg) ──────────────────
+        def _fetch_telemetry(category: str, metric: str) -> list:
+            now  = datetime.now()
+            frm  = (now - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:%S.0000Z")
+            to   = now.strftime("%Y-%m-%dT%H:%M:%S.0000Z")
+            url  = get_telemetry_url(
+                environment, enterprise_id, device_id,
+                category, metric, frm, to, "day", "avg",
+            )
+            try:
+                r = requests.get(url, headers={"Authorization": f"Bearer {api_key}"}, timeout=10)
+                if r.status_code == 200:
+                    pts = r.json().get("data", [])
+                    return [{"x": p["x"][:10], "y": round(p["y"], 1)} for p in pts]
+            except Exception:
+                pass
+            return []
+
+        battery_telemetry = _fetch_telemetry("battery", "level")
+        temp_telemetry    = _fetch_telemetry("battery", "temperature")
+
+        # ── Recent commands (last 10) ──────────────────────────────────────
+        commands: list = []
+        try:
+            cmdv2_client = APIClient(config).get_commandsV2_api_client()
+            cmd_resp = cmdv2_client.list_command_request(enterprise_id, devices=device_id)
+            for req in (cmd_resp.results or [])[:10]:
+                issued_raw = req.issued_by.replace("'", '"')
+                try:
+                    issued_by = json.loads(issued_raw).get("username", issued_raw)
+                except Exception:
+                    issued_by = req.issued_by
+                state_val = None
+                if req.status:
+                    state_val = req.status[0].state
+                created = req.created_on
+                if created:
+                    try:
+                        dt = datetime.fromisoformat(str(created).replace("Z", "+00:00"))
+                        date_str = dt.strftime("%b %d, %H:%M")
+                    except Exception:
+                        date_str = str(created)[:16]
+                else:
+                    date_str = "—"
+                commands.append({
+                    "date":      date_str,
+                    "command":   req.command,
+                    "issued_by": issued_by,
+                    "state":     state_val or "—",
+                })
+        except Exception:
+            pass
+
+        # ── Install count ──────────────────────────────────────────────────
+        installs_count = 0
+        try:
+            inst_client = APIClient(config).get_install_api_client()
+            inst_resp   = inst_client.get_app_installs(enterprise_id, device_id, limit=1)
+            installs_count = inst_resp.count or 0
+        except Exception:
+            pass
+
+    # ── Build data dict ────────────────────────────────────────────────────
+    data = {
+        "name":              alias,
+        "hardware_name":     hw_name,
+        "device_id":         device_id,
+        "state":             dev_state,
+        "api_level":         api_level,
+        "is_gms":            is_gms,
+        "generated_at":      datetime.now().strftime("%B %d, %Y at %H:%M"),
+        "status":            status_data,
+        "battery_telemetry": battery_telemetry,
+        "temp_telemetry":    temp_telemetry,
+        "commands":          commands,
+        "installs_count":    installs_count,
+    }
+
+    # ── Render HTML ────────────────────────────────────────────────────────
+    html = generate_html(data)
+
+    # ── Write file ─────────────────────────────────────────────────────────
+    if output:
+        out_path = os.path.abspath(output)
+    else:
+        tmp_dir  = tempfile.gettempdir()
+        safe_name = alias.replace(" ", "_").replace("/", "_")
+        out_path = os.path.join(tmp_dir, f"esper_report_{safe_name}.html")
+
+    with open(out_path, "w", encoding="utf-8") as fh:
+        fh.write(html)
+
+    render(f"Report written to {out_path}")
+
+    if not no_open:
+        webbrowser.open(f"file://{out_path}")
+        _console.print("[dim]Opening in browser…[/dim]")

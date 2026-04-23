@@ -31,6 +31,11 @@ from esper.cli.content import app as content_app
 from esper.cli.commandsv2 import app as commandsv2_app
 from esper.cli.secureadb import app as secureadb_app
 from esper.cli.telemetry import app as telemetry_app
+from esper.cli.fleet import app as fleet_app
+from esper.cli.heartbeat import app as heartbeat_app
+from esper.cli.location import app as location_app
+from esper.cli.policy import app as policy_app
+from esper.cli.user import app as user_app
 from esper.cli.output import disable_color, install_rich_errors
 from esper.cli.state import state
 
@@ -203,6 +208,11 @@ main.add_typer(content_app,        name="content")
 main.add_typer(commandsv2_app,     name="commandsV2")
 main.add_typer(secureadb_app,      name="secureadb")
 main.add_typer(telemetry_app,      name="telemetry")
+main.add_typer(fleet_app,          name="fleet")
+main.add_typer(heartbeat_app,      name="heartbeat")
+main.add_typer(location_app,       name="location")
+main.add_typer(policy_app,         name="policy")
+main.add_typer(user_app,           name="user")
 
 
 def main_entry() -> None:

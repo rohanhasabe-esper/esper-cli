@@ -10,7 +10,7 @@ from esper.cli.output import render
 from esper.cli.state import state, validate_creds, parse_error_message
 from esper.controllers.enums import OutputFormat
 from esper.ext.api_client import APIClient
-from esper.ext.api_rest import api_get
+from esper.ext.api_rest import api_get, api_get_all
 from esper.ext.db_wrapper import DBWrapper
 
 app = typer.Typer(help="Device location commands")
@@ -24,12 +24,23 @@ def _extract_device_id(url: str) -> Optional[str]:
 
 
 def _build_device_map(device_client, eid: str) -> dict:
-    """Return {device_id_str: name} for all devices."""
-    try:
-        resp = device_client.get_all_devices(eid, limit=500, offset=0)
-        return {str(d.id): (d.alias_name or d.device_name) for d in (resp.results or [])}
-    except ApiException:
-        return {}
+    """Return {device_id_str: name} for all devices (auto-paginated)."""
+    from esper.cli.state import state as _state
+    page_size = 100
+    offset = 0
+    mapping: dict = {}
+    while True:
+        try:
+            resp = device_client.get_all_devices(eid, limit=page_size, offset=offset)
+        except ApiException as e:
+            _state.log.error(f"[location] Failed to fetch device list at offset {offset}: {e}")
+            break
+        for d in resp.results or []:
+            mapping[str(d.id)] = d.alias_name or d.device_name
+        if len(mapping) >= (resp.count or 0) or not resp.results:
+            break
+        offset += page_size
+    return mapping
 
 
 def _city_state(item: dict) -> str:
@@ -51,12 +62,11 @@ def location_list(
     device_client = APIClient(cfg).get_device_api_client()
 
     try:
-        data = api_get(environment, api_key, f"/v1/enterprise/{eid}/report/location/", limit=100)
+        items = api_get_all(environment, api_key, f"/v1/enterprise/{eid}/report/location/")
     except Exception as e:
         render(f"ERROR: {e}")
         raise typer.Exit(1)
 
-    items = data if isinstance(data, list) else data.get("results", data.get("content", []))
     if not items:
         render("No location data found.")
         raise typer.Exit(0)
@@ -118,12 +128,11 @@ def location_show(
         raise typer.Exit(1)
 
     try:
-        data = api_get(environment, api_key, f"/v1/enterprise/{eid}/report/location/", limit=100)
+        items = api_get_all(environment, api_key, f"/v1/enterprise/{eid}/report/location/")
     except Exception as e:
         render(f"ERROR: {e}")
         raise typer.Exit(1)
 
-    items = data if isinstance(data, list) else data.get("results", data.get("content", []))
     match = None
     for item in items:
         did = _extract_device_id(item.get("device", ""))

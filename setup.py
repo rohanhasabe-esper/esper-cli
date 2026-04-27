@@ -26,22 +26,17 @@ setup(
         espercli = esper.cli.app:main_entry
     """,
     install_requires=[
-        'pip==23.3',
-        'wheel',
-        'cement==3.0.2',
-        'clint>=0.5.1',
-        'colorlog>=4.0.2',
-        'crayons>=0.2.0',
         'esperclient>=0.1.3',
         'jinja2>=2.10.1',
         'pyyaml>=5.4',
-        'requests==2.32.2',
+        'requests>=2.32.0',
         'urllib3<2',
         'tabulate>=0.8.3',
         'tinydb>=3.13.0',
         'tqdm>=4.32.1',
         'typer>=0.9.0',
         'rich>=13.0.0',
-        'pyOpenSSL==24.1.0'
+        'cryptography>=44.0.1',
+        'pyOpenSSL>=24.1.0',
     ],
 )

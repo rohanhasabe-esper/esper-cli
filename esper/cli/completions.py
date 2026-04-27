@@ -103,11 +103,11 @@ def _load_db():
         import os
         from tinydb import TinyDB
         from esper.ext.db_wrapper import DBWrapper
+        from esper.cli.state import CREDS_FILE
 
-        creds_path = os.path.expanduser("~/.esper/db/creds.json")
-        if not os.path.exists(creds_path):
+        if not os.path.exists(CREDS_FILE):
             return None
-        db = DBWrapper(TinyDB(creds_path))
+        db = DBWrapper(TinyDB(CREDS_FILE))
         if not db.get_configure():
             return None
         return db

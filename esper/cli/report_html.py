@@ -6,6 +6,7 @@ Chart.js from a CDN) that can be opened in any browser.
 """
 from __future__ import annotations
 
+import html as _html
 import json
 
 # ---------------------------------------------------------------------------
@@ -84,10 +85,10 @@ def generate_html(d: dict) -> str:
       temp_telemetry (list of {x,y}), commands (list of dicts),
       installs_count (int)
     """
-    name        = d.get("name", "Unknown Device")
-    hw_name     = d.get("hardware_name", "—")
-    dev_id      = d.get("device_id", "—")
-    state_val   = d.get("state", "UNKNOWN")
+    name        = _html.escape(str(d.get("name", "Unknown Device")))
+    hw_name     = _html.escape(str(d.get("hardware_name", "—")))
+    dev_id      = _html.escape(str(d.get("device_id", "—")))
+    state_val   = _html.escape(str(d.get("state", "UNKNOWN")))
     api_level   = d.get("api_level", "—")
     is_gms      = "Yes" if d.get("is_gms") else "No"
     generated   = d.get("generated_at", "")
@@ -122,13 +123,17 @@ def generate_html(d: dict) -> str:
     # Commands table rows
     cmd_rows = ""
     for cmd in commands:
-        state_cls  = _cmd_state_class(cmd.get("state", ""))
+        cmd_date    = _html.escape(str(cmd.get("date", "")))
+        cmd_command = _html.escape(str(cmd.get("command", "")))
+        cmd_by      = _html.escape(str(cmd.get("issued_by", "")))
+        cmd_state   = _html.escape(str(cmd.get("state", "")))
+        state_cls   = _cmd_state_class(cmd_state)
         cmd_rows += (
             f'<tr>'
-            f'<td class="td-date muted">{cmd.get("date","")}</td>'
-            f'<td class="td-cmd"><code>{cmd.get("command","")}</code></td>'
-            f'<td class="td-by muted">{cmd.get("issued_by","")}</td>'
-            f'<td><span class="cmd-badge {state_cls}">{cmd.get("state","")}</span></td>'
+            f'<td class="td-date muted">{cmd_date}</td>'
+            f'<td class="td-cmd"><code>{cmd_command}</code></td>'
+            f'<td class="td-by muted">{cmd_by}</td>'
+            f'<td><span class="cmd-badge {state_cls}">{cmd_state}</span></td>'
             f'</tr>'
         )
     if not cmd_rows:

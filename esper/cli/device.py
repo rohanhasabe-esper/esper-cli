@@ -2,7 +2,6 @@
 Device commands — replaces esper/controllers/device/device.py.
 `espercli device list/show/set-active/unset-active/report`
 """
-import uuid
 from typing import Optional
 
 import typer
@@ -111,7 +110,10 @@ def device_list(
             state.log.error(f"[device-list] Failed to list groups: {e}")
             render(f"ERROR: {parse_error_message(e)}")
             raise typer.Exit(1)
-        kwargs["group"] = group_id or str(uuid.uuid4())
+        if not group_id:
+            render(f"ERROR: Group not found: {group!r}")
+            raise typer.Exit(1)
+        kwargs["group"] = group_id
     if imei:
         kwargs["imei"] = imei
     if serial:
@@ -380,8 +382,8 @@ def device_report(
                     "link_speed":          wifi.get("linkSpeed"),
                     "signal_strength":     wifi.get("signalStrength"),
                 }
-        except Exception:
-            pass  # status is optional; dashboard still renders without it
+        except Exception as _e:
+            state.log.error(f"[device-report] Could not fetch device status for {device_id}: {_e}")
 
         # ── Telemetry: battery level (30 days, daily avg) ──────────────────
         def _fetch_telemetry(category: str, metric: str) -> list:
@@ -397,8 +399,11 @@ def device_report(
                 if r.status_code == 200:
                     pts = r.json().get("data", [])
                     return [{"x": p["x"][:10], "y": round(p["y"], 1)} for p in pts]
-            except Exception:
-                pass
+            except Exception as _e:
+                state.log.error(
+                    f"[device-report] Telemetry fetch failed ({category}/{metric}) "
+                    f"for {device_id}: {_e}"
+                )
             return []
 
         battery_telemetry = _fetch_telemetry("battery", "level")
@@ -433,8 +438,8 @@ def device_report(
                     "issued_by": issued_by,
                     "state":     state_val or "—",
                 })
-        except Exception:
-            pass
+        except Exception as _e:
+            state.log.error(f"[device-report] Could not fetch command history for {device_id}: {_e}")
 
         # ── Install count ──────────────────────────────────────────────────
         installs_count = 0
@@ -442,8 +447,8 @@ def device_report(
             inst_client = APIClient(config).get_install_api_client()
             inst_resp   = inst_client.get_app_installs(enterprise_id, device_id, limit=1)
             installs_count = inst_resp.count or 0
-        except Exception:
-            pass
+        except Exception as _e:
+            state.log.error(f"[device-report] Could not fetch install count for {device_id}: {_e}")
 
     # ── Build data dict ────────────────────────────────────────────────────
     data = {

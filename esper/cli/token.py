@@ -35,7 +35,7 @@ def _token_basic_response(token, fmt=OutputFormat.TABULATED):
         "Enterprise": token.enterprise,
         "Developer App": token.developer_app,
         "Token": token.token,
-        "Expires On": token.scope,
+        "Expires On": token.expires_on,
         "Created On": str(token.created_on),
         "Updated On": str(token.updated_on),
     }

@@ -70,7 +70,7 @@ def app_list(
         if all_results:
             from esper.cli.output import console as _console
             results = []
-            page_size, cur_offset = 100, 0
+            page_size, cur_offset = 20, 0
             with _console.status("[dim]Fetching all applications…[/dim]", spinner="dots"):
                 while True:
                     page = application_client.get_all_applications(

@@ -57,8 +57,14 @@ def heartbeat_list(
     device_client = APIClient(cfg).get_device_api_client()
 
     try:
-        response = device_client.get_all_devices(eid, limit=500, offset=0)
-        devices = response.results or []
+        devices = []
+        page_size, offset = 100, 0
+        while True:
+            page = device_client.get_all_devices(eid, limit=page_size, offset=offset)
+            devices.extend(page.results or [])
+            if len(devices) >= (page.count or 0) or not page.results:
+                break
+            offset += page_size
     except ApiException as e:
         render(f"ERROR: {parse_error_message(e)}")
         raise typer.Exit(1)

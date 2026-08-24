@@ -526,7 +526,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "pipeline-stage",
+        "x-esper-noun": "stage",
         "x-esper-scope-parent": "pipeline"
       },
       "post": {
@@ -603,7 +603,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
-        "x-esper-noun": "pipeline-stage",
+        "x-esper-noun": "stage",
         "x-esper-scope-parent": "pipeline"
       }
     },
@@ -939,7 +939,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "stage-target-list",
+        "x-esper-noun": "targetlist",
         "x-esper-scope-parent": "stage"
       },
       "post": {
@@ -1016,7 +1016,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "add",
-        "x-esper-noun": "stage-target-list"
+        "x-esper-noun": "targetlist",
+        "x-esper-scope-parent": "stage"
       }
     },
     "/pipelines/v0/stages/{stage_id}/targetlists/{targetlist_id}/": {
@@ -1178,7 +1179,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "stage-operation-list",
+        "x-esper-noun": "operationlist",
         "x-esper-scope-parent": "stage"
       },
       "post": {
@@ -1255,7 +1256,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "add",
-        "x-esper-noun": "stage-operation-list"
+        "x-esper-noun": "operationlist",
+        "x-esper-scope-parent": "stage"
       }
     },
     "/pipelines/v0/stages/{stage_id}/operationlists/{operationlist_id}/": {
@@ -1512,7 +1514,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "pipeline-target-list",
+        "x-esper-noun": "targetlist",
         "x-esper-scope-parent": "pipeline"
       },
       "post": {
@@ -1589,7 +1591,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "add",
-        "x-esper-noun": "pipeline-target-list"
+        "x-esper-noun": "targetlist",
+        "x-esper-scope-parent": "pipeline"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/": {
@@ -1930,7 +1933,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "target-list-target",
+        "x-esper-noun": "target",
         "x-esper-scope-parent": "targetlist"
       },
       "post": {
@@ -2016,7 +2019,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
-        "x-esper-noun": "target-list-target",
+        "x-esper-noun": "target",
         "x-esper-scope-parent": "targetlist"
       }
     },
@@ -2577,7 +2580,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "target-list-device-group",
+        "x-esper-noun": "devicegroup",
         "x-esper-scope-parent": "targetlist"
       },
       "post": {
@@ -2652,7 +2655,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "add",
-        "x-esper-noun": "target-list-device-group"
+        "x-esper-noun": "devicegroup",
+        "x-esper-scope-parent": "targetlist"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/devicegroups/{devicegroup_id}/": {
@@ -2851,8 +2855,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "device-group-device",
-        "x-esper-scope-parent": "device-group"
+        "x-esper-noun": "device",
+        "x-esper-scope-parent": "devicegroup"
       }
     },
     "/pipelines/v0/operationlists/{operationlist_id}/operations/": {
@@ -2946,7 +2950,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "operation-list-operation",
+        "x-esper-noun": "operation",
         "x-esper-scope-parent": "operationlist"
       },
       "post": {
@@ -3023,7 +3027,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "add",
-        "x-esper-noun": "operation-list-operation"
+        "x-esper-noun": "operation",
+        "x-esper-scope-parent": "operationlist"
       }
     },
     "/pipelines/v0/operationlists/{operationlist_id}/operations/{operation_id}/": {
@@ -3519,7 +3524,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "pipeline-run",
+        "x-esper-noun": "run",
         "x-esper-scope-parent": "pipeline"
       },
       "post": {
@@ -3596,7 +3601,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
-        "x-esper-noun": "pipeline-run",
+        "x-esper-noun": "run",
         "x-esper-scope-parent": "pipeline"
       }
     },
@@ -3961,8 +3966,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "pipeline-run-stage-run",
-        "x-esper-scope-parent": "pipeline-run"
+        "x-esper-noun": "stagerun",
+        "x-esper-scope-parent": "run"
       }
     },
     "/pipelines/v0/runs/{pipeline_run_id}/stageruns/{stage_run_id}/": {
@@ -4236,8 +4241,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "pipeline-stage-run-operation",
-        "x-esper-scope-parent": "stage-run"
+        "x-esper-noun": "operation",
+        "x-esper-scope-parent": "stagerun"
       }
     },
     "/pipelines/v0/stageruns/{stage_run_id}/operations/{stage_run_operation_id}/": {
@@ -4441,8 +4446,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "pipeline-stage-target-run",
-        "x-esper-scope-parent": "stage-run"
+        "x-esper-noun": "targetrun",
+        "x-esper-scope-parent": "stagerun"
       },
       "post": {
         "x-badges": [
@@ -4521,8 +4526,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
-        "x-esper-noun": "pipeline-stage-target-run",
-        "x-esper-scope-parent": "stage-run"
+        "x-esper-noun": "targetrun",
+        "x-esper-scope-parent": "stagerun"
       }
     },
     "/pipelines/v0/stageruns/{stage_run_id}/targetruns/{target_run_id}/": {
@@ -4772,7 +4777,7 @@
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
         "x-esper-noun": "target-run-command-status",
-        "x-esper-scope-parent": "target-run"
+        "x-esper-scope-parent": "targetrun"
       },
       "post": {
         "x-badges": [
@@ -4858,7 +4863,7 @@
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
         "x-esper-noun": "target-run-command",
-        "x-esper-scope-parent": "target-run"
+        "x-esper-scope-parent": "targetrun"
       }
     },
     "/pipelines/v0/stageruns/{stage_run_id}/targetruns/{target_run_id}/command/{command_id}/": {

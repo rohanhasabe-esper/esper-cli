@@ -24,11 +24,13 @@ type Operation struct {
 	Pagination  string
 	Destructive bool
 	ScopeParent string
+	Summary     string
 	Parameters  []Parameter
 	Body        *Body
 }
 type Parameter struct {
 	Name, In, Type  string
+	ScopeName       string
 	Required, Scope bool
 	Enum            []string
 }
@@ -74,13 +76,14 @@ func addCommand(root *cobra.Command, commandPath []string, operations []Operatio
 	for _, segment := range commandPath[:len(commandPath)-1] {
 		child, _, err := parent.Find([]string{segment})
 		if err != nil || child == parent {
-			child = &cobra.Command{Use: segment}
+			child = &cobra.Command{Use: segment, Short: operations[0].Summary}
 			parent.AddCommand(child)
 		}
 		parent = child
 	}
 	verb := commandPath[len(commandPath)-1]
-	command := &cobra.Command{Use: verb, Args: cobra.ArbitraryArgs, RunE: func(command *cobra.Command, args []string) error {
+	summary := operations[0].Summary
+	command := &cobra.Command{Use: verb, Short: summary, Args: cobra.ArbitraryArgs, RunE: func(command *cobra.Command, args []string) error {
 		return run(command, args, operations, options)
 	}}
 	addFlags(command, operations)
@@ -89,20 +92,21 @@ func addCommand(root *cobra.Command, commandPath []string, operations []Operatio
 
 func addFlags(command *cobra.Command, operations []Operation) {
 	seen := map[string]bool{}
-	hasUnscoped := false
-	for _, operation := range operations {
-		hasUnscoped = hasUnscoped || operation.ScopeParent == ""
-	}
 	for _, operation := range operations {
 		for _, parameter := range operation.Parameters {
 			if parameter.In == "path" && !parameter.Scope {
 				continue
 			}
-			addStringFlag(command, parameterFlagName(parameter), parameter.Required && parameter.Scope && !hasUnscoped, parameter.Enum, seen)
+			required := false
+			description := parameterFlagName(parameter)
+			if parameter.Scope {
+				description = "scope routes to " + operation.Path
+			}
+			addStringFlag(command, parameterFlagName(parameter), required, parameter.Enum, description, seen)
 		}
 		if operation.Pagination == "limit-offset" || operation.Pagination == "apps-envelope" {
-			addStringFlag(command, "limit", false, nil, seen)
-			addStringFlag(command, "offset", false, nil, seen)
+			addStringFlag(command, "limit", false, nil, "limit", seen)
+			addStringFlag(command, "offset", false, nil, "offset", seen)
 			if !seen["all"] {
 				command.Flags().Bool("all", false, "fetch all result pages")
 				seen["all"] = true
@@ -112,20 +116,20 @@ func addFlags(command *cobra.Command, operations []Operation) {
 			continue
 		}
 		if operation.Body.MediaType == "application/json" {
-			addStringFlag(command, "body", false, nil, seen)
+			addStringFlag(command, "body", false, nil, "inline JSON, @path, or - for stdin", seen)
 		}
 		for _, property := range operation.Body.Properties {
-			addStringFlag(command, property.Name, false, property.Enum, seen)
+			addStringFlag(command, property.Name, false, property.Enum, property.Name, seen)
 		}
 	}
 }
 
-func addStringFlag(command *cobra.Command, name string, required bool, values []string, seen map[string]bool) {
+func addStringFlag(command *cobra.Command, name string, required bool, values []string, description string, seen map[string]bool) {
 	name = kebab(name)
 	if seen[name] {
 		return
 	}
-	command.Flags().String(name, "", name)
+	command.Flags().String(name, "", description)
 	seen[name] = true
 	if required {
 		_ = command.MarkFlagRequired(name)
@@ -189,9 +193,25 @@ func run(command *cobra.Command, args []string, operations []Operation, options 
 }
 
 func selectOperation(command *cobra.Command, operations []Operation) (Operation, error) {
+	validScopes := map[string]bool{}
+	selectedScope := ""
 	for _, operation := range operations {
-		if operation.ScopeParent != "" && command.Flags().Changed(kebab(operation.ScopeParent)) {
-			return operation, nil
+		if operation.ScopeParent == "" {
+			continue
+		}
+		validScopes[operation.ScopeParent] = true
+		if command.Flags().Changed(kebab(operation.ScopeParent)) {
+			if selectedScope != "" {
+				return Operation{}, esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("scope flags are mutually exclusive: --%s and --%s", kebab(selectedScope), kebab(operation.ScopeParent)))
+			}
+			selectedScope = operation.ScopeParent
+		}
+	}
+	if selectedScope != "" {
+		for _, operation := range operations {
+			if operation.ScopeParent == selectedScope {
+				return operation, nil
+			}
 		}
 	}
 	for _, operation := range operations {
@@ -199,7 +219,12 @@ func selectOperation(command *cobra.Command, operations []Operation) (Operation,
 			return operation, nil
 		}
 	}
-	return operations[0], nil
+	scopes := make([]string, 0, len(validScopes))
+	for scope := range validScopes {
+		scopes = append(scopes, "--"+kebab(scope))
+	}
+	sort.Strings(scopes)
+	return Operation{}, esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("exactly one scope is required: %s", strings.Join(scopes, ", ")))
 }
 
 func replacePath(command *cobra.Command, operation Operation, args []string) (string, error) {
@@ -348,6 +373,9 @@ func flagString(command *cobra.Command, name string) string {
 
 func parameterFlagName(parameter Parameter) string {
 	if parameter.Scope {
+		if parameter.ScopeName != "" {
+			return kebab(parameter.ScopeName)
+		}
 		name := strings.TrimSuffix(parameter.Name, "_id")
 		name = strings.TrimSuffix(name, "Id")
 		return kebab(name)

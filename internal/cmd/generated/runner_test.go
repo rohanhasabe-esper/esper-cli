@@ -51,3 +51,33 @@ func TestJSONBodyRules(t *testing.T) {
 		t.Fatalf("bodyFor() error = %v", err)
 	}
 }
+
+func TestMultiParentScopesRequireExactlyOneWithoutGlobalRoute(t *testing.T) {
+	operations := []Operation{
+		{Path: "/blueprints/{blueprint_id}/versions", ScopeParent: "blueprint", Parameters: []Parameter{{Name: "blueprint_id", In: "path", Scope: true, ScopeName: "blueprint"}}},
+		{Path: "/tenant-apps/{app_id}/versions", ScopeParent: "tenant-app", Parameters: []Parameter{{Name: "app_id", In: "path", Scope: true, ScopeName: "tenant-app"}}},
+	}
+	command := &cobra.Command{Use: "list"}
+	addFlags(command, operations)
+	if command.Flags().Lookup("blueprint") == nil || command.Flags().Lookup("tenant-app") == nil {
+		t.Fatal("missing multi-parent scope flags")
+	}
+	_, err := selectOperation(command, operations)
+	if err == nil || esperruntime.ExitCode(err) != 2 {
+		t.Fatalf("selectOperation() error = %v", err)
+	}
+	if err := command.Flags().Set("blueprint", "blueprint-1"); err != nil {
+		t.Fatal(err)
+	}
+	selected, err := selectOperation(command, operations)
+	if err != nil || selected.ScopeParent != "blueprint" {
+		t.Fatalf("selectOperation() = %#v, %v", selected, err)
+	}
+	if err := command.Flags().Set("tenant-app", "app-1"); err != nil {
+		t.Fatal(err)
+	}
+	_, err = selectOperation(command, operations)
+	if err == nil || esperruntime.ExitCode(err) != 2 {
+		t.Fatalf("selectOperation() error = %v", err)
+	}
+}

@@ -11,15 +11,20 @@ import (
 
 	"github.com/esper-io/esper-cli/internal/cmd"
 	"github.com/esper-io/esper-cli/internal/cmd/generated"
+	"github.com/spf13/cobra"
 )
 
 var methods = map[string]bool{"get": true, "post": true, "put": true, "patch": true, "delete": true}
+var coreGenerationRank = map[string]int{"legacy": 0, "v0": 1, "v1": 2, "v2": 3, "v3": 4}
 
 type spec struct {
 	Info struct {
 		Generation string `json:"x-esper-generation"`
 	} `json:"info"`
-	Paths map[string]map[string]operation `json:"paths"`
+	Paths      map[string]map[string]operation `json:"paths"`
+	Components struct {
+		Parameters map[string]parameter `json:"parameters"`
+	} `json:"components"`
 }
 type operation struct {
 	Parameters  []parameter `json:"parameters"`
@@ -28,8 +33,10 @@ type operation struct {
 	Verb        string      `json:"x-esper-verb"`
 	Noun        string      `json:"x-esper-noun"`
 	ScopeParent string      `json:"x-esper-scope-parent"`
+	Summary     string      `json:"summary"`
 }
 type parameter struct {
+	Ref      string `json:"$ref"`
 	Name     string `json:"name"`
 	In       string `json:"in"`
 	Required bool   `json:"required"`
@@ -83,12 +90,18 @@ func check(specDir string) []string {
 					issues = append(issues, location+": missing required x-esper annotation")
 					continue
 				}
+				if strings.TrimSpace(operation.Summary) == "" {
+					issues = append(issues, location+": missing operation summary")
+				}
+				if hasVersionSuffix(operation.Noun) || hasPluralComponent(operation.Noun) {
+					issues = append(issues, location+": overlay noun violates CLI grammar: "+operation.Noun)
+				}
 				generatedOperation, ok := byOperation[key(document.Info.Generation, strings.ToUpper(method), apiPath)]
 				if !ok {
 					issues = append(issues, location+": no generated operation")
 					continue
 				}
-				if generatedOperation.Noun != operation.Noun || generatedOperation.Verb != operation.Verb || generatedOperation.Destructive != *operation.Destructive {
+				if generatedOperation.Noun != operation.Noun || generatedOperation.Verb != operation.Verb || generatedOperation.Destructive != *operation.Destructive || generatedOperation.Summary != operation.Summary {
 					issues = append(issues, location+": generated metadata differs from overlay")
 				}
 				command, _, err := root.Find(generatedOperation.Command)
@@ -96,7 +109,11 @@ func check(specDir string) []string {
 					issues = append(issues, location+": generated command is unreachable")
 					continue
 				}
+				if strings.TrimSpace(command.Short) == "" {
+					issues = append(issues, location+": generated command has no description")
+				}
 				for _, parameter := range operation.Parameters {
+					parameter = resolveParameter(parameter, document.Components.Parameters)
 					if parameter.In == "path" && parameter.Name != operation.ScopeParent && operation.ScopeParent == "" {
 						continue
 					}
@@ -115,11 +132,104 @@ func check(specDir string) []string {
 			}
 		}
 	}
+	issues = append(issues, checkCommandGrammar(root)...)
+	issues = append(issues, checkDescriptions(root)...)
+	return issues
+}
+
+func checkDescriptions(root *cobra.Command) []string {
+	issues := []string{}
+	var walk func(*cobra.Command)
+	walk = func(command *cobra.Command) {
+		for _, child := range command.Commands() {
+			if child.Name() == "help" || child.Name() == "completion" {
+				continue
+			}
+			if strings.TrimSpace(child.Short) == "" {
+				issues = append(issues, "generated command has no description: "+child.CommandPath())
+			}
+			walk(child)
+		}
+	}
+	walk(root)
+	return issues
+}
+
+func checkCommandGrammar(root interface {
+	Find([]string) (*cobra.Command, []string, error)
+}) []string {
+	operations := generated.Operations()
+	issues := []string{}
+	byNounVerb := map[string][]generated.Operation{}
+	byCommand := map[string][]generated.Operation{}
+	for _, operation := range operations {
+		byNounVerb[operation.Noun+"\x00"+operation.Verb] = append(byNounVerb[operation.Noun+"\x00"+operation.Verb], operation)
+		byCommand[strings.Join(operation.Command, "\x00")] = append(byCommand[strings.Join(operation.Command, "\x00")], operation)
+	}
+	for _, group := range byNounVerb {
+		maxRank := -1
+		for _, operation := range group {
+			if rank, core := coreGenerationRank[operation.Generation]; core && rank > maxRank {
+				maxRank = rank
+			}
+		}
+		for _, operation := range group {
+			rank, core := coreGenerationRank[operation.Generation]
+			var expected []string
+			if !core {
+				expected = []string{operation.Generation, operation.Noun, operation.Verb}
+			} else if rank < maxRank {
+				expected = []string{"api", operation.Generation, operation.Noun, operation.Verb}
+			} else {
+				expected = []string{operation.Noun, operation.Verb}
+			}
+			if strings.Join(operation.Command, "\x00") != strings.Join(expected, "\x00") {
+				issues = append(issues, fmt.Sprintf("%s %s %s: violates generation collision namespace", operation.Method, operation.Path, operation.Generation))
+			}
+		}
+	}
+	for commandPath, group := range byCommand {
+		scopes := map[string]bool{}
+		unscoped := 0
+		for _, operation := range group {
+			if operation.ScopeParent == "" {
+				unscoped++
+				continue
+			}
+			if scopes[operation.ScopeParent] {
+				issues = append(issues, commandPath+": duplicate scope --"+kebab(operation.ScopeParent))
+				continue
+			}
+			scopes[operation.ScopeParent] = true
+		}
+		if unscoped > 1 {
+			issues = append(issues, commandPath+": multiple unscoped operations")
+		}
+		command, _, err := root.Find(strings.Split(commandPath, "\x00"))
+		if err != nil || command == nil {
+			continue
+		}
+		for scope := range scopes {
+			if command.Flags().Lookup(kebab(scope)) == nil {
+				issues = append(issues, commandPath+": missing scope flag --"+kebab(scope))
+			}
+		}
+	}
 	return issues
 }
 
 func key(generation, method, apiPath string) string {
 	return generation + "\x00" + method + "\x00" + apiPath
+}
+func resolveParameter(value parameter, parameters map[string]parameter) parameter {
+	if !strings.HasPrefix(value.Ref, "#/components/parameters/") {
+		return value
+	}
+	name := strings.TrimPrefix(value.Ref, "#/components/parameters/")
+	if resolved, ok := parameters[name]; ok {
+		return resolveParameter(resolved, parameters)
+	}
+	return value
 }
 func kebab(value string) string {
 	var result []rune
@@ -134,4 +244,33 @@ func kebab(value string) string {
 		result = append(result, char)
 	}
 	return strings.ToLower(string(result))
+}
+
+func hasVersionSuffix(noun string) bool {
+	parts := strings.Split(noun, "-")
+	for _, part := range parts {
+		if len(part) > 1 && part[0] == 'v' && allDigits(part[1:]) {
+			return true
+		}
+	}
+	return false
+}
+func allDigits(value string) bool {
+	if value == "" {
+		return false
+	}
+	for _, char := range value {
+		if char < '0' || char > '9' {
+			return false
+		}
+	}
+	return true
+}
+func hasPluralComponent(noun string) bool {
+	for _, part := range strings.Split(noun, "-") {
+		if strings.HasSuffix(part, "s") && !strings.HasSuffix(part, "ss") && part != "status" && part != "apns" {
+			return true
+		}
+	}
+	return false
 }

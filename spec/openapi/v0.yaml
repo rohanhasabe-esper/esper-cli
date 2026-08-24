@@ -1180,7 +1180,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "add",
-        "x-esper-noun": "google-app"
+        "x-esper-noun": "google-app",
+        "x-esper-scope-parent": "emm"
       }
     },
     "/v0/enterprise/{enterprise_id}/emm/{emm_id}/product/{product_id}": {
@@ -2175,7 +2176,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "command-request-status"
+        "x-esper-noun": "status"
       }
     },
     "/v0/enterprise/{enterprise_id}/content/": {
@@ -4693,7 +4694,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
-        "x-esper-noun": "operations-list"
+        "x-esper-noun": "operation-list"
       },
       "post": {
         "summary": "Create a new Operation",
@@ -4991,7 +4992,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
-        "x-esper-noun": "device-operation",
+        "x-esper-noun": "device",
         "x-esper-scope-parent": "operation"
       }
     },
@@ -5054,7 +5055,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "devices-operation",
+        "x-esper-noun": "operation",
         "x-esper-scope-parent": "device"
       }
     },
@@ -5333,7 +5334,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "apps-vpp"
+        "x-esper-noun": "app-vpp"
       }
     },
     "/apps/v0/vpp/{appId}": {
@@ -5407,7 +5408,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "apps-vpp"
+        "x-esper-noun": "app-vpp"
       }
     },
     "/commands/v0/commands/": {
@@ -5794,8 +5795,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "command-request-stat",
-        "x-esper-scope-parent": "id"
+        "x-esper-noun": "stat",
+        "x-esper-scope-parent": "command"
       }
     },
     "/commands/v0/status/": {
@@ -6460,7 +6461,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
-        "x-esper-noun": "ap-ns-cert"
+        "x-esper-noun": "apns-cert"
       },
       "post": {
         "summary": "Get the CSR file to upload to the apple identity console",
@@ -6529,7 +6530,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "ap-ns-csr"
+        "x-esper-noun": "apns-csr"
       }
     },
     "/tenant/v0/apnscertificates/{id}/": {
@@ -6611,7 +6612,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "ap-ns-cert"
+        "x-esper-noun": "apns-cert"
       },
       "put": {
         "summary": "Upload APNs certificate",
@@ -6712,7 +6713,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "upload",
-        "x-esper-noun": "ap-ns-cert"
+        "x-esper-noun": "apns-cert"
       },
       "delete": {
         "summary": "Delete a APNs certificate",
@@ -6792,7 +6793,7 @@
         "x-esper-destructive": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "delete",
-        "x-esper-noun": "ap-ns-cert"
+        "x-esper-noun": "apns-cert"
       }
     },
     "/tenant/v0/vpptokens/": {

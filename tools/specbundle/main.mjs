@@ -240,7 +240,15 @@ function generationFor(apiPath) {
 const methods = new Set(["get", "post", "put", "patch", "delete"]);
 
 function words(value) {
-  return value
+  const normalized = value
+    .replaceAll("APNs", "Apns")
+    .replaceAll("APNS", "Apns")
+    .replaceAll("EMM", "Emm")
+    .replaceAll("VPP", "Vpp")
+    .replaceAll("DEP", "Dep")
+    .replaceAll("OTA", "Ota")
+    .replaceAll("ADB", "Adb");
+  return normalized
     .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
     .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
     .replace(/[^A-Za-z0-9]+/g, " ")
@@ -258,6 +266,7 @@ function singular(word) {
     ["companies", "company"],
     ["statuses", "status"],
     ["data", "data"],
+    ["apns", "apns"],
   ]);
   if (irregular.has(word)) return irregular.get(word);
   if (word.endsWith("ies") && word.length > 4) return `${word.slice(0, -3)}y`;
@@ -272,7 +281,7 @@ function nounFromTag(operation) {
     .filter((part) => !/^\d+$/.test(part))
     .filter((part) => !["api", "deprecated", "v0", "v1", "v2", "v3"].includes(part));
   if (parts.length === 0) return "operation";
-  parts[parts.length - 1] = singular(parts[parts.length - 1]);
+  for (let index = 0; index < parts.length; index++) parts[index] = singular(parts[index]);
   return parts.join("-");
 }
 
@@ -293,22 +302,37 @@ function nounFromPath(apiPath, operation) {
     .flatMap(words)
     .filter((part) => !ignored.has(part));
   if (parts.length === 0) return nounFromTag(operation);
-  parts[parts.length - 1] = singular(parts[parts.length - 1]);
+  for (let index = 0; index < parts.length; index++) parts[index] = singular(parts[index]);
+  return parts.join("-");
+}
+
+function relationshipCollectionNoun(apiPath) {
+  const segments = apiPath.split("/").filter(Boolean);
+  if (segments.length < 2) return "";
+  const collection = segments.at(-1);
+  const parent = segments.at(-2);
+  if (!parent.startsWith("{") || !parent.endsWith("}") || !collection.endsWith("s")) return "";
+  const parts = words(collection);
+  if (parts.length === 0) return "";
+  for (let index = 0; index < parts.length; index++) parts[index] = singular(parts[index]);
   return parts.join("-");
 }
 
 function nounFor(apiPath, operation) {
+  const relationshipNoun = relationshipCollectionNoun(apiPath);
+  if (relationshipNoun) return relationshipNoun;
   if (!operation.operationId) return nounFromPath(apiPath, operation);
   let parts = words(operation.operationId);
   if (parts[0] === "partial" && parts[1] === "update") parts = parts.slice(2);
   else if (parts[0] === "bulk" && ["add", "create", "update", "delete"].includes(parts[1])) parts = parts.slice(2);
   else if (actionPrefixes.includes(parts[0])) parts = parts.slice(1);
   if (parts[0] === "all") parts = parts.slice(1);
+  parts = parts.filter((part) => !/^v\d+$/.test(part)).map((part) => part.replace(/v\d+$/, ""));
   const by = parts.indexOf("by");
   if (by > 0) parts = parts.slice(0, by);
   while (["url", "id"].includes(parts.at(-1))) parts.pop();
   if (parts.length === 0) return nounFromTag(operation);
-  parts[parts.length - 1] = singular(parts[parts.length - 1]);
+  for (let index = 0; index < parts.length; index++) parts[index] = singular(parts[index]);
   return parts.join("-");
 }
 
@@ -365,12 +389,20 @@ function paginationFor(apiPath, operation, verb) {
 }
 
 function scopeParentFor(apiPath, verb) {
-  if (!["list", "create"].includes(verb)) return "";
+  if (!["list", "create", "add"].includes(verb)) return "";
   const segments = apiPath.split("/").filter(Boolean);
   if (segments.length === 0 || segments.at(-1).startsWith("{")) return "";
   for (let index = segments.length - 2; index >= 0; index--) {
     const segment = segments[index];
     if (!segment.startsWith("{") || !segment.endsWith("}")) continue;
+    const parentSegment = segments[index - 1];
+    if (parentSegment && !parentSegment.startsWith("{")) {
+      const parentParts = words(parentSegment);
+      if (parentParts.length > 0) {
+        for (let part = 0; part < parentParts.length; part++) parentParts[part] = singular(parentParts[part]);
+        return parentParts.join("-");
+      }
+    }
     const parameter = segment.slice(1, -1)
       .replace(/_id$/i, "")
       .replace(/Id$/, "");
@@ -406,6 +438,7 @@ function annotateOperations(spec, generation) {
       operation["x-esper-pagination"] = paginationFor(apiPath, operation, verb);
       operation["x-esper-verb"] = verb;
       operation["x-esper-noun"] = noun;
+      if (!operation.summary) operation.summary = `${verb.charAt(0).toUpperCase()}${verb.slice(1)} ${noun}`;
       if (scopeParent) operation["x-esper-scope-parent"] = scopeParent;
       if (!commands.has(identity)) commands.set(identity, []);
       commands.get(identity).push({ apiPath, method, scopeParent });
@@ -418,7 +451,7 @@ function annotateOperations(spec, generation) {
     const unscoped = operations.filter((operation) => !operation.scopeParent);
     const scoped = operations.filter((operation) => operation.scopeParent);
     const uniqueScopes = new Set(scoped.map((operation) => operation.scopeParent));
-    const explainedByScope = unscoped.length === 1 && scoped.length > 0 &&
+    const explainedByScope = scoped.length > 0 && unscoped.length <= 1 &&
       uniqueScopes.size === scoped.length;
     if (!explainedByScope) collisions.push({ generation, identity, operations });
   }

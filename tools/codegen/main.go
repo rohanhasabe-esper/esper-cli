@@ -20,7 +20,8 @@ type document struct {
 	} `json:"info"`
 	Paths      map[string]map[string]operation `json:"paths"`
 	Components struct {
-		Schemas map[string]schema `json:"schemas"`
+		Schemas    map[string]schema    `json:"schemas"`
+		Parameters map[string]parameter `json:"parameters"`
 	} `json:"components"`
 }
 
@@ -34,9 +35,11 @@ type operation struct {
 	Pagination  string `json:"x-esper-pagination"`
 	Destructive bool   `json:"x-esper-destructive"`
 	ScopeParent string `json:"x-esper-scope-parent"`
+	Summary     string `json:"summary"`
 }
 
 type parameter struct {
+	Ref      string `json:"$ref"`
 	Name     string `json:"name"`
 	In       string `json:"in"`
 	Required bool   `json:"required"`
@@ -65,11 +68,13 @@ type generatedOperation struct {
 	Pagination  string
 	Destructive bool
 	ScopeParent string
+	Summary     string
 	Parameters  []generatedParameter
 	Body        *generatedBody
 }
 type generatedParameter struct {
 	Name, In, Type  string
+	ScopeName       string
 	Required, Scope bool
 	Enum            []string
 }
@@ -145,10 +150,11 @@ func load(directory string) ([]generatedOperation, error) {
 				if !methods[method] {
 					continue
 				}
-				generated := generatedOperation{Generation: spec.Info.Generation, Method: strings.ToUpper(method), Path: apiPath, Noun: operation.Noun, Verb: operation.Verb, Pagination: operation.Pagination, Destructive: operation.Destructive, ScopeParent: operation.ScopeParent}
+				generated := generatedOperation{Generation: spec.Info.Generation, Method: strings.ToUpper(method), Path: apiPath, Noun: operation.Noun, Verb: operation.Verb, Pagination: operation.Pagination, Destructive: operation.Destructive, ScopeParent: operation.ScopeParent, Summary: operation.Summary}
 				for _, parameter := range operation.Parameters {
+					parameter = resolveParameter(parameter, spec.Components.Parameters)
 					resolved := resolve(parameter.Schema, spec.Components.Schemas)
-					generated.Parameters = append(generated.Parameters, generatedParameter{Name: parameter.Name, In: parameter.In, Type: scalarType(resolved), Required: parameter.Required, Scope: operation.ScopeParent != "" && parameter.In == "path", Enum: stringEnum(resolved.Enum)})
+					generated.Parameters = append(generated.Parameters, generatedParameter{Name: parameter.Name, In: parameter.In, Type: scalarType(resolved), Required: parameter.Required, Scope: operation.ScopeParent != "" && parameter.In == "path", ScopeName: operation.ScopeParent, Enum: stringEnum(resolved.Enum)})
 				}
 				if len(operation.Body.Content) > 0 {
 					generated.Body = extractBody(operation.Body.Content, spec.Components.Schemas)
@@ -170,6 +176,18 @@ func resolve(value schema, schemas map[string]schema) schema {
 		return value
 	}
 	return resolve(resolved, schemas)
+}
+
+func resolveParameter(value parameter, parameters map[string]parameter) parameter {
+	if !strings.HasPrefix(value.Ref, "#/components/parameters/") {
+		return value
+	}
+	name := strings.TrimPrefix(value.Ref, "#/components/parameters/")
+	resolved, ok := parameters[name]
+	if !ok {
+		return value
+	}
+	return resolveParameter(resolved, parameters)
 }
 
 func extractBody(content map[string]requestMedia, schemas map[string]schema) *generatedBody {
@@ -204,11 +222,12 @@ func assignCommands(operations []generatedOperation) {
 	groups := map[string][]candidate{}
 	for index := range operations {
 		operation := &operations[index]
-		key := operation.Noun + "\x00" + operation.Verb
 		rank, core := coreGenerationRank[operation.Generation]
 		if !core {
-			rank = 100
+			operation.Command = []string{operation.Generation, operation.Noun, operation.Verb}
+			continue
 		}
+		key := operation.Noun + "\x00" + operation.Verb
 		groups[key] = append(groups[key], candidate{index: index, rank: rank})
 	}
 	for _, candidates := range groups {

@@ -1273,7 +1273,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
-        "x-esper-noun": "install-device",
+        "x-esper-noun": "installdevice",
         "x-esper-scope-parent": "version"
       }
     },
@@ -2236,7 +2236,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "device-event"
+        "x-esper-noun": "status"
       }
     },
     "/enterprise/{enterprise_id}/device/{device_id}/download/eventfeed/": {
@@ -5637,7 +5637,7 @@
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
         "x-esper-noun": "blueprint",
-        "x-esper-scope-parent": "group"
+        "x-esper-scope-parent": "devicegroup"
       },
       "post": {
         "x-badges": [
@@ -5718,7 +5718,7 @@
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
         "x-esper-noun": "blueprint",
-        "x-esper-scope-parent": "group"
+        "x-esper-scope-parent": "devicegroup"
       }
     },
     "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/{blueprint_id}/": {
@@ -6004,7 +6004,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "blueprint-revision",
+        "x-esper-noun": "revision",
         "x-esper-scope-parent": "blueprint"
       }
     },
@@ -6511,7 +6511,7 @@
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
         "x-esper-noun": "legacy-device-group-command",
-        "x-esper-scope-parent": "group"
+        "x-esper-scope-parent": "devicegroup"
       },
       "post": {
         "operationId": "createLegacyDeviceGroupCommand",
@@ -6638,7 +6638,7 @@
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
         "x-esper-noun": "legacy-device-group-command",
-        "x-esper-scope-parent": "group"
+        "x-esper-scope-parent": "devicegroup"
       }
     },
     "/enterprise/{enterprise_id}/devicegroup/{group_id}/command/{command_id}/": {

@@ -32,7 +32,7 @@ Excluded from Phase 2:
 | 13 | custom-action | 6 | `custom-action`, `script` | Blocked |
 | 14 | dep-sync | 3 | `dep-sync-request` | Blocked |
 | 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Blocked |
-| 16 | directory-record | 5 | `directory-record` | Pending |
+| 16 | directory-record | 5 | `directory-record` | Blocked |
 | 17 | emm | 9 | `emm`, `emm-account`, `emm-detail`, `emm-enrollment-begin`, `emm-enrollment-complete`, `emm-instance`, `emm-web-token` | Pending |
 | 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Pending |
 | 19 | geofence | 9 | `create-apply-geo-fence`, `geofence`, `the-geofence` | Pending |
@@ -123,6 +123,9 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 
 - `device-support`: Google EMM policy update requires a JSON body with only an
   optional array property, so it depends on the unresolved explicit-body rule.
+
+- `directory-record`: create and update require JSON bodies without required
+  properties, so their input enforcement depends on the unresolved body rule.
 
 ## Final status
 

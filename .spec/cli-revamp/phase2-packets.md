@@ -23,7 +23,7 @@ Excluded from Phase 2:
 | 4 | blueprint | 15 | `blueprint`, `blueprint-revision`, `blueprint-version`, `revision` | Blocked |
 | 5 | pipeline | 37 | `pipeline`, `pipeline-run`, `stage`, `stage-run`, `target`, `target-bulk`, `target-list`, `target-run` | Blocked |
 | 6 | token-user | 33 | `authn-user`, `dep-token`, `dep-token-based-on`, `dep-token-upload`, `different-user`, `invite`, `own-user`, `personal-access-token`, `renew-token`, `tenant-user`, `tenant-user-invite`, `tenant-vpptoken`, `token-info`, `user`, `user-delete`, `user-info`, `webtoken`, `webtoken-instance` | Blocked |
-| 7 | alarm-alert | 13 | `alarm-rule`, `alarmhistory`, `alarmrule`, `alert-channel`, `alertchannel` | Pending |
+| 7 | alarm-alert | 13 | `alarm-rule`, `alarmhistory`, `alarmrule`, `alert-channel`, `alertchannel` | Blocked |
 | 8 | apns | 5 | `apns-cert`, `apns-csr` | Pending |
 | 9 | command-operation | 37 | `command`, `command-history`, `command-inbox`, `command-request`, `command-request-status`, `command-status`, `device-operation`, `operation`, `operation-list`, `stat`, `status` | Pending |
 | 10 | connection | 2 | `connection`, `custom-connection` | Pending |
@@ -81,6 +81,10 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `token-user`: legacy `user partial-update` requires a JSON body whose schema
   has no required properties. It depends on the unresolved required-body input
   rule recorded in `inbox.md` and `spec.md` Issues.
+
+- `alarm-alert`: required body/object-only inputs lack a locked enforcement
+  rule, and create routes collide `--enterprise` between scope and body.
+  Details are recorded in `inbox.md` and `spec.md` Issues.
 
 ## Final status
 

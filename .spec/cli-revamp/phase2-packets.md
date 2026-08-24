@@ -34,7 +34,7 @@ Excluded from Phase 2:
 | 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Blocked |
 | 16 | directory-record | 5 | `directory-record` | Blocked |
 | 17 | emm | 9 | `emm`, `emm-account`, `emm-detail`, `emm-enrollment-begin`, `emm-enrollment-complete`, `emm-instance`, `emm-web-token` | Blocked |
-| 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Pending |
+| 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Blocked |
 | 19 | geofence | 9 | `create-apply-geo-fence`, `geofence`, `the-geofence` | Pending |
 | 20 | policy | 5 | `policy` | Pending |
 | 21 | provisioning-profile | 5 | `provisioning-profile`, `provisioning-profile-version` | Pending |
@@ -129,6 +129,9 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 
 - `emm`: EMM detail and account creation require JSON bodies with no required
   properties, so they depend on the unresolved required-body rule.
+
+- `foundry`: build and device-model updates require JSON bodies whose scalar
+  properties are all optional, so required input behavior is undefined.
 
 ## Final status
 

@@ -41,7 +41,7 @@ Excluded from Phase 2:
 | 22 | report-telemetry | 19 | `device-location`, `device-report`, `device-tile-report`, `event-feed`, `report-info`, `report-status`, `report-type`, `specific-location`, `status-metric`, `subscription`, `subscription-report`, `telemetry-graph-data` | Blocked |
 | 23 | role-scope | 7 | `role`, `scope` | Blocked |
 | 24 | seamless | 2 | `seamless` | Blocked |
-| 25 | tile-ui | 10 | `tile-icon`, `tile-icon-apply`, `tile-icon-unapply`, `wallpaper` | Pending |
+| 25 | tile-ui | 10 | `tile-icon`, `tile-icon-apply`, `tile-icon-unapply`, `wallpaper` | Blocked |
 | | **Total** | **328** | | |
 
 ## Checkpoint summaries
@@ -79,6 +79,14 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `foundry` - Blocked: update bodies have only optional scalar properties.
 - `geofence` - Blocked: body rules and normalized same-generation aliases are undefined.
 - `policy` - Blocked: required wildcard bodies, complex properties, and scope/body collisions lack rules.
+
+### Packets 21-25
+
+- `provisioning-profile` - Complete: all 5 operations have success/API-error goldens, multipart, pagination, scope, and destructive coverage.
+- `report-telemetry` - Blocked: required array-only subscription input lacks explicit-body enforcement.
+- `role-scope` - Blocked: required bodies have only optional scalar or array inputs.
+- `seamless` - Blocked: both operations require bodies without required scalar input.
+- `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
 
@@ -159,7 +167,39 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `seamless`: both create and upload require bodies with no required scalar
   input, so invocation validation depends on the unresolved body rule.
 
+- `tile-ui`: tile-icon add collides `--enterprise` between route and body, and
+  tile-icon apply requires complex-only input without an enforcement rule.
+  Unapply also needs its destructive overlay corrected after unblock.
+
 ## Final status
 
-The final packet/state/blocker table will be written here after all packets are
-complete or blocked.
+| Packet | State | Blocker |
+|---|---|---|
+| enterprise | Complete | - |
+| group | Blocked | Scope/body `--enterprise` collision and wildcard body media. |
+| app-application | Blocked | Merged routes need conditional required query flags. |
+| blueprint | Blocked | Required body with no required properties. |
+| pipeline | Blocked | Required bodies with no required scalar input. |
+| token-user | Blocked | Required body with no required properties. |
+| alarm-alert | Blocked | Required complex/body input and scope/body collision rules. |
+| apns | Blocked | Empty required body and binary plist output behavior. |
+| command-operation | Blocked | Required body input and scope/body collision rules. |
+| connection | Blocked | Required body with optional scalar/object-only input. |
+| content | Complete | - |
+| converge | Complete | - |
+| custom-action | Blocked | Required complex properties and body-only update input. |
+| dep-sync | Blocked | Empty required JSON body behavior. |
+| device-support | Blocked | Required body with optional array-only input. |
+| directory-record | Blocked | Required bodies with no required properties. |
+| emm | Blocked | Required bodies with no required properties. |
+| foundry | Blocked | Required bodies with optional scalar inputs. |
+| geofence | Blocked | Body rules and normalized same-generation alias collision. |
+| policy | Blocked | Wildcard/complex bodies and scope/body collisions. |
+| provisioning-profile | Complete | - |
+| report-telemetry | Blocked | Required array-only body input. |
+| role-scope | Blocked | Required bodies with optional scalar/array inputs. |
+| seamless | Blocked | Required bodies with no required scalar input. |
+| tile-ui | Blocked | Scope/body collision and required complex-only input. |
+
+Summary: 4 packets complete (19 operations); 21 packets blocked (309
+operations). All blockers are recorded in `inbox.md` and `spec.md` Issues.

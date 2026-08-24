@@ -1,0 +1,26 @@
+# Canonical OpenAPI specifications
+
+These resolved OpenAPI 3.1 files are generated from the private
+`github.com/esper-code/esper-api-docs` repository at revision
+`d5563a0e35361f9c0dd0aefec140f6071619e8a1`.
+
+The upstream assembly joins 12 platform service specifications, rewrites
+cross-service references, prefixes colliding tags and components, and splits
+the result into 205 path files. `tools/specbundle/bundle.sh` bundles that split
+source and partitions it into API generations without external references.
+
+Two source paths are intentionally excluded:
+
+- `/device/v0/devices/` is deprecated in the device API public specification.
+- `/sys/health` is an operational health endpoint, not a customer API.
+
+Run the following from an authenticated local checkout:
+
+```sh
+tools/specbundle/bundle.sh /path/to/esper-api-docs
+npx --yes @redocly/cli@1.34.5 lint --config spec/redocly.yaml
+```
+
+`manifest.json` records the source, excluded, emitted, and per-generation path
+counts. Generated specifications are JSON-formatted YAML so downstream Go tools
+can parse them with the standard library.

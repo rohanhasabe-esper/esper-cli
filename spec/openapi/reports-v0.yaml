@@ -1,0 +1,589 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ESPER API REFERENCE - reports-v0",
+    "version": "1.0.0",
+    "x-esper-generation": "reports-v0",
+    "x-esper-auth": "bearer"
+  },
+  "servers": [
+    {
+      "url": "https://{foo}-api.esper.cloud/api",
+      "variables": {
+        "foo": {
+          "default": "develop",
+          "description": "Custom end point"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "10_Reports API",
+      "description": "APIs for managing reports.<br /> Currently supports [App Reports](https://help.esper.io/hc/en-us/articles/27379366650257-App-Reports).",
+      "x-displayName": "Reports API"
+    }
+  ],
+  "paths": {
+    "/report/v0/report-types": {
+      "get": {
+        "tags": [
+          "10_Reports API"
+        ],
+        "summary": "Get report types",
+        "description": "Get report types",
+        "operationId": "getReportTypes",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report types",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReportTypesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportsErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportsErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportsErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/report/v0/reports": {
+      "post": {
+        "tags": [
+          "10_Reports API"
+        ],
+        "summary": "Create Report",
+        "description": "This API will return a report ID. Use this ID to call the \"Get Report Status\" API to check the report generation status and retrieve the results. [Learn more](https://help.esper.io/hc/en-us/articles/27379366650257).",
+        "operationId": "createReportStatus",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create Report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateReportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportsErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportsErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportsErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/report/v0/reports/{report_id}": {
+      "get": {
+        "tags": [
+          "10_Reports API"
+        ],
+        "summary": "Get report status",
+        "description": "Call this API with report ID generated from \"Create Report\" API to check the report generation status and retrieve the results. [Learn more](https://help.esper.io/hc/en-us/articles/27379366650257).",
+        "operationId": "getReportStatus",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ReportID"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/CreateReportResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GetReportResponsePreview"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GetReportResponseDownload"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportsErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportsErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportsErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GetReportResponseDownload": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "RUNNING",
+                  "SUCCEEDED",
+                  "FAILED",
+                  "CANCELED",
+                  "CLOSED"
+                ]
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "column_count": {
+                    "type": "integer"
+                  },
+                  "columns": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "position": {
+                          "type": "integer"
+                        },
+                        "type_name": {
+                          "type": "string"
+                        },
+                        "type_text": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "external_link": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "GetReportResponsePreview": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "RUNNING",
+                  "SUCCEEDED",
+                  "FAILED",
+                  "CANCELED",
+                  "CLOSED"
+                ]
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "column_count": {
+                    "type": "integer"
+                  },
+                  "columns": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "position": {
+                          "type": "integer"
+                        },
+                        "type_name": {
+                          "type": "string"
+                        },
+                        "type_text": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "data_array": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateReportResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "RUNNING",
+                  "SUCCEEDED",
+                  "FAILED",
+                  "CANCELED",
+                  "CLOSED"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Report": {
+        "type": "object",
+        "properties": {
+          "report_type": {
+            "type": "string",
+            "enum": [
+              "device_apps",
+              "device"
+            ],
+            "example": "device_apps"
+          },
+          "start_time": {
+            "description": "Start time of the report in UTC format. Example: \"2024-08-28T00:00:00Z\". Must be a date and time later than July 1st, 2024.",
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-08-28T00:00:00Z"
+          },
+          "end_time": {
+            "description": "End time of the report in UTC format. Example: \"2024-08-29T00:00:00Z\". Must be a date and time later than July 1st, 2024 and equal to the start_time.",
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-08-28T00:00:00Z"
+          },
+          "is_download": {
+            "type": "boolean"
+          },
+          "filters": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DeviceAppsFilter"
+              },
+              {
+                "$ref": "#/components/schemas/DeviceFilter"
+              }
+            ]
+          }
+        },
+        "required": [
+          "report_type"
+        ]
+      },
+      "DeviceFilter": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "example": "2025-03-17",
+            "description": "Date of report. If provided, this value will override start_time and end_time values. Example: \"2025-03-17\". Must be a date later than May 17th, 2025."
+          },
+          "platform": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "Android",
+                "Apple",
+                "Linux",
+                "Windows"
+              ]
+            },
+            "example": [
+              "Android"
+            ]
+          }
+        }
+      },
+      "DeviceAppsFilter": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "example": "2024-08-28",
+            "description": "Date of report. If provided, this value will override start_time and end_time values. Example: \"2024-08-28\". Must be a date later than July 1st, 2024."
+          },
+          "package_name": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "com.android.chrome"
+            ]
+          },
+          "app_state": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "SHOW",
+                "HIDE",
+                "DISABLE",
+                "LAUNCHABLE_BUT_HIDDEN"
+              ]
+            },
+            "example": [
+              "SHOW"
+            ]
+          },
+          "device_os": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "Android",
+                "iOS"
+              ]
+            },
+            "example": [
+              "Android"
+            ]
+          },
+          "platform": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "Android",
+                "Apple",
+                "Linux",
+                "Windows"
+              ]
+            },
+            "example": [
+              "Android"
+            ]
+          }
+        }
+      },
+      "ReportsErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer"
+          },
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "GetReportTypesResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "object",
+            "properties": {
+              "report_types": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "display_name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "last_generated_at": {
+                      "type": "string"
+                    },
+                    "available_from": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "ReportID": {
+        "name": "report_id",
+        "description": "Report ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

@@ -1,0 +1,1126 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ESPER API REFERENCE - operations-v0",
+    "version": "1.0.0",
+    "x-esper-generation": "operations-v0",
+    "x-esper-auth": "bearer"
+  },
+  "servers": [
+    {
+      "url": "https://{foo}-api.esper.cloud/api",
+      "variables": {
+        "foo": {
+          "default": "develop",
+          "description": "Custom end point"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "3_Operations",
+      "description": "APIs to get information about operations",
+      "x-displayName": "Operations"
+    },
+    {
+      "name": "3_DeviceOperations",
+      "description": "APIs to get information about device operations",
+      "x-displayName": "DeviceOperations"
+    }
+  ],
+  "paths": {
+    "/v0/operations/": {
+      "get": {
+        "summary": "Get all Operations in the Tenant",
+        "operationId": "getOperationsList",
+        "tags": [
+          "3_Operations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Following are the Operation States and their corresponding integer values\n```\nOPERATION_CREATED      = 10\nOPERATION_RESOLVING    = 20\nOPERATION_RESOLVED     = 30\nOPERATION_DISPATCHING  = 40\nOPERATION_DISPATCHED   = 50\nOPERATION_PROCESSING   = 60\nOPERATION_COMPLETED    = 70\nOPERATION_SUCCESS      = 80\nOPERATION_FAILURE      = 90\nOPERATION_SCHEDULED    = 100\nOPERATION_CANCELLED    = 110\nOPERATION_TIMEOUT      = 120\n```\n"
+          },
+          {
+            "in": "query",
+            "name": "ordering",
+            "description": "Field to order the results by. Prefix with '-' to reverse the order.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "state",
+                "updated_at"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "operation_type",
+            "description": "Filter operations by type (e.g., INSTALL, UNINSTALL, CONVERGE, INSTALL_APP, UNINSTALL_APP, REBOOT)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "group_multi",
+            "description": "Filter by multiple group ID. Fetch the devices from groups matching with the IDs and its subgroup.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-scope": [
+          "read:operation"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operations information for the Tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/OperationWithStats"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new Operation",
+        "operationId": "createOperation",
+        "tags": [
+          "3_Operations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Operations_POST"
+              },
+              "examples": {
+                "devices": {
+                  "$ref": "#/components/examples/example_devices"
+                },
+                "filters": {
+                  "$ref": "#/components/examples/example_filters"
+                }
+              }
+            }
+          }
+        },
+        "x-scope": [
+          "create:operation:CONVERGE"
+        ],
+        "responses": {
+          "201": {
+            "description": "Operation information for the Tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/OperationWithStats"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v0/operations/{operationId}/": {
+      "get": {
+        "summary": "Get specific Operation details (Operation Status)",
+        "operationId": "getOperation",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "tags": [
+          "3_Operations"
+        ],
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "description": "ID of the Operation",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-scope": [
+          "read:operation"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation information for the Tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/OperationWithStats"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update the operation (Support status update as of now)",
+        "description": "This API allows updating the status of a specific operation by providing the operation ID.",
+        "tags": [
+          "3_Operations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the operation to update (Put created operationId here)",
+            "schema": {
+              "type": "string",
+              "example": "5743470f-7dcc-4a92-8a4b-f41b1cea69ed"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "FAILED",
+                      "CANCELLED",
+                      "TIMEOUT",
+                      "SCHEDULED"
+                    ],
+                    "description": "The new status of the operation"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "examples": {
+                "example-1": {
+                  "summary": "Update status to CANCELLED",
+                  "value": {
+                    "state": "CANCELLED",
+                    "reason": "User requested"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-scope": [
+          "update:operation"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation status updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "operationId": {
+                      "type": "string",
+                      "description": "The ID of the updated operation"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The updated status of the operation"
+                    }
+                  }
+                },
+                "example": {
+                  "operationId": "12345",
+                  "status": "SUCCEEDED"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v0/operations/{operationsId}/devices/": {
+      "get": {
+        "summary": "Get all DeviceOperations for a specific Operation",
+        "operationId": "getDeviceOperations",
+        "tags": [
+          "3_DeviceOperations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "operationsId",
+            "in": "path",
+            "description": "ID of the Operation",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "5743470f-7dcc-4a92-8a4b-f41b1cea69ed"
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Following are the Device Operation States and their corresponding integer values\n```\nDEVICE_OPERATION_CREATED     = 10\nDEVICE_OPERATION_INITIATED   = 20\nDEVICE_OPERATION_DISPATCHED  = 30\nDEVICE_OPERATION_PROCESSING  = 40\nDEVICE_OPERATION_SUCCESS     = 50\nDEVICE_OPERATION_FAILURE     = 60\nDEVICE_OPERATION_CANCELLED   = 70\nDEVICE_OPERATION_TIMEOUT     = 80\nDEVICE_OPERATION_COMPLETED   = 90\n```\n"
+          },
+          {
+            "in": "query",
+            "name": "ordering",
+            "description": "Field to order the results by. Prefix with '-' to reverse the order.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "state",
+                "updated_at"
+              ]
+            }
+          }
+        ],
+        "x-scope": [
+          "read:operation:devices"
+        ],
+        "responses": {
+          "200": {
+            "description": "Device Operation information for the Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/DeviceOperationWithStats"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v0/operations/{operationsId}/devices/{deviceId}/": {
+      "get": {
+        "summary": "Get a specific DeviceOperations for a specific Operation (Device Operation Status)",
+        "operationId": "getDeviceOperation",
+        "tags": [
+          "3_DeviceOperations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operationsId",
+            "in": "path",
+            "description": "ID of the Operation",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "5743470f-7dcc-4a92-8a4b-f41b1cea69ed"
+            }
+          },
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "ID of the Device",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "17d384d3-29bd-4dd4-af64-d02b9d6d54ee"
+            }
+          }
+        ],
+        "x-scope": [
+          "read:operation:devices"
+        ],
+        "responses": {
+          "200": {
+            "description": "Device Operation information for the Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/DeviceOperationWithStats"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a specific DeviceOperation for a specific Operation",
+        "operationId": "updateDeviceOperation",
+        "tags": [
+          "3_DeviceOperations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operationsId",
+            "in": "path",
+            "description": "ID of the Operation",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "0aae03d2-32b4-4cab-b733-6919b84bb2ac"
+            }
+          },
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "ID of the Device",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            }
+          }
+        ],
+        "x-scope": [
+          "update:operation"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "operation_type": {
+                    "type": "string",
+                    "example": "CONVERGE"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "SUCCESS"
+                  },
+                  "service_id": {
+                    "type": "string",
+                    "example": "drift-service"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "example": "test"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Device Operation updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/DeviceOperationWithStats"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error_500_Internal_Server_Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 500
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "Error_404_Not_Found": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 404
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "Error_401_Unauthorized": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 401
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "Error_400_Bad_Data": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 400
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "DeviceOperationWithStats": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "CREATED",
+              "INITIATED",
+              "SUCCEDED",
+              "FAILED"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "example": ""
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "device_operation_activity": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceOperationActivity"
+            }
+          }
+        }
+      },
+      "DeviceOperationActivity": {
+        "type": "object",
+        "properties": {
+          "device_operation_state": {
+            "type": "string",
+            "description": "The state of the device operation (e.g., queued, processing).",
+            "example": "CREATED"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The start time of the device operation state."
+          }
+        }
+      },
+      "Operations_POST": {
+        "type": "object",
+        "properties": {
+          "operation_type": {
+            "type": "string",
+            "description": "",
+            "enum": [
+              "CONVERGE",
+              "INSTALL",
+              "UNINSTALL",
+              "INSTALL_APP",
+              "UNINSTALL_APP",
+              "REBOOT",
+              "LOCK",
+              "SHUT_DOWN",
+              "WIPE",
+              "ADD_EMM_ACCOUNT",
+              "ADD_OVERRIDE_APN",
+              "ADD_WIFI_AP",
+              "REMOVE_WIFI_AP",
+              "SET_ETHERNET_SETTINGS",
+              "SET_STATIC_IP",
+              "USE_ONLY_SAVED_WIFI_AP",
+              "ADD_TO_WHITELIST",
+              "REMOVE_FROM_WHITELIST",
+              "ALLOW_BLUETOOTH",
+              "ALLOW_CAMERA",
+              "ALLOW_FACTORY_RESET",
+              "ALLOW_UNENROLLMENT_FROM_DEVICE",
+              "DEFER_OS_UPDATES",
+              "PAUSE_OS_UPDATES",
+              "SET_OS_UPDATE_POLICY",
+              "APPLE_APP_UNINSTALL",
+              "APPLY_APP_CONFIG",
+              "CLEAR_APP_DATA",
+              "DIRECT_IOS_APP_INSTALL",
+              "INSTALL_CERTIFICATE",
+              "INSTALL_OTA",
+              "NOTIFY_OTA",
+              "REFRESH_APPLIST",
+              "SET_APP_NOTIFICATIONS",
+              "SET_APP_PERMISSION",
+              "SET_APP_STATE",
+              "SET_KIOSK_APP",
+              "SET_MULTI_APP_MODE",
+              "SET_NEW_POLICY",
+              "SIMPLE_INSTALL",
+              "SYNC_CONTENT",
+              "UNINSTALL_CERTIFICATE",
+              "VPP_APP_INSTALL",
+              "INSTALL_PROFILE",
+              "INSTALL_PROVISIONING_PROFILE",
+              "INSTALL_WEBCLIP",
+              "REMOVE_PROVISIONING_PROFILE",
+              "UNINSTALL_WEBCLIP",
+              "LIST_PROVISIONING_PROFILES",
+              "BEEP_DEVICE",
+              "CAPTURE_SCREENSHOT",
+              "INITIATE_CONFERENCE_CALL",
+              "INITIATE_OFFER",
+              "NOTIFY_DEVICE",
+              "NUDGE_DEVICE",
+              "REQUEST_BUGREPORT",
+              "REQUEST_DPCLOG",
+              "DEPLOY_SYSTEM_OTA",
+              "UPDATE_BLUEPRINT",
+              "UPDATE_DEVICE_CONFIG",
+              "UPDATE_OEM_CONFIG",
+              "CLEAR_PASSCODE",
+              "RESET_LOCKSCREEN_PASSWORD",
+              "SET_ADB_STATE",
+              "SET_DEVICE_LOCKDOWN_STATE",
+              "DISABLE_LOST_MODE",
+              "ENABLE_LOST_MODE",
+              "LOST_MODE_DEVICE_LOCATION",
+              "PLAY_LOST_MODE_SOUND",
+              "SET_BLUETOOTH_STATE",
+              "SET_BRIGHTNESS_SCALE",
+              "SET_DEVICE_LANGUAGE",
+              "SET_GEO_FENCE",
+              "SET_GPS_STATE",
+              "SET_LOCATION_SERVICE",
+              "SET_ROTATION_STATE",
+              "SET_SCREEN_OFF_TIMEOUT",
+              "SET_STREAM_VOLUME",
+              "SET_TIMEZONE",
+              "SET_WALLPAPER",
+              "SET_WIDGET",
+              "SET_WIFI_STATE",
+              "RUN_CSP_PAYLOAD",
+              "SET_PFN",
+              "COLLECT_LOGS",
+              "REMOTE_CONNECTION",
+              "REMOVE_AGENT",
+              "REMOVE_DEVICE",
+              "RUN_CUSTOM_ACTION",
+              "RUN_SHELL_SCRIPT",
+              "DECLARATIVE_MANAGEMENT",
+              "APPLY_GEO_FENCE"
+            ]
+          },
+          "schedule_type": {
+            "type": "string",
+            "description": "Following Schedule types are supported\n```\n* IMMEDIATE: Schedule the command to execcute Immediately\n* WINDOW: Schedule the command to execute within the given window\n",
+            "enum": [
+              "IMMEDIATE",
+              "WINDOW"
+            ]
+          },
+          "schedule_args": {
+            "$ref": "#/components/schemas/ScheduleArgs"
+          },
+          "operation_device_query": {
+            "type": "object",
+            "description": "A flexible JSON object to define device properties and filters.",
+            "properties": {}
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "converge_with_provision": {
+                "type": "boolean"
+              },
+              "sample_key": {
+                "type": "string"
+              },
+              "geofence_ids": {
+                "type": "array",
+                "description": "List of geofence UUIDs to apply (APPLY_GEO_FENCE).",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ScheduleArgs": {
+        "type": "object",
+        "properties": {
+          "start_datetime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start date and time in ISO 8601 format, including timezone (e.g., 2024-08-08T14:30:00Z or 2024-08-08T14:30:00+05:30)."
+          },
+          "end_datetime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End date and time in ISO 8601 format, including timezone (e.g., 2024-08-08T15:30:00Z or 2024-08-08T15:30:00+05:30)."
+          },
+          "time_type": {
+            "$ref": "#/components/schemas/OperationScheduleArgsTimeTypeEnum"
+          },
+          "window_start_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "It is automatically populated by the time field from the request's start_datetime and cannot be injected via the API request body."
+          },
+          "window_end_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "It is automatically populated by the time field from the request's end_datetime and cannot be injected via the API request body."
+          },
+          "days": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "OperationScheduleArgsTimeTypeEnum": {
+        "type": "string",
+        "description": "The Time-Type argument, in Schedule args, is to indicate which timezone the Command Framework should utilize when scheduling the command.\nFollowing Schedule Args for Time-Type are supported:\n\n```\n* CONSOLE: Use the local timezone of the user creating the schedule.\n* DEVICE: Use the local timezone of the device, to which the command is issued, wherever it may be.\n```\n",
+        "enum": [
+          "console",
+          "device"
+        ]
+      },
+      "OperationWithStats": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation": {
+            "type": "string",
+            "description": "",
+            "enum": [
+              "CONVERGE"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "description": "",
+            "enum": [
+              "CREATED",
+              "RESOLVING",
+              "RESOLVED",
+              "DISPATCHING",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "schedule_type": {
+            "type": "string",
+            "description": "Following Schedule types are supported\n```\n* IMMEDIATE: Schedule the command to execcute Immediately\n* WINDOW: Schedule the command to execute within the given window\n",
+            "enum": [
+              "IMMEDIATE",
+              "WINDOW"
+            ]
+          },
+          "schedule_args": {
+            "$ref": "#/components/schemas/ScheduleArgs"
+          },
+          "operation_device_query": {
+            "type": "object"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "converge_with_provision": {
+                "type": "boolean"
+              },
+              "sample_key": {
+                "type": "string"
+              },
+              "geofence_ids": {
+                "type": "array",
+                "description": "List of geofence UUIDs to apply (APPLY_GEO_FENCE).",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "reason": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation_activity": {
+            "$ref": "#/components/schemas/OperationActivity"
+          },
+          "operation_stats": {
+            "$ref": "#/components/schemas/OperationStats"
+          }
+        }
+      },
+      "OperationStats": {
+        "type": "object",
+        "properties": {
+          "device_operation_statuses_count": {
+            "type": "object",
+            "properties": {
+              "resolved_device_count": {
+                "type": "integer"
+              },
+              "dispatched_device_count": {
+                "type": "integer"
+              },
+              "dispatch_failed_count": {
+                "type": "integer"
+              },
+              "failed_device_count": {
+                "type": "integer"
+              },
+              "success_device_count": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "OperationActivity": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "operation_state": {
+              "type": "string",
+              "enum": [
+                "CREATED",
+                "QUERY INITIATED",
+                "QUERY RESOLVED",
+                "DISPATCHING",
+                "DISPATCHED",
+                "PROCESSING",
+                "SUCCESS",
+                "FAILURE"
+              ]
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "examples": {
+      "example_filters": {
+        "summary": "An example with devices filters.",
+        "value": {
+          "operation_type": "CONVERGE",
+          "schedule_type": "IMMEDIATE",
+          "schedule_args": {
+            "start_datetime": "2024-08-08T19:13:36.969Z",
+            "end_datetime": "2024-08-08T19:13:36.969Z",
+            "time_type": "console",
+            "window_start_time": "2024-08-08T19:00:00Z",
+            "window_end_time": "2024-08-08T20:00:00Z",
+            "days": [
+              0
+            ]
+          },
+          "operation_device_query": {
+            "device_request": {
+              "group_multi": "460a4c28-b974-4c20-99b5-29aa6f10054f,760a4c28-b974-4c20-99b5-29aa6f10054e",
+              "state": "1",
+              "filter1": "val1",
+              "filter2": "val2"
+            }
+          },
+          "arguments": {
+            "converge_with_provision": true,
+            "sample_key": "value"
+          }
+        },
+        "description": "An example with dynamic filters, where 'filter1' and 'filter2' are used to apply specific criteria (Same as existing device api filters).\n- active_connection                     (string)\n- android_version                       (string)\n- assigned_blueprint_id                 (string)\n- battery_level_gte                     (string)\n- battery_level_lte                     (string)\n- current_blueprint_id                  (string)\n- current_blueprint_version_id          (string)\n- current_blueprint_version_id_net      (string)\n- device_source                         (string)\n- group_multi                           (string)\n- group_multi_immediate                 (string)\n- ios_version                           (string)\n- ipados_version                        (string)\n- tvos_version                          (string)\n- windows_version                       (string)\n- is_gms                                (string)\n- last_seen_gt                          (time.Time)\n- last_seen_lt                          (time.Time)\n- managed_by                            (string)\n- ordering                              (string)\n- os                                    (string)\n- platform                              (string)\n- policy_multi                          (string)\n- provisioned_on_gt                     (time.Time)\n- provisioned_on_lt                     (time.Time)\n- search                                (string)\n- security_status                       (string)\n- serial                                (string)\n- state                                 (string)\n- tags                                  (string)\n- template_multi                        (string)\n- udid                                  (string)\n- is_seamless                           (string)\n- is_locked_down                        (string)\n"
+      },
+      "example_devices": {
+        "summary": "An example where the query specifies a list of devices.",
+        "value": {
+          "operation_type": "CONVERGE",
+          "schedule_type": "IMMEDIATE",
+          "schedule_args": {
+            "start_datetime": "2024-08-08T19:13:36.969Z",
+            "end_datetime": "2024-08-08T19:13:36.969Z",
+            "time_type": "console",
+            "window_start_time": "2024-08-08T19:00:00Z",
+            "window_end_time": "2024-08-08T20:00:00Z",
+            "days": [
+              0
+            ]
+          },
+          "operation_device_query": {
+            "device_ids": "460a4c28-b974-4c20-99b5-29aa6f10054f,560a4c28-b974-4c20-99b5-29aa6f10054e"
+          },
+          "arguments": {
+            "converge_with_provision": true,
+            "sample_key": "value"
+          }
+        },
+        "description": "An example where the query specifies a list of devices with specific values."
+      }
+    },
+    "securitySchemes": {
+      "apiKey": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "#### API KEY - Access Token\nAccess token for API is passed as authorization header in calls. You need to generate this from your Esper Console at `<domain>-api.esper.cloud` where foo is the sub-domain name you gave for your Esper Dev environment when you signed up for your Esper account. Please follow the instructions [in this Help article](https://help.esper.io/hc/en-us/articles/12656959508497) to generate an access token.\nOnce you have the access token, you need to send an authorization header as below\n\n```bash\n\n    curl -X GET \\\n      https://<domain>-api.esper.cloud/api/enterprise/<enterprise_id>/device/ \\\n      -H 'Authorization: Bearer <ACCESS_TOKEN>' \\\n      -H 'Content-Type: application/json' \\\n```\n\n> Please note the use of keyword **Bearer** before the token value.\n\n\nYou can read more about api key authentication [here](https://help.esper.io/hc/en-us/articles/12656959508497).\n"
+      }
+    }
+  }
+}

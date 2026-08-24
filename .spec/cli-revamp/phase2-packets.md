@@ -27,7 +27,7 @@ Excluded from Phase 2:
 | 8 | apns | 5 | `apns-cert`, `apns-csr` | Blocked |
 | 9 | command-operation | 37 | `command`, `command-history`, `command-inbox`, `command-request`, `command-request-status`, `command-status`, `device-operation`, `operation`, `operation-list`, `stat`, `status` | Blocked |
 | 10 | connection | 2 | `connection`, `custom-connection` | Blocked |
-| 11 | content | 7 | `content`, `download`, `remote-file` | Pending |
+| 11 | content | 7 | `content`, `download`, `remote-file` | Complete |
 | 12 | converge | 3 | `converge` | Pending |
 | 13 | custom-action | 6 | `custom-action`, `script` | Pending |
 | 14 | dep-sync | 3 | `dep-sync-request` | Pending |

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"mime/multipart"
+	"net/url"
 	"os"
 	"path/filepath"
 	"sort"
@@ -190,10 +191,49 @@ func run(command *cobra.Command, args []string, operations []Operation, options 
 	if err != nil {
 		return err
 	}
+	all, _ := command.Flags().GetBool("all")
+	if all {
+		response, err = allPages(command, client, operation, response)
+		if err != nil {
+			return err
+		}
+	}
 	if options.JSON {
 		return esperruntime.WriteJSON(command.OutOrStdout(), response)
 	}
 	return esperruntime.WriteHuman(command.OutOrStdout(), response)
+}
+
+func allPages(command *cobra.Command, client *esperruntime.HTTPClient, operation Operation, response []byte) ([]byte, error) {
+	if operation.Pagination == "none" {
+		return response, nil
+	}
+	var results []json.RawMessage
+	for {
+		page, err := unwrapPage(operation.Pagination, response)
+		if err != nil {
+			return nil, esperruntime.NewError(esperruntime.CategoryAPI, err)
+		}
+		results = append(results, page.Results...)
+		if page.Next == "" {
+			return esperruntime.MarshalMergedResults(results)
+		}
+		next, err := url.Parse(page.Next)
+		if err != nil || next.Path == "" {
+			return nil, esperruntime.NewError(esperruntime.CategoryAPI, fmt.Errorf("invalid pagination next URL %q", page.Next))
+		}
+		response, err = client.DoWithContentType(command.Context(), operation.Method, next.EscapedPath(), next.Query(), nil, "application/json")
+		if err != nil {
+			return nil, err
+		}
+	}
+}
+
+func unwrapPage(kind string, response []byte) (esperruntime.Page, error) {
+	if kind == "apps-envelope" {
+		return esperruntime.UnwrapAppsEnvelope(response)
+	}
+	return esperruntime.UnwrapLimitOffset(response)
 }
 
 func selectOperation(command *cobra.Command, operations []Operation) (Operation, error) {

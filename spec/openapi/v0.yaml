@@ -228,7 +228,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "emm-instance",
+        "x-esper-noun": "emm",
         "x-esper-scope-parent": "enterprise"
       }
     },
@@ -1074,7 +1074,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
-        "x-esper-noun": "google-app",
+        "x-esper-noun": "product",
         "x-esper-scope-parent": "emm"
       },
       "post": {
@@ -1180,7 +1180,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "add",
-        "x-esper-noun": "google-app",
+        "x-esper-noun": "product",
         "x-esper-scope-parent": "emm"
       }
     },
@@ -1810,7 +1810,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "product",
+        "x-esper-noun": "install",
         "x-esper-scope-parent": "product"
       }
     },
@@ -1950,7 +1950,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "command-request",
+        "x-esper-noun": "command",
         "x-esper-scope-parent": "enterprise"
       },
       "post": {
@@ -3168,7 +3168,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "renew",
-        "x-esper-noun": "token"
+        "x-esper-noun": "renew-token"
       }
     },
     "/v0/enterprise/{enterprise_id}/device/{device_id}/command-history/": {
@@ -3285,7 +3285,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "device-command-history"
+        "x-esper-noun": "command-history"
       }
     },
     "/v0/enterprise/{enterprise_id}/geofence/": {
@@ -3903,7 +3903,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
-        "x-esper-noun": "geofence",
+        "x-esper-noun": "create-apply-geo-fence",
         "x-esper-scope-parent": "enterprise"
       },
       "get": {
@@ -4034,7 +4034,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
-        "x-esper-noun": "geofence-list",
+        "x-esper-noun": "create-apply-geo-fence",
         "x-esper-scope-parent": "enterprise"
       }
     },
@@ -4502,7 +4502,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "device-state-request"
+        "x-esper-noun": "devicestate"
       }
     },
     "/device/v0/heartbeat/{id}/": {
@@ -7819,7 +7819,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
-        "x-esper-noun": "remote-adb-connection",
+        "x-esper-noun": "remoteadb",
         "x-esper-scope-parent": "device"
       },
       "post": {
@@ -7980,7 +7980,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
-        "x-esper-noun": "remote-adb-connection",
+        "x-esper-noun": "remoteadb",
         "x-esper-scope-parent": "device"
       }
     },

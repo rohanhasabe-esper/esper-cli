@@ -106,7 +106,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
-        "x-esper-noun": "tenant-user-invite",
+        "x-esper-noun": "invite",
         "x-esper-scope-parent": "tenant"
       },
       "get": {
@@ -178,7 +178,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "list",
-        "x-esper-noun": "tenant-user-invite",
+        "x-esper-noun": "invite",
         "x-esper-scope-parent": "tenant"
       }
     },

@@ -76,7 +76,7 @@ func addCommand(root *cobra.Command, commandPath []string, operations []Operatio
 	for _, segment := range commandPath[:len(commandPath)-1] {
 		child, _, err := parent.Find([]string{segment})
 		if err != nil || child == parent {
-			child = &cobra.Command{Use: segment, Short: operations[0].Summary}
+			child = &cobra.Command{Use: segment, Short: commandGroupSummary(segment)}
 			parent.AddCommand(child)
 		}
 		parent = child
@@ -88,6 +88,10 @@ func addCommand(root *cobra.Command, commandPath []string, operations []Operatio
 	}}
 	addFlags(command, operations)
 	parent.AddCommand(command)
+}
+
+func commandGroupSummary(segment string) string {
+	return fmt.Sprintf("Commands in the %s group", segment)
 }
 
 func addFlags(command *cobra.Command, operations []Operation) {

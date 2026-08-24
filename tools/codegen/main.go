@@ -13,6 +13,8 @@ import (
 
 var methods = map[string]bool{"get": true, "post": true, "put": true, "patch": true, "delete": true}
 var coreGenerationRank = map[string]int{"legacy": 0, "v0": 1, "v1": 2, "v2": 3, "v3": 4}
+var pathResourceNames = map[string]string{"devicegroup": "device-group", "devicegroups": "device-group", "operationlists": "operation-list", "pipelines": "pipeline", "runs": "pipeline-run", "stageruns": "stage-run", "stages": "stage", "targetlists": "target-list", "targetruns": "target-run", "targets": "target"}
+var sideFamilyPrefixes = map[string]string{"authn2": "authn", "authz2": "authz", "foundry": "foundry", "geofence": "geofence", "pipelines-v0": "pipeline"}
 
 type document struct {
 	Info struct {
@@ -154,7 +156,8 @@ func load(directory string) ([]generatedOperation, error) {
 				for _, parameter := range operation.Parameters {
 					parameter = resolveParameter(parameter, spec.Components.Parameters)
 					resolved := resolve(parameter.Schema, spec.Components.Schemas)
-					generated.Parameters = append(generated.Parameters, generatedParameter{Name: parameter.Name, In: parameter.In, Type: scalarType(resolved), Required: parameter.Required, Scope: operation.ScopeParent != "" && parameter.In == "path", ScopeName: operation.ScopeParent, Enum: stringEnum(resolved.Enum)})
+					scopeParameter := scopeParameterName(apiPath, operation.ScopeParent)
+					generated.Parameters = append(generated.Parameters, generatedParameter{Name: parameter.Name, In: parameter.In, Type: scalarType(resolved), Required: parameter.Required, Scope: parameter.In == "path" && parameter.Name == scopeParameter, ScopeName: operation.ScopeParent, Enum: stringEnum(resolved.Enum)})
 				}
 				if len(operation.Body.Content) > 0 {
 					generated.Body = extractBody(operation.Body.Content, spec.Components.Schemas)
@@ -164,6 +167,28 @@ func load(directory string) ([]generatedOperation, error) {
 		}
 	}
 	return result, nil
+}
+
+func scopeParameterName(apiPath, scopeParent string) string {
+	if scopeParent == "" {
+		return ""
+	}
+	segments := strings.Split(strings.Trim(apiPath, "/"), "/")
+	for index := 0; index+1 < len(segments); index++ {
+		rawResource := strings.TrimSuffix(segments[index], "s")
+		resource := pathResourceNames[segments[index]]
+		if resource == "" {
+			resource = rawResource
+		}
+		if resource != scopeParent && rawResource != scopeParent {
+			continue
+		}
+		parameter := segments[index+1]
+		if strings.HasPrefix(parameter, "{") && strings.HasSuffix(parameter, "}") {
+			return strings.TrimSuffix(strings.TrimPrefix(parameter, "{"), "}")
+		}
+	}
+	return ""
 }
 
 func resolve(value schema, schemas map[string]schema) schema {
@@ -222,11 +247,32 @@ func assignCommands(operations []generatedOperation) {
 	groups := map[string][]candidate{}
 	for index := range operations {
 		operation := &operations[index]
-		rank, core := coreGenerationRank[operation.Generation]
-		if !core {
-			operation.Command = []string{operation.Generation, operation.Noun, operation.Verb}
+		rank, _ := coreGenerationRank[operation.Generation]
+		key := operation.Noun + "\x00" + operation.Verb
+		groups[key] = append(groups[key], candidate{index: index, rank: rank})
+	}
+	for _, candidates := range groups {
+		hasUnscopedCore := false
+		for _, candidate := range candidates {
+			operation := operations[candidate.index]
+			if _, core := coreGenerationRank[operation.Generation]; core && operation.ScopeParent == "" {
+				hasUnscopedCore = true
+			}
+		}
+		if !hasUnscopedCore {
 			continue
 		}
+		for _, candidate := range candidates {
+			operation := &operations[candidate.index]
+			if prefix, side := sideFamilyPrefixes[operation.Generation]; side && operation.ScopeParent == "" {
+				operation.Noun = prefix + "-" + operation.Noun
+			}
+		}
+	}
+	groups = map[string][]candidate{}
+	for index := range operations {
+		operation := &operations[index]
+		rank, _ := coreGenerationRank[operation.Generation]
 		key := operation.Noun + "\x00" + operation.Verb
 		groups[key] = append(groups[key], candidate{index: index, rank: rank})
 	}

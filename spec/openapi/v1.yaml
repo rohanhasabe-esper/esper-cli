@@ -198,7 +198,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "min-app-info"
+        "x-esper-noun": "application-minimal"
       }
     },
     "/v1/enterprise/{enterprise_id}/device/{device_id}/report/eventfeed/": {
@@ -1685,7 +1685,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "alarm-history"
+        "x-esper-noun": "alarmhistory"
       }
     },
     "/v1/enterprise/{enterprise_id}/wallpaper/": {
@@ -2731,7 +2731,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "apply",
-        "x-esper-noun": "tile-icon"
+        "x-esper-noun": "tile-icon-apply"
       }
     },
     "/v1/enterprise/{enterprise_id}/tile-icon-unapply/": {
@@ -2842,7 +2842,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "remove",
-        "x-esper-noun": "tile-icon"
+        "x-esper-noun": "tile-icon-unapply"
       }
     },
     "/v1/enterprise/{enterprise_id}/report/location/": {
@@ -4484,7 +4484,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
-        "x-esper-noun": "app-version",
+        "x-esper-noun": "version",
         "x-esper-scope-parent": "application"
       }
     },

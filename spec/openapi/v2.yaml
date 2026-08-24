@@ -3896,7 +3896,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "update",
-        "x-esper-noun": "itunesapp-preferred-region"
+        "x-esper-noun": "preferred-region"
       }
     },
     "/v2/tenant-apps": {

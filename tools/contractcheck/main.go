@@ -16,6 +16,7 @@ import (
 
 var methods = map[string]bool{"get": true, "post": true, "put": true, "patch": true, "delete": true}
 var coreGenerationRank = map[string]int{"legacy": 0, "v0": 1, "v1": 2, "v2": 3, "v3": 4}
+var sideFamilyPrefixes = map[string]string{"authn2": "authn", "authz2": "authz", "foundry": "foundry", "geofence": "geofence", "pipelines-v0": "pipeline"}
 
 type spec struct {
 	Info struct {
@@ -101,7 +102,11 @@ func check(specDir string) []string {
 					issues = append(issues, location+": no generated operation")
 					continue
 				}
-				if generatedOperation.Noun != operation.Noun || generatedOperation.Verb != operation.Verb || generatedOperation.Destructive != *operation.Destructive || generatedOperation.Summary != operation.Summary {
+				expectedNoun := operation.Noun
+				if prefix, side := sideFamilyPrefixes[document.Info.Generation]; side && generatedOperation.Noun == prefix+"-"+operation.Noun {
+					expectedNoun = generatedOperation.Noun
+				}
+				if generatedOperation.Noun != expectedNoun || generatedOperation.Verb != operation.Verb || generatedOperation.Destructive != *operation.Destructive || generatedOperation.Summary != operation.Summary {
 					issues = append(issues, location+": generated metadata differs from overlay")
 				}
 				command, _, err := root.Find(generatedOperation.Command)
@@ -111,6 +116,14 @@ func check(specDir string) []string {
 				}
 				if strings.TrimSpace(command.Short) == "" {
 					issues = append(issues, location+": generated command has no description")
+				}
+				for index := 1; index < len(generatedOperation.Command)-1; index++ {
+					groupPath := generatedOperation.Command[:index]
+					group, _, err := root.Find(groupPath)
+					expectedSummary := "Commands in the " + generatedOperation.Command[index-1] + " group"
+					if err != nil || group == root || group.Short != expectedSummary {
+						issues = append(issues, location+": generated group has no explicit description")
+					}
 				}
 				for _, parameter := range operation.Parameters {
 					parameter = resolveParameter(parameter, document.Components.Parameters)
@@ -176,9 +189,7 @@ func checkCommandGrammar(root interface {
 		for _, operation := range group {
 			rank, core := coreGenerationRank[operation.Generation]
 			var expected []string
-			if !core {
-				expected = []string{operation.Generation, operation.Noun, operation.Verb}
-			} else if rank < maxRank {
+			if core && rank < maxRank {
 				expected = []string{"api", operation.Generation, operation.Noun, operation.Verb}
 			} else {
 				expected = []string{operation.Noun, operation.Verb}
@@ -213,6 +224,14 @@ func checkCommandGrammar(root interface {
 			if command.Flags().Lookup(kebab(scope)) == nil {
 				issues = append(issues, commandPath+": missing scope flag --"+kebab(scope))
 			}
+		}
+	}
+	for _, operation := range operations {
+		if operation.Generation != "pipelines-v0" {
+			continue
+		}
+		if noun := relationshipNoun(operation.Path); noun != "" && operation.Noun != noun {
+			issues = append(issues, operation.Method+" "+operation.Path+": synthesized relationship noun "+operation.Noun+", want "+noun)
 		}
 	}
 	return issues
@@ -273,4 +292,28 @@ func hasPluralComponent(noun string) bool {
 		}
 	}
 	return false
+}
+
+func relationshipNoun(apiPath string) string {
+	segments := []string{}
+	for _, segment := range strings.Split(apiPath, "/") {
+		if segment != "" {
+			segments = append(segments, segment)
+		}
+	}
+	if len(segments) < 2 {
+		return ""
+	}
+	finalID := strings.HasPrefix(segments[len(segments)-1], "{")
+	resourceIndex := len(segments) - 1
+	if finalID {
+		resourceIndex--
+	}
+	parentIDIndex := resourceIndex - 1
+	if parentIDIndex < 0 || !strings.HasPrefix(segments[parentIDIndex], "{") {
+		return ""
+	}
+	resource := segments[resourceIndex]
+	resources := map[string]string{"devicegroups": "device-group", "operationlists": "operation-list", "pipelines": "pipeline", "runs": "pipeline-run", "stageruns": "stage-run", "stages": "stage", "targetlists": "target-list", "targetruns": "target-run", "targets": "target"}
+	return resources[resource]
 }

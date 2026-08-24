@@ -24,7 +24,7 @@ Excluded from Phase 2:
 | 5 | pipeline | 37 | `pipeline`, `pipeline-run`, `stage`, `stage-run`, `target`, `target-bulk`, `target-list`, `target-run` | Blocked |
 | 6 | token-user | 33 | `authn-user`, `dep-token`, `dep-token-based-on`, `dep-token-upload`, `different-user`, `invite`, `own-user`, `personal-access-token`, `renew-token`, `tenant-user`, `tenant-user-invite`, `tenant-vpptoken`, `token-info`, `user`, `user-delete`, `user-info`, `webtoken`, `webtoken-instance` | Blocked |
 | 7 | alarm-alert | 13 | `alarm-rule`, `alarmhistory`, `alarmrule`, `alert-channel`, `alertchannel` | Blocked |
-| 8 | apns | 5 | `apns-cert`, `apns-csr` | Pending |
+| 8 | apns | 5 | `apns-cert`, `apns-csr` | Blocked |
 | 9 | command-operation | 37 | `command`, `command-history`, `command-inbox`, `command-request`, `command-request-status`, `command-status`, `device-operation`, `operation`, `operation-list`, `stat`, `status` | Pending |
 | 10 | connection | 2 | `connection`, `custom-connection` | Pending |
 | 11 | content | 7 | `content`, `download`, `remote-file` | Pending |
@@ -85,6 +85,10 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `alarm-alert`: required body/object-only inputs lack a locked enforcement
   rule, and create routes collide `--enterprise` between scope and body.
   Details are recorded in `inbox.md` and `spec.md` Issues.
+
+- `apns`: CSR creation requires an empty JSON body with no locked invocation
+  rule, and its binary plist response has no defined output behavior. Details
+  are recorded in `inbox.md` and `spec.md` Issues.
 
 ## Final status
 

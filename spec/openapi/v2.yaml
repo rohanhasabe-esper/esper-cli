@@ -5788,7 +5788,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "provisioning-profile-version"
+        "x-esper-noun": "provisioning-profile-version",
+        "x-esper-scope-parent": "provisioning-profile"
       },
       "delete": {
         "security": [
@@ -5883,7 +5884,8 @@
         "x-esper-destructive": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "delete",
-        "x-esper-noun": "provisioning-profile-version"
+        "x-esper-noun": "provisioning-profile-version",
+        "x-esper-scope-parent": "provisioning-profile"
       }
     },
     "/v2/preferred-regions": {

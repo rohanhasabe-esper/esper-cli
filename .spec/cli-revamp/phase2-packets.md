@@ -37,7 +37,7 @@ Excluded from Phase 2:
 | 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Blocked |
 | 19 | geofence | 9 | `create-apply-geo-fence`, `geofence`, `the-geofence` | Blocked |
 | 20 | policy | 5 | `policy` | Blocked |
-| 21 | provisioning-profile | 5 | `provisioning-profile`, `provisioning-profile-version` | Pending |
+| 21 | provisioning-profile | 5 | `provisioning-profile`, `provisioning-profile-version` | Complete |
 | 22 | report-telemetry | 19 | `device-location`, `device-report`, `device-tile-report`, `event-feed`, `report-info`, `report-status`, `report-type`, `specific-location`, `status-metric`, `subscription`, `subscription-report`, `telemetry-graph-data` | Pending |
 | 23 | role-scope | 7 | `role`, `scope` | Pending |
 | 24 | seamless | 2 | `seamless` | Pending |

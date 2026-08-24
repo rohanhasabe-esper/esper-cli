@@ -35,7 +35,7 @@ Excluded from Phase 2:
 | 16 | directory-record | 5 | `directory-record` | Blocked |
 | 17 | emm | 9 | `emm`, `emm-account`, `emm-detail`, `emm-enrollment-begin`, `emm-enrollment-complete`, `emm-instance`, `emm-web-token` | Blocked |
 | 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Blocked |
-| 19 | geofence | 9 | `create-apply-geo-fence`, `geofence`, `the-geofence` | Pending |
+| 19 | geofence | 9 | `create-apply-geo-fence`, `geofence`, `the-geofence` | Blocked |
 | 20 | policy | 5 | `policy` | Pending |
 | 21 | provisioning-profile | 5 | `provisioning-profile`, `provisioning-profile-version` | Pending |
 | 22 | report-telemetry | 19 | `device-location`, `device-report`, `device-tile-report`, `event-feed`, `report-info`, `report-status`, `report-type`, `specific-location`, `status-metric`, `subscription`, `subscription-report`, `telemetry-graph-data` | Pending |
@@ -132,6 +132,10 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 
 - `foundry`: build and device-model updates require JSON bodies whose scalar
   properties are all optional, so required input behavior is undefined.
+
+- `geofence`: wildcard/required body behavior is unresolved, and normalizing
+  the malformed geofence nouns creates an undefined same-generation command
+  alias collision. Details are in the steering files.
 
 ## Final status
 

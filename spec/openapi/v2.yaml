@@ -2491,7 +2491,7 @@
             }
           },
           {
-            "name": "app type",
+            "name": "app_type",
             "in": "query",
             "description": "App Type to filter list by, supports multiple values separated by comma",
             "schema": {

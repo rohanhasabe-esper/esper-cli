@@ -19,7 +19,7 @@ Excluded from Phase 2:
 |---:|---|---:|---|---|
 | 1 | enterprise | 4 | `enterprise`, `enterprise-policy`, `enterprise-report` | Complete |
 | 2 | group | 18 | `device-group`, `group`, `group-eventfeed`, `group-report`, `group-thumbnail`, `legacy-device-group-command`, `sub-group` | Blocked |
-| 3 | app-application | 53 | `app`, `app-info`, `app-instance`, `app-version`, `app-vpp`, `appleappstore`, `application`, `application-minimal`, `device-app`, `esper-app-version`, `install`, `installdevice`, `itunesapp`, `preferred-region`, `product`, `tenant-app`, `tenant-app-version`, `tenant-esper-app`, `version`, `webclip` | Pending |
+| 3 | app-application | 53 | `app`, `app-info`, `app-instance`, `app-version`, `app-vpp`, `appleappstore`, `application`, `application-minimal`, `device-app`, `esper-app-version`, `install`, `installdevice`, `itunesapp`, `preferred-region`, `product`, `tenant-app`, `tenant-app-version`, `tenant-esper-app`, `version`, `webclip` | Blocked |
 | 4 | blueprint | 15 | `blueprint`, `blueprint-revision`, `blueprint-version`, `revision` | Pending |
 | 5 | pipeline | 37 | `pipeline`, `pipeline-run`, `stage`, `stage-run`, `target`, `target-bulk`, `target-list`, `target-run` | Pending |
 | 6 | token-user | 33 | `authn-user`, `dep-token`, `dep-token-based-on`, `dep-token-upload`, `different-user`, `invite`, `own-user`, `personal-access-token`, `renew-token`, `tenant-user`, `tenant-user-invite`, `tenant-vpptoken`, `token-info`, `user`, `user-delete`, `user-info`, `webtoken`, `webtoken-instance` | Pending |
@@ -54,6 +54,11 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
   and a scalar JSON body property, but the locked conventions define no
   collision rule. The source body is also incorrectly advertised as `*/*`.
   Details are recorded in `inbox.md` and `spec.md` Issues.
+
+- `app-application`: merged `device-app list` routes have different required
+  query flags, but the locked scoped-collection rules do not define
+  route-conditional required-flag enforcement. Details are recorded in
+  `inbox.md` and `spec.md` Issues.
 
 ## Final status
 

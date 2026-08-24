@@ -10019,6 +10019,1066 @@
           }
         }
       }
+    },
+    "/v0/enterprise/{enterprise_id}/device/{device_id}/remoteadb/": {
+      "get": {
+        "operationId": "listRemoteADBConnections",
+        "summary": "List remote ADB connections for a device",
+        "tags": [
+          "Remote ADB"
+        ],
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "device_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Remote ADB connections",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "uri"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "uri"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "enterprise": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "device": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "device_name": {
+                            "type": "string"
+                          },
+                          "ip": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "client_port": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "device_port": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "remoteadb_host": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "client_certificate": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "device_certificate": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "errors": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/remoteadb/urls.py:13-22",
+          "src/services/shoonyacloud/shoonyapoc/api/remoteadb/views/remoteadb_connection.py:9-20"
+        ]
+      },
+      "post": {
+        "operationId": "createRemoteADBConnection",
+        "summary": "Start a remote ADB connection",
+        "tags": [
+          "Remote ADB"
+        ],
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "device_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "client_certificate"
+                ],
+                "properties": {
+                  "client_certificate": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Remote ADB connection created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "enterprise": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "device": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "device_name": {
+                      "type": "string"
+                    },
+                    "ip": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "client_port": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "device_port": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "remoteadb_host": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "client_certificate": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "device_certificate": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/remoteadb/urls.py:13-22",
+          "src/services/shoonyacloud/shoonyapoc/api/remoteadb/views/remoteadb_connection.py:9-20"
+        ]
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/device/{device_id}/remoteadb/{remoteadb_id}/": {
+      "get": {
+        "operationId": "getRemoteADBConnection",
+        "summary": "Get remote ADB connection status",
+        "tags": [
+          "Remote ADB"
+        ],
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "device_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "remoteadb_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Remote ADB connection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "enterprise": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "device": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "device_name": {
+                      "type": "string"
+                    },
+                    "ip": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "client_port": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "device_port": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "remoteadb_host": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "client_certificate": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "device_certificate": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/remoteadb/urls.py:13-22",
+          "src/services/shoonyacloud/shoonyapoc/api/remoteadb/views/remoteadb_connection.py:9-20"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteRemoteADBConnection",
+        "summary": "Delete a remote ADB connection",
+        "tags": [
+          "Remote ADB"
+        ],
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "device_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "remoteadb_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Remote ADB connection deleted"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/remoteadb/urls.py:13-22",
+          "src/services/shoonyacloud/shoonyapoc/api/remoteadb/views/remoteadb_connection.py:9-20"
+        ]
+      }
+    },
+    "/graph/{category}/{metric}/": {
+      "get": {
+        "operationId": "getTelemetryGraphData",
+        "summary": "Get telemetry graph data",
+        "tags": [
+          "Device Telemetry"
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "metric",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from_time",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to_time",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "statistic",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "device_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Telemetry data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/shoonyapoc/urls.py:158-160",
+          "src/services/shoonyacloud/shoonyapoc/api/device/views/telemetry_graph.py:44-74"
+        ]
+      }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/{group_id}/command/": {
+      "get": {
+        "operationId": "listLegacyDeviceGroupCommands",
+        "summary": "List commands for a device group",
+        "tags": [
+          "Device Group Command"
+        ],
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "group_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device group commands",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "uri"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "uri"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "command": {
+                            "type": "string"
+                          },
+                          "command_args": {
+                            "type": "object",
+                            "additionalProperties": true
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "details": {
+                            "type": "object",
+                            "additionalProperties": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/urls.py:250-256",
+          "src/services/shoonyacloud/shoonyapoc/api/device/views/group_command.py:43-93"
+        ]
+      },
+      "post": {
+        "operationId": "createLegacyDeviceGroupCommand",
+        "summary": "Send a command to a device group",
+        "tags": [
+          "Device Group Command"
+        ],
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "group_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "command"
+                ],
+                "properties": {
+                  "command": {
+                    "type": "string"
+                  },
+                  "command_args": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "schedule": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Device group command created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "command": {
+                      "type": "string"
+                    },
+                    "command_args": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/urls.py:250-256",
+          "src/services/shoonyacloud/shoonyapoc/api/device/views/group_command.py:43-93"
+        ]
+      }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/{group_id}/command/{command_id}/": {
+      "get": {
+        "operationId": "getLegacyDeviceGroupCommand",
+        "summary": "Get a device group command",
+        "tags": [
+          "Device Group Command"
+        ],
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "group_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "command_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device group command",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "command": {
+                      "type": "string"
+                    },
+                    "command_args": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/urls.py:250-256",
+          "src/services/shoonyacloud/shoonyapoc/api/device/views/group_command.py:43-93"
+        ]
+      }
     }
   },
   "components": {

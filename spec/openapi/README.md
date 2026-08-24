@@ -24,3 +24,15 @@ npx --yes @redocly/cli@1.34.5 lint --config spec/redocly.yaml
 `manifest.json` records the source, excluded, emitted, and per-generation path
 counts. Generated specifications are JSON-formatted YAML so downstream Go tools
 can parse them with the standard library.
+
+## Platform reconciliation
+
+The bundler adds customer routes present in `esper-platform` but absent from the
+docs source. Each generated operation carries an `x-esper-platform-source`
+citation with the exact router and view files:
+
+- Remote ADB nested routes from `api/remoteadb/urls.py`.
+- Telemetry graph data from `shoonyapoc/urls.py` and
+  `api/device/views/telemetry_graph.py`.
+- Legacy device-group commands from `api/enterprise/urls.py` and
+  `api/device/views/group_command.py`.

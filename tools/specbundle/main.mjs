@@ -10,10 +10,218 @@ if (!input || !outputDir) {
 }
 
 const source = JSON.parse(await readFile(input, "utf8"));
+const sourcePathCount = Object.keys(source.paths).length;
 const excludedPaths = new Set([
   "/sys/health",
   "/device/v0/devices/",
 ]);
+
+const uuidParameter = (name) => ({
+  name,
+  in: "path",
+  required: true,
+  schema: { type: "string", format: "uuid" },
+});
+
+const jsonResponse = (description, schema = { type: "object", additionalProperties: true }) => ({
+  description,
+  content: { "application/json": { schema } },
+});
+
+const errorResponses = {
+  "400": jsonResponse("Bad request"),
+  "401": jsonResponse("Unauthorized"),
+  "404": jsonResponse("Not found"),
+};
+
+const remoteADBProperties = {
+  id: { type: "string", format: "uuid" },
+  enterprise: { type: "string", format: "uuid" },
+  device: { type: "string", format: "uuid" },
+  device_name: { type: "string" },
+  ip: { type: ["string", "null"] },
+  client_port: { type: ["string", "null"] },
+  device_port: { type: ["string", "null"] },
+  remoteadb_host: { type: ["string", "null"] },
+  client_certificate: { type: ["string", "null"] },
+  device_certificate: { type: ["string", "null"] },
+  state: { type: "string" },
+  errors: { type: ["string", "null"] },
+};
+const remoteADBResponse = { type: "object", properties: remoteADBProperties };
+const remoteADBParameters = [uuidParameter("enterprise_id"), uuidParameter("device_id")];
+const remoteADBSource = [
+  "src/services/shoonyacloud/shoonyapoc/api/remoteadb/urls.py:13-22",
+  "src/services/shoonyacloud/shoonyapoc/api/remoteadb/views/remoteadb_connection.py:9-20",
+];
+
+// Platform source: api/remoteadb/urls.py:13-22 registers a ModelViewSet below enterprise/device.
+source.paths["/v0/enterprise/{enterprise_id}/device/{device_id}/remoteadb/"] = {
+  get: {
+    operationId: "listRemoteADBConnections",
+    summary: "List remote ADB connections for a device",
+    tags: ["Remote ADB"],
+    parameters: [
+      ...remoteADBParameters,
+      { name: "limit", in: "query", schema: { type: "integer", minimum: 1 } },
+      { name: "offset", in: "query", schema: { type: "integer", minimum: 0 } },
+    ],
+    responses: {
+      "200": jsonResponse("Remote ADB connections", {
+        type: "object",
+        properties: {
+          count: { type: "integer" },
+          next: { type: ["string", "null"], format: "uri" },
+          previous: { type: ["string", "null"], format: "uri" },
+          results: { type: "array", items: remoteADBResponse },
+        },
+      }),
+      ...errorResponses,
+    },
+    "x-esper-platform-source": remoteADBSource,
+  },
+  post: {
+    operationId: "createRemoteADBConnection",
+    summary: "Start a remote ADB connection",
+    tags: ["Remote ADB"],
+    parameters: remoteADBParameters,
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            required: ["client_certificate"],
+            properties: { client_certificate: { type: "string" } },
+          },
+        },
+      },
+    },
+    responses: { "201": jsonResponse("Remote ADB connection created", remoteADBResponse), ...errorResponses },
+    "x-esper-platform-source": remoteADBSource,
+  },
+};
+
+source.paths["/v0/enterprise/{enterprise_id}/device/{device_id}/remoteadb/{remoteadb_id}/"] = {
+  get: {
+    operationId: "getRemoteADBConnection",
+    summary: "Get remote ADB connection status",
+    tags: ["Remote ADB"],
+    parameters: [...remoteADBParameters, uuidParameter("remoteadb_id")],
+    responses: { "200": jsonResponse("Remote ADB connection", remoteADBResponse), ...errorResponses },
+    "x-esper-platform-source": remoteADBSource,
+  },
+  delete: {
+    operationId: "deleteRemoteADBConnection",
+    summary: "Delete a remote ADB connection",
+    tags: ["Remote ADB"],
+    parameters: [...remoteADBParameters, uuidParameter("remoteadb_id")],
+    responses: { "204": { description: "Remote ADB connection deleted" }, ...errorResponses },
+    "x-esper-platform-source": remoteADBSource,
+  },
+};
+
+// Platform source: shoonyapoc/urls.py:158-160 and telemetry_graph.py:44-74.
+source.paths["/graph/{category}/{metric}/"] = {
+  get: {
+    operationId: "getTelemetryGraphData",
+    summary: "Get telemetry graph data",
+    tags: ["Device Telemetry"],
+    parameters: [
+      { name: "category", in: "path", required: true, schema: { type: "string" } },
+      { name: "metric", in: "path", required: true, schema: { type: "string" } },
+      { name: "from_time", in: "query", required: true, schema: { type: "string", format: "date-time" } },
+      { name: "to_time", in: "query", required: true, schema: { type: "string", format: "date-time" } },
+      { name: "period", in: "query", required: true, schema: { type: "string" } },
+      { name: "statistic", in: "query", required: true, schema: { type: "string" } },
+      uuidParameter("device_id"),
+      { name: "enterprise_id", in: "query", schema: { type: "string", format: "uuid" } },
+    ].map((parameter) => parameter.name === "device_id" ? { ...parameter, in: "query", required: true } : parameter),
+    responses: { "200": jsonResponse("Telemetry data"), ...errorResponses },
+    "x-esper-platform-source": [
+      "src/services/shoonyacloud/shoonyapoc/shoonyapoc/urls.py:158-160",
+      "src/services/shoonyacloud/shoonyapoc/api/device/views/telemetry_graph.py:44-74",
+    ],
+  },
+};
+
+const groupCommandParameters = [uuidParameter("enterprise_id"), uuidParameter("group_id")];
+const groupCommandSource = [
+  "src/services/shoonyacloud/shoonyapoc/api/enterprise/urls.py:250-256",
+  "src/services/shoonyacloud/shoonyapoc/api/device/views/group_command.py:43-93",
+];
+const groupCommandResponse = {
+  type: "object",
+  properties: {
+    id: { type: "string", format: "uuid" },
+    command: { type: "string" },
+    command_args: { type: "object", additionalProperties: true },
+    state: { type: "string" },
+    details: { type: "object", additionalProperties: true },
+  },
+};
+
+// Platform source: api/enterprise/urls.py:250-256 nests GroupCommandViewSet under devicegroup.
+source.paths["/enterprise/{enterprise_id}/devicegroup/{group_id}/command/"] = {
+  get: {
+    operationId: "listLegacyDeviceGroupCommands",
+    summary: "List commands for a device group",
+    tags: ["Device Group Command"],
+    parameters: [
+      ...groupCommandParameters,
+      { name: "limit", in: "query", schema: { type: "integer", minimum: 1 } },
+      { name: "offset", in: "query", schema: { type: "integer", minimum: 0 } },
+    ],
+    responses: {
+      "200": jsonResponse("Device group commands", {
+        type: "object",
+        properties: {
+          count: { type: "integer" },
+          next: { type: ["string", "null"], format: "uri" },
+          previous: { type: ["string", "null"], format: "uri" },
+          results: { type: "array", items: groupCommandResponse },
+        },
+      }),
+      ...errorResponses,
+    },
+    "x-esper-platform-source": groupCommandSource,
+  },
+  post: {
+    operationId: "createLegacyDeviceGroupCommand",
+    summary: "Send a command to a device group",
+    tags: ["Device Group Command"],
+    parameters: groupCommandParameters,
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            required: ["command"],
+            properties: {
+              command: { type: "string" },
+              command_args: { type: "object", additionalProperties: true },
+              schedule: { type: "object", additionalProperties: true },
+            },
+          },
+        },
+      },
+    },
+    responses: { "201": jsonResponse("Device group command created", groupCommandResponse), ...errorResponses },
+    "x-esper-platform-source": groupCommandSource,
+  },
+};
+
+source.paths["/enterprise/{enterprise_id}/devicegroup/{group_id}/command/{command_id}/"] = {
+  get: {
+    operationId: "getLegacyDeviceGroupCommand",
+    summary: "Get a device group command",
+    tags: ["Device Group Command"],
+    parameters: [...groupCommandParameters, uuidParameter("command_id")],
+    responses: { "200": jsonResponse("Device group command", groupCommandResponse), ...errorResponses },
+    "x-esper-platform-source": groupCommandSource,
+  },
+};
 
 function generationFor(apiPath) {
   if (apiPath.startsWith("/authn2/")) return "authn2";
@@ -30,7 +238,7 @@ function generationFor(apiPath) {
   if (apiPath.startsWith("/v1/")) return "v1";
   if (apiPath.startsWith("/v2/") || apiPath.startsWith("/api/v2/")) return "v2";
   if (apiPath.startsWith("/v0/") || apiPath.startsWith("/enterprise/") ||
-      apiPath.startsWith("/user")) return "v0";
+      apiPath.startsWith("/user") || apiPath.startsWith("/graph/")) return "v0";
   throw new Error(`no generation mapping for ${apiPath}`);
 }
 
@@ -145,7 +353,8 @@ for (const [apiPath, pathItem] of Object.entries(source.paths)) {
 
 await mkdir(outputDir, { recursive: true });
 const manifest = {
-  sourcePathCount: Object.keys(source.paths).length,
+  sourcePathCount,
+  addedPathCount: Object.keys(source.paths).length - sourcePathCount,
   excludedPaths: [...excludedPaths].sort(),
   emittedPathCount: 0,
   generations: {},

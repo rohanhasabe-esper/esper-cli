@@ -1,10 +1,11 @@
 {
   "sourcePathCount": 205,
+  "addedPathCount": 5,
   "excludedPaths": [
     "/device/v0/devices/",
     "/sys/health"
   ],
-  "emittedPathCount": 203,
+  "emittedPathCount": 208,
   "generations": {
     "apps-v0": 2,
     "authn2": 9,
@@ -17,7 +18,7 @@
     "pipelines-v0": 29,
     "reports-v0": 3,
     "tenant-v0": 6,
-    "v0": 56,
+    "v0": 61,
     "v1": 27,
     "v2": 47
   }

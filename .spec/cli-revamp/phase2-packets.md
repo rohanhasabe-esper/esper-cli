@@ -38,7 +38,7 @@ Excluded from Phase 2:
 | 19 | geofence | 9 | `create-apply-geo-fence`, `geofence`, `the-geofence` | Blocked |
 | 20 | policy | 5 | `policy` | Blocked |
 | 21 | provisioning-profile | 5 | `provisioning-profile`, `provisioning-profile-version` | Complete |
-| 22 | report-telemetry | 19 | `device-location`, `device-report`, `device-tile-report`, `event-feed`, `report-info`, `report-status`, `report-type`, `specific-location`, `status-metric`, `subscription`, `subscription-report`, `telemetry-graph-data` | Pending |
+| 22 | report-telemetry | 19 | `device-location`, `device-report`, `device-tile-report`, `event-feed`, `report-info`, `report-status`, `report-type`, `specific-location`, `status-metric`, `subscription`, `subscription-report`, `telemetry-graph-data` | Blocked |
 | 23 | role-scope | 7 | `role`, `scope` | Pending |
 | 24 | seamless | 2 | `seamless` | Pending |
 | 25 | tile-ui | 10 | `tile-icon`, `tile-icon-apply`, `tile-icon-unapply`, `wallpaper` | Pending |
@@ -147,6 +147,10 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 
 - `policy`: create and updates have required wildcard bodies plus unresolved
   complex-property enforcement and `--enterprise` scope/body collisions.
+
+- `report-telemetry`: subscription add/update require an array-only
+  `email_ids` body, but the locked rules do not define when explicit `--body`
+  is mandatory.
 
 ## Final status
 

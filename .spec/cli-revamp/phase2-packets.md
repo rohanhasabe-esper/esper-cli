@@ -29,7 +29,7 @@ Excluded from Phase 2:
 | 10 | connection | 2 | `connection`, `custom-connection` | Blocked |
 | 11 | content | 7 | `content`, `download`, `remote-file` | Complete |
 | 12 | converge | 3 | `converge` | Complete |
-| 13 | custom-action | 6 | `custom-action`, `script` | Pending |
+| 13 | custom-action | 6 | `custom-action`, `script` | Blocked |
 | 14 | dep-sync | 3 | `dep-sync-request` | Pending |
 | 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Pending |
 | 16 | directory-record | 5 | `directory-record` | Pending |
@@ -105,6 +105,10 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `connection`: custom connection update requires a JSON body whose scalar
   properties are optional and whose `config` property is object-only. It
   depends on the unresolved required-body rule.
+
+- `custom-action`: create requires object-only properties and update has no
+  required scalar input. Both depend on the unresolved required-body/property
+  enforcement rule recorded in the steering files.
 
 ## Final status
 

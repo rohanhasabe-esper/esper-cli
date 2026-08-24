@@ -28,7 +28,7 @@ Excluded from Phase 2:
 | 9 | command-operation | 37 | `command`, `command-history`, `command-inbox`, `command-request`, `command-request-status`, `command-status`, `device-operation`, `operation`, `operation-list`, `stat`, `status` | Blocked |
 | 10 | connection | 2 | `connection`, `custom-connection` | Blocked |
 | 11 | content | 7 | `content`, `download`, `remote-file` | Complete |
-| 12 | converge | 3 | `converge` | Pending |
+| 12 | converge | 3 | `converge` | Complete |
 | 13 | custom-action | 6 | `custom-action`, `script` | Pending |
 | 14 | dep-sync | 3 | `dep-sync-request` | Pending |
 | 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Pending |

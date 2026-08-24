@@ -26,7 +26,7 @@ Excluded from Phase 2:
 | 7 | alarm-alert | 13 | `alarm-rule`, `alarmhistory`, `alarmrule`, `alert-channel`, `alertchannel` | Blocked |
 | 8 | apns | 5 | `apns-cert`, `apns-csr` | Blocked |
 | 9 | command-operation | 37 | `command`, `command-history`, `command-inbox`, `command-request`, `command-request-status`, `command-status`, `device-operation`, `operation`, `operation-list`, `stat`, `status` | Blocked |
-| 10 | connection | 2 | `connection`, `custom-connection` | Pending |
+| 10 | connection | 2 | `connection`, `custom-connection` | Blocked |
 | 11 | content | 7 | `content`, `download`, `remote-file` | Pending |
 | 12 | converge | 3 | `converge` | Pending |
 | 13 | custom-action | 6 | `custom-action`, `script` | Pending |
@@ -55,6 +55,14 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `app-application` - Blocked: merged routes require conditional query-flag enforcement not defined by conventions.
 - `blueprint` - Blocked: required bodies with no required properties lack a locked input rule.
 - `pipeline` - Blocked: seven required bodies with no required scalar input depend on the same missing rule.
+
+### Packets 6-10
+
+- `token-user` - Blocked: legacy user partial-update depends on the missing required-body input rule.
+- `alarm-alert` - Blocked: required body/object inputs and scope/body flag collisions lack locked rules.
+- `apns` - Blocked: empty required body and binary plist output behavior are undefined.
+- `command-operation` - Blocked: required-body inputs and a scope/body flag collision lack locked rules.
+- `connection` - Blocked: custom connection update has a required body with no required scalar input.
 
 ## Blockers
 
@@ -93,6 +101,10 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `command-operation`: ten required-body operations depend on the missing input
   rule, and v0 command create also collides `--enterprise` between scope and
   body. Details are recorded in `inbox.md` and `spec.md` Issues.
+
+- `connection`: custom connection update requires a JSON body whose scalar
+  properties are optional and whose `config` property is object-only. It
+  depends on the unresolved required-body rule.
 
 ## Final status
 

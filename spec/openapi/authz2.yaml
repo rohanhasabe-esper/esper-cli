@@ -108,7 +108,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "different-user"
       }
     },
     "/authz2/v1/users/{user_id}/groups": {
@@ -184,7 +188,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "user-group",
+        "x-esper-scope-parent": "user"
       }
     },
     "/authz2/v1/roles/": {
@@ -248,7 +257,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "role"
       },
       "post": {
         "x-badges": [
@@ -309,7 +322,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "role"
       }
     },
     "/authz2/v1/roles/{role_id}": {
@@ -367,7 +384,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "role"
       },
       "patch": {
         "x-badges": [
@@ -433,7 +454,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "role"
       },
       "delete": {
         "x-badges": [
@@ -482,7 +507,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "role"
       }
     },
     "/authz2/v1/roles/{role_id}/scopes": {
@@ -733,7 +762,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "role-scope"
       },
       "get": {
         "x-badges": [
@@ -800,7 +833,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "role-scope",
+        "x-esper-scope-parent": "role"
       }
     }
   },

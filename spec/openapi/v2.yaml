@@ -229,7 +229,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "sub-group"
       }
     },
     "/v2/enterprise/{enterprise_id}/report/status-metrics": {
@@ -293,7 +297,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "status-metrics-v2",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/v2/blueprints/": {
@@ -467,7 +476,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "blueprint"
       },
       "post": {
         "x-badges": [
@@ -538,7 +551,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "blueprint"
       }
     },
     "/v2/blueprints/{blueprint_id}/": {
@@ -613,7 +630,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "blueprint"
       },
       "put": {
         "x-badges": [
@@ -720,7 +741,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "blueprint"
       },
       "delete": {
         "x-badges": [
@@ -793,7 +818,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "blueprint"
       }
     },
     "/v2/blueprints/{blueprint_id}/versions/": {
@@ -922,7 +951,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "blueprints-version",
+        "x-esper-scope-parent": "blueprint"
       }
     },
     "/v2/blueprints/{blueprint_id}/versions/{version_id}/": {
@@ -1006,7 +1040,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "blueprints-version"
       }
     },
     "/v2/custom-actions/": {
@@ -1184,7 +1222,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "custom-action"
       },
       "post": {
         "x-badges": [
@@ -1301,7 +1343,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "custom-action"
       }
     },
     "/v2/custom-actions/{custom_action_id}/": {
@@ -1373,7 +1419,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "custom-action"
       },
       "put": {
         "x-badges": [
@@ -1516,7 +1566,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "custom-action"
       },
       "delete": {
         "x-badges": [
@@ -1625,7 +1679,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "custom-action"
       }
     },
     "/v2/scripts/{script_id}/": {
@@ -1739,7 +1797,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "script"
       }
     },
     "/v2/devices/": {
@@ -2157,7 +2219,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device"
       }
     },
     "/v2/devices/{id}": {
@@ -2259,7 +2325,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "device"
       }
     },
     "/v2/heartbeat/": {
@@ -2378,7 +2448,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device-heartbeat-list"
       }
     },
     "/v2/devices/{deviceId}/device-apps/": {
@@ -2483,7 +2557,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "devices-device-app",
+        "x-esper-scope-parent": "device"
       }
     },
     "/v2/device-apps": {
@@ -2581,7 +2660,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device-app"
       }
     },
     "/v2/devices/{deviceId}/google-accounts/policy/": {
@@ -2653,7 +2736,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "devices-google-accounts-policy"
       },
       "put": {
         "summary": "Update the Google EMM Policy details for a specific device.",
@@ -2758,7 +2845,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "devices-google-accounts-policy"
       }
     },
     "/v2/devices/{deviceId}/google-accounts/emm-managed/": {
@@ -2830,7 +2921,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "devices-google-accounts-emm-managed"
       }
     },
     "/v2/devices/{deviceId}/google-accounts/": {
@@ -2914,7 +3009,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "devices-google-account",
+        "x-esper-scope-parent": "device"
       },
       "put": {
         "summary": "Update the Google account details of the EMM enrollment stored in the database for a specific device.",
@@ -2999,7 +3099,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "devices-google-account"
       },
       "post": {
         "summary": "Create a Google user and, if request body is not provided, generate a Google auth token for a specific device on the Google EMM side.",
@@ -3084,7 +3188,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "devices-google-account",
+        "x-esper-scope-parent": "device"
       },
       "delete": {
         "summary": "Unenrolls device from Google EMM and deletes the Google account details.",
@@ -3149,7 +3258,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "devices-google-account"
       }
     },
     "/v2/foundationversions": {
@@ -3258,7 +3371,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "foundation-versions-list"
       }
     },
     "/v2/rv-activity-feed/": {
@@ -3536,7 +3653,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "rv-activity-feed"
       }
     },
     "/v2/itunesapps": {
@@ -3656,7 +3777,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "itunesapp"
       }
     },
     "/v2/itunesapps/{appleAppId}/preferred-region": {
@@ -3754,7 +3879,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "itunesapps-preferred-region"
       }
     },
     "/v2/tenant-apps": {
@@ -3834,7 +3963,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "tenant-app"
       },
       "get": {
         "security": [
@@ -3957,7 +4090,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "tenant-app"
       }
     },
     "/v2/tenant-apps/{appId}": {
@@ -4038,7 +4175,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "tenant-app"
       }
     },
     "/v2/tenant-apps/{appId}/versions": {
@@ -4163,7 +4304,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "tenant-apps-version",
+        "x-esper-scope-parent": "app"
       }
     },
     "/v2/tenant-apps/{appId}/versions/{versionId}": {
@@ -4262,7 +4408,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "tenant-apps-version"
       },
       "put": {
         "security": [
@@ -4374,7 +4524,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "tenant-apps-version"
       },
       "delete": {
         "security": [
@@ -4472,7 +4626,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "tenant-apps-version"
       }
     },
     "/v2/appleappstore/": {
@@ -4562,7 +4720,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "appleappstore"
       }
     },
     "/v2/apps": {
@@ -4697,7 +4859,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "app"
       }
     },
     "/v2/webclips": {
@@ -4777,7 +4943,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "webclip"
       },
       "get": {
         "security": [
@@ -4889,7 +5059,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "webclip"
       }
     },
     "/v2/webclips/{webclipId}": {
@@ -4970,7 +5144,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "webclip"
       },
       "delete": {
         "security": [
@@ -5059,7 +5237,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "webclip"
       }
     },
     "/v2/provisioning-profiles": {
@@ -5130,7 +5312,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "provisioning-profile"
       },
       "get": {
         "security": [
@@ -5267,7 +5453,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "provisioning-profile"
       }
     },
     "/v2/provisioning-profiles/{id}": {
@@ -5350,7 +5540,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "provisioning-profile"
       }
     },
     "/v2/provisioning-profiles/{id}/versions": {
@@ -5479,7 +5673,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "provisioning-profiles-version",
+        "x-esper-scope-parent": "id"
       }
     },
     "/v2/provisioning-profiles/{id}/versions/{versionId}": {
@@ -5572,7 +5771,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "provisioning-profiles-version"
       },
       "delete": {
         "security": [
@@ -5663,7 +5866,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "provisioning-profiles-version"
       }
     },
     "/v2/preferred-regions": {
@@ -5734,7 +5941,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "preferred-region"
       },
       "get": {
         "security": [
@@ -5783,7 +5994,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "preferred-region"
       }
     },
     "/v2/esper-apps/{appId}/versions/{versionId}": {
@@ -5873,7 +6088,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "esper-apps-version"
       }
     },
     "/v2/tenant-esper-apps": {
@@ -6016,7 +6235,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "tenant-esper-app"
       }
     },
     "/v2/command-inbox/": {
@@ -6095,7 +6318,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "command-inbox"
       }
     },
     "/v2/converge": {
@@ -6188,7 +6415,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "converge"
       },
       "post": {
         "summary": "Create a converge action",
@@ -6258,7 +6489,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "converge"
       }
     },
     "/v2/converge/{id}": {
@@ -6331,7 +6566,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "converge"
       }
     },
     "/v2/converge/{id}/commands": {
@@ -6435,7 +6674,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "converge-command",
+        "x-esper-scope-parent": "id"
       }
     },
     "/v2/seamless/upload": {
@@ -6534,7 +6778,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "upload",
+        "x-esper-noun": "seamless"
       }
     },
     "/v2/seamless": {
@@ -6610,7 +6858,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "seamless"
       }
     },
     "/v2/emm/enrollment/begin/": {
@@ -6691,7 +6943,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "emm-enrollment-begin"
       }
     },
     "/v2/emm/details/": {
@@ -6774,7 +7030,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "emm-detail"
       },
       "post": {
         "summary": "Creates a new Google Enterprise with the provided details",
@@ -6853,7 +7113,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "emm-detail"
       }
     },
     "/v2/emm/web-token/": {
@@ -6924,7 +7188,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "emm-web-token"
       }
     },
     "/v2/emm/enrollment/complete/": {
@@ -7017,7 +7285,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "emm-enrollment-complete"
       }
     },
     "/v2/emm/accounts/": {
@@ -7100,7 +7372,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "emm-account"
       },
       "post": {
         "summary": "Creates a new Google Service Account with the provided details",
@@ -7179,7 +7455,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "emm-account"
       }
     }
   },

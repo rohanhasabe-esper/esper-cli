@@ -226,20 +226,203 @@ source.paths["/enterprise/{enterprise_id}/devicegroup/{group_id}/command/{comman
 function generationFor(apiPath) {
   if (apiPath.startsWith("/authn2/")) return "authn2";
   if (apiPath.startsWith("/authz2/")) return "authz2";
-  if (apiPath.startsWith("/apps/v0/")) return "apps-v0";
-  if (apiPath.startsWith("/commands/v0/")) return "commands-v0";
-  if (apiPath.startsWith("/device/v0/")) return "device-v0";
-  if (apiPath.startsWith("/v1/foundry/")) return "foundry-v1";
-  if (apiPath.startsWith("/onboarding/v0/")) return "onboarding-v0";
-  if (apiPath.startsWith("/v0/operations")) return "operations-v0";
   if (apiPath.startsWith("/pipelines/v0/")) return "pipelines-v0";
-  if (apiPath.startsWith("/report/v0/")) return "reports-v0";
-  if (apiPath.startsWith("/tenant/v0/")) return "tenant-v0";
+  if (apiPath.startsWith("/v1/foundry/")) return "foundry";
+  if (/^\/(apps|commands|device|onboarding|report|tenant)\/v0\//.test(apiPath)) return "v0";
   if (apiPath.startsWith("/v1/")) return "v1";
   if (apiPath.startsWith("/v2/") || apiPath.startsWith("/api/v2/")) return "v2";
-  if (apiPath.startsWith("/v0/") || apiPath.startsWith("/enterprise/") ||
-      apiPath.startsWith("/user") || apiPath.startsWith("/graph/")) return "v0";
+  if (apiPath.startsWith("/v0/")) return "v0";
+  if (apiPath.startsWith("/enterprise/") || apiPath.startsWith("/user") ||
+      apiPath.startsWith("/graph/")) return "legacy";
   throw new Error(`no generation mapping for ${apiPath}`);
+}
+
+const methods = new Set(["get", "post", "put", "patch", "delete"]);
+
+function words(value) {
+  return value
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
+    .replace(/[^A-Za-z0-9]+/g, " ")
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+function singular(word) {
+  const irregular = new Map([
+    ["apps", "app"],
+    ["policies", "policy"],
+    ["activities", "activity"],
+    ["companies", "company"],
+    ["statuses", "status"],
+    ["data", "data"],
+  ]);
+  if (irregular.has(word)) return irregular.get(word);
+  if (word.endsWith("ies") && word.length > 4) return `${word.slice(0, -3)}y`;
+  if (word.endsWith("sses") || word.endsWith("uses")) return word.slice(0, -2);
+  if (word.endsWith("s") && !word.endsWith("ss") && word !== "status") return word.slice(0, -1);
+  return word;
+}
+
+function nounFromTag(operation) {
+  const tag = operation.tags?.[0] ?? "operation";
+  const parts = words(tag)
+    .filter((part) => !/^\d+$/.test(part))
+    .filter((part) => !["api", "deprecated", "v0", "v1", "v2", "v3"].includes(part));
+  if (parts.length === 0) return "operation";
+  parts[parts.length - 1] = singular(parts[parts.length - 1]);
+  return parts.join("-");
+}
+
+const actionPrefixes = [
+  "partialupdate", "partial", "bulk", "list", "get", "create", "post", "update",
+  "put", "patch", "edit", "delete", "upload", "download", "generate", "renew",
+  "restore", "apply", "remove", "add",
+];
+
+function nounFromPath(apiPath, operation) {
+  const ignored = new Set([
+    "api", "v0", "v1", "v2", "v3", "authn2", "authz2", "pipelines", "enterprise",
+    "download", "upload",
+  ]);
+  const parts = apiPath.split("/")
+    .filter(Boolean)
+    .filter((part) => !part.startsWith("{"))
+    .flatMap(words)
+    .filter((part) => !ignored.has(part));
+  if (parts.length === 0) return nounFromTag(operation);
+  parts[parts.length - 1] = singular(parts[parts.length - 1]);
+  return parts.join("-");
+}
+
+function nounFor(apiPath, operation) {
+  if (!operation.operationId) return nounFromPath(apiPath, operation);
+  let parts = words(operation.operationId);
+  if (parts[0] === "partial" && parts[1] === "update") parts = parts.slice(2);
+  else if (parts[0] === "bulk" && ["add", "create", "update", "delete"].includes(parts[1])) parts = parts.slice(2);
+  else if (actionPrefixes.includes(parts[0])) parts = parts.slice(1);
+  if (parts[0] === "all") parts = parts.slice(1);
+  const by = parts.indexOf("by");
+  if (by > 0) parts = parts.slice(0, by);
+  while (["url", "id"].includes(parts.at(-1))) parts.pop();
+  if (parts.length === 0) return nounFromTag(operation);
+  parts[parts.length - 1] = singular(parts[parts.length - 1]);
+  return parts.join("-");
+}
+
+function operationHasPagination(operation) {
+  const names = new Set((operation.parameters ?? []).map((parameter) => parameter.name));
+  return names.has("limit") && names.has("offset");
+}
+
+function isCollectionPath(apiPath) {
+  const finalSegment = apiPath.replace(/\/$/, "").split("/").at(-1) ?? "";
+  return !finalSegment.startsWith("{") && finalSegment.endsWith("s") &&
+    !["status", "metrics"].includes(finalSegment);
+}
+
+function verbFor(method, apiPath, operation, collectionPaths) {
+  const id = operation.operationId ?? "";
+  const parts = words(id);
+  const first = parts[0] ?? "";
+  if (first === "list" || (first === "get" && parts[1] === "all")) return "list";
+  if (first === "get") return operationHasPagination(operation) || isCollectionPath(apiPath) ||
+    collectionPaths.has(apiPath) ? "list" : "get";
+  if (["create", "post"].includes(first)) return "create";
+  if (first === "partialupdate" || (first === "partial" && parts[1] === "update")) return "partial-update";
+  if (first === "patch") return "patch";
+  if (["update", "put", "edit"].includes(first)) return "update";
+  if (first === "delete") return "delete";
+  if (first === "bulk" && parts[1]) return `bulk-${parts[1]}`;
+  if (["upload", "download", "generate", "renew", "restore", "apply", "remove", "add"].includes(first)) return first;
+
+  if (method === "get") {
+    const finalSegment = apiPath.replace(/\/$/, "").split("/").at(-1);
+    return collectionPaths.has(apiPath) || operationHasPagination(operation) || isCollectionPath(apiPath)
+      ? "list"
+      : "get";
+  }
+  if (method === "post") {
+    const finalSegment = apiPath.replace(/\/$/, "").split("/").at(-1) ?? "";
+    if (["upload", "download", "generate", "renew", "restore", "apply", "remove", "run", "execute"].includes(finalSegment)) {
+      return finalSegment;
+    }
+    return "create";
+  }
+  if (method === "put") return "update";
+  if (method === "patch") return "patch";
+  return "delete";
+}
+
+function paginationFor(apiPath, operation, verb) {
+  if (verb !== "list" || !operationHasPagination(operation)) return "none";
+  if (/^\/(apps\/v0|v2\/(itunesapps|tenant-apps|appleappstore|apps|webclips|provisioning-profiles|preferred-regions|esper-apps|tenant-esper-apps))/.test(apiPath)) {
+    return "apps-envelope";
+  }
+  return "limit-offset";
+}
+
+function scopeParentFor(apiPath, verb) {
+  if (!["list", "create"].includes(verb)) return "";
+  const segments = apiPath.split("/").filter(Boolean);
+  if (segments.length === 0 || segments.at(-1).startsWith("{")) return "";
+  for (let index = segments.length - 2; index >= 0; index--) {
+    const segment = segments[index];
+    if (!segment.startsWith("{") || !segment.endsWith("}")) continue;
+    const parameter = segment.slice(1, -1)
+      .replace(/_id$/i, "")
+      .replace(/Id$/, "");
+    const parts = words(parameter);
+    if (parts.length === 0) return "";
+    parts[parts.length - 1] = singular(parts[parts.length - 1]);
+    return parts.join("-");
+  }
+  return "";
+}
+
+function annotateOperations(spec, generation) {
+  const collectionPaths = new Set();
+  const paths = Object.keys(spec.paths);
+  for (const apiPath of paths) {
+    const prefix = apiPath.endsWith("/") ? apiPath : `${apiPath}/`;
+    if (paths.some((candidate) => candidate !== apiPath && candidate.startsWith(`${prefix}{`))) {
+      collectionPaths.add(apiPath);
+    }
+  }
+  let operationCount = 0;
+  const commands = new Map();
+  for (const [apiPath, pathItem] of Object.entries(spec.paths)) {
+    for (const [method, operation] of Object.entries(pathItem)) {
+      if (!methods.has(method)) continue;
+      operationCount++;
+      const noun = nounFor(apiPath, operation);
+      const verb = verbFor(method, apiPath, operation, collectionPaths);
+      const identity = `${noun} ${verb}`;
+      const scopeParent = scopeParentFor(apiPath, verb);
+      operation["x-esper-destructive"] = method === "delete" ||
+        /\b(delete|remove|wipe|factory|revoke|terminate|uninstall|unapply)\b/i.test(`${operation.operationId ?? ""} ${operation.summary ?? ""}`);
+      operation["x-esper-pagination"] = paginationFor(apiPath, operation, verb);
+      operation["x-esper-verb"] = verb;
+      operation["x-esper-noun"] = noun;
+      if (scopeParent) operation["x-esper-scope-parent"] = scopeParent;
+      if (!commands.has(identity)) commands.set(identity, []);
+      commands.get(identity).push({ apiPath, method, scopeParent });
+    }
+  }
+
+  const collisions = [];
+  for (const [identity, operations] of commands) {
+    if (operations.length < 2) continue;
+    const unscoped = operations.filter((operation) => !operation.scopeParent);
+    const scoped = operations.filter((operation) => operation.scopeParent);
+    const uniqueScopes = new Set(scoped.map((operation) => operation.scopeParent));
+    const explainedByScope = unscoped.length === 1 && scoped.length > 0 &&
+      uniqueScopes.size === scoped.length;
+    if (!explainedByScope) collisions.push({ generation, identity, operations });
+  }
+  return { operationCount, collisions };
 }
 
 function decodePointerPart(part) {
@@ -357,8 +540,10 @@ const manifest = {
   addedPathCount: Object.keys(source.paths).length - sourcePathCount,
   excludedPaths: [...excludedPaths].sort(),
   emittedPathCount: 0,
+  operationCount: 0,
   generations: {},
 };
+const unexplainedCollisions = [];
 
 for (const generation of [...byGeneration.keys()].sort()) {
   const paths = byGeneration.get(generation);
@@ -385,12 +570,25 @@ for (const generation of [...byGeneration.keys()].sort()) {
     components: componentsFor(paths),
   };
   if (source.security) spec.security = source.security;
+  const annotation = annotateOperations(spec, generation);
+  manifest.operationCount += annotation.operationCount;
+  unexplainedCollisions.push(...annotation.collisions);
   convertSchemasTo31(spec);
 
   const filename = `${generation}.yaml`;
   await writeFile(path.join(outputDir, filename), `${JSON.stringify(spec, null, 2)}\n`);
   manifest.generations[generation] = Object.keys(paths).length;
   manifest.emittedPathCount += Object.keys(paths).length;
+}
+
+if (unexplainedCollisions.length > 0) {
+  const details = unexplainedCollisions.map((collision) => {
+    const operations = collision.operations
+      .map((operation) => `${operation.method.toUpperCase()} ${operation.apiPath}`)
+      .join(", ");
+    return `${collision.generation}: ${collision.identity}: ${operations}`;
+  });
+  throw new Error(`unexplained same-generation command collisions:\n${details.join("\n")}`);
 }
 
 await writeFile(

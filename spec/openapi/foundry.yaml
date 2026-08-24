@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "ESPER API REFERENCE - foundry-v1",
+    "title": "ESPER API REFERENCE - foundry",
     "version": "1.0.0",
-    "x-esper-generation": "foundry-v1",
+    "x-esper-generation": "foundry",
     "x-esper-auth": "bearer"
   },
   "servers": [
@@ -185,7 +185,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "foundry-build"
       }
     },
     "/v1/foundry/builds/{build_id}/": {
@@ -257,7 +261,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "foundry-build"
       },
       "put": {
         "summary": "Update Foundry build",
@@ -338,7 +346,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "foundry-build"
       }
     },
     "/v1/foundry/device-models/": {
@@ -471,7 +483,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "foundry-device-model"
       }
     },
     "/v1/foundry/device-models/{device_model_id}/": {
@@ -564,7 +580,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "foundry-device-model"
       }
     },
     "/v1/foundry/events/": {
@@ -661,7 +681,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "foundry-event"
       }
     }
   },

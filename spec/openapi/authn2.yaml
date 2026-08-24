@@ -102,7 +102,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "tenant-user-invite",
+        "x-esper-scope-parent": "enterprise"
       },
       "get": {
         "x-badges": [
@@ -169,7 +174,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "tenant-user-invite",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/authn2/v0/tenant/{enterprise_id}/invite/{invite_id}": {
@@ -223,7 +233,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "tenant-user-invite"
       }
     },
     "/authn2/v0/user/{user_id}": {
@@ -304,7 +318,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "own-user"
       }
     },
     "/authn2/v0/tenant/{enterprise_id}/user/{user_id}/": {
@@ -358,7 +376,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "tenant-user"
       }
     },
     "/authn2/v0/tenant/{enterprise_id}/connection": {
@@ -430,7 +452,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "connection",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/authn2/v0/tenant/{enterprise_id}/connection/{connection_id}": {
@@ -511,7 +538,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "custom-connection"
       }
     },
     "/authn2/v0/personal-access-token/": {
@@ -587,7 +618,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "personal-access-token"
       },
       "get": {
         "x-badges": [
@@ -632,7 +667,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "personal-access-token"
       }
     },
     "/authn2/v0/personal-access-token/{personal_access_token_id}": {
@@ -703,7 +742,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "personal-access-token"
       },
       "delete": {
         "x-badges": [
@@ -746,7 +789,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "personal-access-token"
       }
     },
     "/authn2/v1/users/": {
@@ -798,7 +845,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "user"
       }
     }
   },

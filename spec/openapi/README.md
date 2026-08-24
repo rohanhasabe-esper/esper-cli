@@ -36,3 +36,8 @@ citation with the exact router and view files:
   `api/device/views/telemetry_graph.py`.
 - Legacy device-group commands from `api/enterprise/urls.py` and
   `api/device/views/group_command.py`.
+
+Unversioned core routes are emitted as the `legacy` generation. Versioned core
+and service routes are grouped by `v0`, `v1`, or `v2`; independent API families
+such as `pipelines-v0`, `authn2`, `authz2`, and `foundry` retain distinct
+generation names. This partition feeds the locked generation-collision rule.

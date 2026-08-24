@@ -1,26 +1,14 @@
 apis:
-  apps-v0@v1:
-    root: openapi/apps-v0.yaml
   authn2@v1:
     root: openapi/authn2.yaml
   authz2@v1:
     root: openapi/authz2.yaml
-  commands-v0@v1:
-    root: openapi/commands-v0.yaml
-  device-v0@v1:
-    root: openapi/device-v0.yaml
-  foundry-v1@v1:
-    root: openapi/foundry-v1.yaml
-  onboarding-v0@v1:
-    root: openapi/onboarding-v0.yaml
-  operations-v0@v1:
-    root: openapi/operations-v0.yaml
+  foundry@v1:
+    root: openapi/foundry.yaml
+  legacy@v1:
+    root: openapi/legacy.yaml
   pipelines-v0@v1:
     root: openapi/pipelines-v0.yaml
-  reports-v0@v1:
-    root: openapi/reports-v0.yaml
-  tenant-v0@v1:
-    root: openapi/tenant-v0.yaml
   v0@v1:
     root: openapi/v0.yaml
   v1@v1:

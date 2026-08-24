@@ -6,19 +6,14 @@
     "/sys/health"
   ],
   "emittedPathCount": 208,
+  "operationCount": 338,
   "generations": {
-    "apps-v0": 2,
     "authn2": 9,
     "authz2": 5,
-    "commands-v0": 5,
-    "device-v0": 3,
-    "foundry-v1": 5,
-    "onboarding-v0": 2,
-    "operations-v0": 4,
+    "foundry": 5,
+    "legacy": 38,
     "pipelines-v0": 29,
-    "reports-v0": 3,
-    "tenant-v0": 6,
-    "v0": 61,
+    "v0": 48,
     "v1": 27,
     "v2": 47
   }

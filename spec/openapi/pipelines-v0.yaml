@@ -161,7 +161,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "pipeline"
       },
       "post": {
         "x-badges": [
@@ -233,7 +237,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "pipeline"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/": {
@@ -287,7 +295,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "pipeline"
       },
       "put": {
         "x-badges": [
@@ -369,7 +381,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "pipeline"
       },
       "delete": {
         "x-badges": [
@@ -431,7 +447,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "pipeline"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/stages/": {
@@ -502,7 +522,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "pipeline-stage",
+        "x-esper-scope-parent": "pipeline"
       },
       "post": {
         "x-badges": [
@@ -574,7 +599,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "pipeline-stage",
+        "x-esper-scope-parent": "pipeline"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/stages/{stage_id}/": {
@@ -637,7 +667,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "pipeline-stage"
       },
       "put": {
         "x-badges": [
@@ -728,7 +762,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "pipeline-stage"
       },
       "delete": {
         "x-badges": [
@@ -799,7 +837,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "pipeline-stage"
       }
     },
     "/pipelines/v0/stages/{stage_id}/targetlists/": {
@@ -893,7 +935,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "stage-target-list",
+        "x-esper-scope-parent": "stage"
       },
       "post": {
         "x-badges": [
@@ -965,7 +1012,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "stage-target-list"
       }
     },
     "/pipelines/v0/stages/{stage_id}/targetlists/{targetlist_id}/": {
@@ -1038,7 +1089,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "stage-target-list"
       }
     },
     "/pipelines/v0/stages/{stage_id}/operationlists/": {
@@ -1119,7 +1174,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "stage-operation-list",
+        "x-esper-scope-parent": "stage"
       },
       "post": {
         "x-badges": [
@@ -1191,7 +1251,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "stage-operation-list"
       }
     },
     "/pipelines/v0/stages/{stage_id}/operationlists/{operationlist_id}/": {
@@ -1284,7 +1348,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "pipeline-operation-list"
       },
       "delete": {
         "x-badges": [
@@ -1355,7 +1423,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "stage-operation-list"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/targetlists/": {
@@ -1436,7 +1508,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "pipeline-target-list",
+        "x-esper-scope-parent": "pipeline"
       },
       "post": {
         "x-badges": [
@@ -1508,7 +1585,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "pipeline-target-list"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/": {
@@ -1581,7 +1662,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "pipeline-target-list"
       },
       "put": {
         "x-badges": [
@@ -1672,7 +1757,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "pipeline-target-list"
       },
       "delete": {
         "x-badges": [
@@ -1743,7 +1832,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "pipeline-target-list"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/targets/": {
@@ -1833,7 +1926,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "target-list-target",
+        "x-esper-scope-parent": "targetlist"
       },
       "post": {
         "x-badges": [
@@ -1914,7 +2012,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "target-list-target",
+        "x-esper-scope-parent": "targetlist"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/targets/{target_id}/": {
@@ -1999,7 +2102,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "target-list-target"
       },
       "put": {
         "x-badges": [
@@ -2092,7 +2199,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "target-list-target"
       },
       "delete": {
         "x-badges": [
@@ -2175,7 +2286,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "target-list-target"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/targets-bulk/": {
@@ -2364,7 +2479,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "bulk-add",
+        "x-esper-noun": "target-list-target"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/devicegroups/": {
@@ -2454,7 +2573,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "target-list-device-group",
+        "x-esper-scope-parent": "targetlist"
       },
       "post": {
         "x-badges": [
@@ -2524,7 +2648,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "target-list-device-group"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/devicegroups/{devicegroup_id}/": {
@@ -2613,7 +2741,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "target-list-device-group"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/devicegroups/{device_group_id}/devices/": {
@@ -2715,7 +2847,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device-group-device",
+        "x-esper-scope-parent": "device-group"
       }
     },
     "/pipelines/v0/operationlists/{operationlist_id}/operations/": {
@@ -2805,7 +2942,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "operation-list-operation",
+        "x-esper-scope-parent": "operationlist"
       },
       "post": {
         "x-badges": [
@@ -2877,7 +3019,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "operation-list-operation"
       }
     },
     "/pipelines/v0/operationlists/{operationlist_id}/operations/{operation_id}/": {
@@ -2950,7 +3096,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "operation-list-operation"
       },
       "put": {
         "x-badges": [
@@ -3041,7 +3191,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "operation-list-operation"
       },
       "delete": {
         "x-badges": [
@@ -3112,7 +3266,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "operation-list-operation"
       }
     },
     "/pipelines/v0/runs/": {
@@ -3233,7 +3391,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "pipeline-run"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/runs/": {
@@ -3353,7 +3515,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "pipeline-run",
+        "x-esper-scope-parent": "pipeline"
       },
       "post": {
         "x-badges": [
@@ -3425,7 +3592,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "pipeline-run",
+        "x-esper-scope-parent": "pipeline"
       }
     },
     "/pipelines/v0/pipelines/{pipeline_id}/runs/{pipeline_run_id}/": {
@@ -3498,7 +3670,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "pipeline-run"
       },
       "put": {
         "x-badges": [
@@ -3590,7 +3766,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "pipeline-run"
       },
       "delete": {
         "x-badges": [
@@ -3671,7 +3851,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "pipeline-run"
       }
     },
     "/pipelines/v0/runs/{pipeline_run_id}/stageruns/": {
@@ -3773,7 +3957,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "pipeline-run-stage-run",
+        "x-esper-scope-parent": "pipeline-run"
       }
     },
     "/pipelines/v0/runs/{pipeline_run_id}/stageruns/{stage_run_id}/": {
@@ -3846,7 +4035,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "pipeline-run-stage-run"
       },
       "put": {
         "x-badges": [
@@ -3954,7 +4147,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "pipeline-run-stage-run"
       }
     },
     "/pipelines/v0/stageruns/{stage_run_id}/operations/": {
@@ -4035,7 +4232,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "pipeline-stage-run-operation",
+        "x-esper-scope-parent": "stage-run"
       }
     },
     "/pipelines/v0/stageruns/{stage_run_id}/operations/{stage_run_operation_id}/": {
@@ -4108,7 +4310,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "pipeline-stage-run-operation"
       }
     },
     "/pipelines/v0/stageruns/{stage_run_id}/targetruns/": {
@@ -4231,7 +4437,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "pipeline-stage-target-run",
+        "x-esper-scope-parent": "stage-run"
       },
       "post": {
         "x-badges": [
@@ -4306,7 +4517,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "pipeline-stage-target-run",
+        "x-esper-scope-parent": "stage-run"
       }
     },
     "/pipelines/v0/stageruns/{stage_run_id}/targetruns/{target_run_id}/": {
@@ -4379,7 +4595,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "pipeline-stage-target-run"
       },
       "put": {
         "x-badges": [
@@ -4470,7 +4690,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "pipeline-stage-target-run"
       }
     },
     "/pipelines/v0/stageruns/{stage_run_id}/targetruns/{target_run_id}/command/": {
@@ -4543,7 +4767,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "target-run-command-status",
+        "x-esper-scope-parent": "target-run"
       },
       "post": {
         "x-badges": [
@@ -4624,7 +4853,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "target-run-command",
+        "x-esper-scope-parent": "target-run"
       }
     },
     "/pipelines/v0/stageruns/{stage_run_id}/targetruns/{target_run_id}/command/{command_id}/": {
@@ -4716,7 +4950,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "target-run-command-status"
       }
     }
   },

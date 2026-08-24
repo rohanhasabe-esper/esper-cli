@@ -194,7 +194,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "min-app-info"
       }
     },
     "/v1/enterprise/{enterprise_id}/device/{device_id}/report/eventfeed/": {
@@ -314,7 +318,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "event-feed",
+        "x-esper-scope-parent": "device"
       }
     },
     "/v1/enterprise/{enterprise_id}/alertchannels/": {
@@ -443,7 +452,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
       },
       "post": {
         "x-badges": [
@@ -535,7 +549,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/v1/enterprise/{enterprise_id}/alertchannels/{alert_id}": {
@@ -618,7 +637,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "alert-channel"
       },
       "put": {
         "x-badges": [
@@ -720,7 +743,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "alert-channel"
       },
       "patch": {
         "x-badges": [
@@ -811,7 +838,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "patch",
+        "x-esper-noun": "alert-channel"
       },
       "delete": {
         "x-badges": [
@@ -906,7 +937,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "alert-channel"
       }
     },
     "/v1/enterprise/{enterprise_id}/alarmrules/": {
@@ -1067,7 +1102,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "alarm-rule",
+        "x-esper-scope-parent": "enterprise"
       },
       "post": {
         "x-badges": [
@@ -1159,7 +1199,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "alarm-rule"
       }
     },
     "/v1/enterprise/{enterprise_id}/alarmrules/{alarm_id}/": {
@@ -1242,7 +1286,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "alarm-rule"
       },
       "put": {
         "x-badges": [
@@ -1343,7 +1391,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "alarm-rule"
       },
       "patch": {
         "x-badges": [
@@ -1443,7 +1495,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "patch",
+        "x-esper-noun": "alarm-rule"
       },
       "delete": {
         "x-badges": [
@@ -1537,7 +1593,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "alarm-rule"
       }
     },
     "/v1/enterprise/{enterprise_id}/alarmrules/{alarm_id}/alarmhistory/": {
@@ -1620,7 +1680,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "alarm-history"
       }
     },
     "/v1/enterprise/{enterprise_id}/wallpaper/": {
@@ -1777,7 +1841,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "wallpaper",
+        "x-esper-scope-parent": "enterprise"
       },
       "post": {
         "x-badges": [
@@ -1893,7 +1962,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "wallpaper"
       }
     },
     "/v1/enterprise/{enterprise_id}/wallpaper/{wallpaper_id}/": {
@@ -1976,7 +2049,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "wallpaper"
       },
       "delete": {
         "x-badges": [
@@ -2070,7 +2147,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "wallpaper"
       }
     },
     "/v1/enterprise/{enterprise_id}/tile-icons/": {
@@ -2233,7 +2314,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "tile-icon",
+        "x-esper-scope-parent": "enterprise"
       },
       "post": {
         "x-badges": [
@@ -2355,7 +2441,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "tile-icon"
       }
     },
     "/v1/enterprise/{enterprise_id}/tile-icons/{tileicons_id}/": {
@@ -2438,7 +2528,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "tile-icon"
       },
       "delete": {
         "x-badges": [
@@ -2532,7 +2626,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "tile-icon"
       }
     },
     "/v1/enterprise/{enterprise_id}/tile-icon-apply/": {
@@ -2626,7 +2724,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "apply",
+        "x-esper-noun": "tile-icon"
       }
     },
     "/v1/enterprise/{enterprise_id}/tile-icon-unapply/": {
@@ -2733,7 +2835,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "remove",
+        "x-esper-noun": "tile-icon"
       }
     },
     "/v1/enterprise/{enterprise_id}/report/location/": {
@@ -2852,7 +2958,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device-location",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/v1/enterprise/{enterprise_id}/report/location/{location_id}/": {
@@ -2935,7 +3046,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "specific-location"
       }
     },
     "/v1/enterprise/{enterprise_id}/report/device-tiles/": {
@@ -3402,7 +3517,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device-tile-report",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/v1/enterprise/{enterprise_id}/report/device-tiles/{device_tiles_id}/": {
@@ -3485,7 +3605,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "device-tile-report"
       }
     },
     "/v1/enterprise/{enterprise_id}/report/status-metrics/": {
@@ -3559,7 +3683,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "status-metric",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/v1/enterprise/{enterprise_id}/": {
@@ -3634,7 +3763,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "enterprise"
       },
       "patch": {
         "x-badges": [
@@ -3728,7 +3861,11 @@
             "apiKey": []
           }
         ],
-        "x-codegen-request-body-name": "data"
+        "x-codegen-request-body-name": "data",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "partial-update",
+        "x-esper-noun": "enterprise"
       }
     },
     "/v1/enterprise/{enterprise_id}/application/": {
@@ -3940,7 +4077,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "applications-v1",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/v1/enterprise/{enterprise_id}/application/{application_id}/": {
@@ -4024,7 +4166,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "applicationv1"
       },
       "delete": {
         "x-badges": [
@@ -4109,7 +4255,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "application-v1"
       }
     },
     "/v1/enterprise/{enterprise_id}/application/{application_id}/version/": {
@@ -4327,7 +4477,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "app-versions-v1",
+        "x-esper-scope-parent": "application"
       }
     },
     "/v1/enterprise/{enterprise_id}/application/{application_id}/version/{version_id}/": {
@@ -4421,7 +4576,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "app-version-v1"
       },
       "delete": {
         "x-badges": [
@@ -4544,7 +4703,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "app-version-v1"
       },
       "patch": {
         "x-badges": [
@@ -4704,7 +4867,11 @@
             "apiKey": []
           }
         ],
-        "x-codegen-request-body-name": "data"
+        "x-codegen-request-body-name": "data",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "patch",
+        "x-esper-noun": "app-version-v1"
       }
     },
     "/v1/enterprise/{enterprise_id}/application/{application_id}/version/{version_id}/installdevices": {
@@ -4861,7 +5028,12 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "install-devices-v1",
+        "x-esper-scope-parent": "version"
       }
     },
     "/v1/token-info/": {
@@ -4924,7 +5096,11 @@
           {
             "apiKey": []
           }
-        ]
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "token-info"
       }
     },
     "/v1/enterprise/{enterprise_id}/directory_record/": {
@@ -4989,7 +5165,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "directory-record",
+        "x-esper-scope-parent": "enterprise"
       },
       "post": {
         "x-badges": [
@@ -5055,7 +5236,12 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "directory-record",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/v1/enterprise/{enterprise_id}/directory_record/{directory_record_id}/": {
@@ -5106,7 +5292,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "directory-record"
       },
       "put": {
         "x-badges": [
@@ -5175,7 +5365,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "directory-record"
       },
       "delete": {
         "x-badges": [
@@ -5217,7 +5411,11 @@
               }
             }
           }
-        }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "directory-record"
       }
     }
   },

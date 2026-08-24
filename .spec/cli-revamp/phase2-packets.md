@@ -36,7 +36,7 @@ Excluded from Phase 2:
 | 17 | emm | 9 | `emm`, `emm-account`, `emm-detail`, `emm-enrollment-begin`, `emm-enrollment-complete`, `emm-instance`, `emm-web-token` | Blocked |
 | 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Blocked |
 | 19 | geofence | 9 | `create-apply-geo-fence`, `geofence`, `the-geofence` | Blocked |
-| 20 | policy | 5 | `policy` | Pending |
+| 20 | policy | 5 | `policy` | Blocked |
 | 21 | provisioning-profile | 5 | `provisioning-profile`, `provisioning-profile-version` | Pending |
 | 22 | report-telemetry | 19 | `device-location`, `device-report`, `device-tile-report`, `event-feed`, `report-info`, `report-status`, `report-type`, `specific-location`, `status-metric`, `subscription`, `subscription-report`, `telemetry-graph-data` | Pending |
 | 23 | role-scope | 7 | `role`, `scope` | Pending |
@@ -71,6 +71,14 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `custom-action` - Blocked: required complex properties and body-only update input lack locked enforcement.
 - `dep-sync` - Blocked: empty required JSON body behavior is undefined.
 - `device-support` - Blocked: Google EMM policy update has a required body with only an optional array.
+
+### Packets 16-20
+
+- `directory-record` - Blocked: create/update bodies have no required properties.
+- `emm` - Blocked: detail/account create bodies have no required properties.
+- `foundry` - Blocked: update bodies have only optional scalar properties.
+- `geofence` - Blocked: body rules and normalized same-generation aliases are undefined.
+- `policy` - Blocked: required wildcard bodies, complex properties, and scope/body collisions lack rules.
 
 ## Blockers
 
@@ -136,6 +144,9 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `geofence`: wildcard/required body behavior is unresolved, and normalizing
   the malformed geofence nouns creates an undefined same-generation command
   alias collision. Details are in the steering files.
+
+- `policy`: create and updates have required wildcard bodies plus unresolved
+  complex-property enforcement and `--enterprise` scope/body collisions.
 
 ## Final status
 

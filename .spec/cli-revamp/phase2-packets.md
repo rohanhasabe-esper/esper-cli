@@ -18,7 +18,7 @@ Excluded from Phase 2:
 | # | Packet | Operations | Top-level nouns | State |
 |---:|---|---:|---|---|
 | 1 | enterprise | 4 | `enterprise`, `enterprise-policy`, `enterprise-report` | Complete |
-| 2 | group | 18 | `device-group`, `group`, `group-eventfeed`, `group-report`, `group-thumbnail`, `legacy-device-group-command`, `sub-group` | Pending |
+| 2 | group | 18 | `device-group`, `group`, `group-eventfeed`, `group-report`, `group-thumbnail`, `legacy-device-group-command`, `sub-group` | Blocked |
 | 3 | app-application | 53 | `app`, `app-info`, `app-instance`, `app-version`, `app-vpp`, `appleappstore`, `application`, `application-minimal`, `device-app`, `esper-app-version`, `install`, `installdevice`, `itunesapp`, `preferred-region`, `product`, `tenant-app`, `tenant-app-version`, `tenant-esper-app`, `version`, `webclip` | Pending |
 | 4 | blueprint | 15 | `blueprint`, `blueprint-revision`, `blueprint-version`, `revision` | Pending |
 | 5 | pipeline | 37 | `pipeline`, `pipeline-run`, `stage`, `stage-run`, `target`, `target-bulk`, `target-list`, `target-run` | Pending |
@@ -47,6 +47,13 @@ Excluded from Phase 2:
 ## Checkpoint summaries
 
 Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
+
+## Blockers
+
+- `group`: `device-group create` requires `--enterprise` as both a route scope
+  and a scalar JSON body property, but the locked conventions define no
+  collision rule. The source body is also incorrectly advertised as `*/*`.
+  Details are recorded in `inbox.md` and `spec.md` Issues.
 
 ## Final status
 

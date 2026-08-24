@@ -50,6 +50,10 @@ func init() {
 	}
 }
 
+func Operations() []Operation {
+	return append([]Operation(nil), generatedOperations...)
+}
+
 func AddCommands(root *cobra.Command, options *esperruntime.GlobalOptions) {
 	groups := map[string][]Operation{}
 	for _, operation := range generatedOperations {

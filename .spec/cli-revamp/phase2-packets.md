@@ -30,7 +30,7 @@ Excluded from Phase 2:
 | 11 | content | 7 | `content`, `download`, `remote-file` | Complete |
 | 12 | converge | 3 | `converge` | Complete |
 | 13 | custom-action | 6 | `custom-action`, `script` | Blocked |
-| 14 | dep-sync | 3 | `dep-sync-request` | Pending |
+| 14 | dep-sync | 3 | `dep-sync-request` | Blocked |
 | 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Pending |
 | 16 | directory-record | 5 | `directory-record` | Pending |
 | 17 | emm | 9 | `emm`, `emm-account`, `emm-detail`, `emm-enrollment-begin`, `emm-enrollment-complete`, `emm-instance`, `emm-web-token` | Pending |
@@ -109,6 +109,9 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `custom-action`: create requires object-only properties and update has no
   required scalar input. Both depend on the unresolved required-body/property
   enforcement rule recorded in the steering files.
+
+- `dep-sync`: create requires an empty JSON object, whose implicit versus
+  explicit CLI input behavior is not defined by the locked body rules.
 
 ## Final status
 

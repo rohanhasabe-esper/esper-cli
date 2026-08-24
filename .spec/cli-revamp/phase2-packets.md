@@ -31,7 +31,7 @@ Excluded from Phase 2:
 | 12 | converge | 3 | `converge` | Complete |
 | 13 | custom-action | 6 | `custom-action`, `script` | Blocked |
 | 14 | dep-sync | 3 | `dep-sync-request` | Blocked |
-| 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Pending |
+| 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Blocked |
 | 16 | directory-record | 5 | `directory-record` | Pending |
 | 17 | emm | 9 | `emm`, `emm-account`, `emm-detail`, `emm-enrollment-begin`, `emm-enrollment-complete`, `emm-instance`, `emm-web-token` | Pending |
 | 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Pending |
@@ -63,6 +63,14 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `apns` - Blocked: empty required body and binary plist output behavior are undefined.
 - `command-operation` - Blocked: required-body inputs and a scope/body flag collision lack locked rules.
 - `connection` - Blocked: custom connection update has a required body with no required scalar input.
+
+### Packets 11-15
+
+- `content` - Complete: all 7 operations have success/API-error goldens, including multipart and `--all` coverage.
+- `converge` - Complete: all 3 operations have goldens and apps-envelope `--all` coverage.
+- `custom-action` - Blocked: required complex properties and body-only update input lack locked enforcement.
+- `dep-sync` - Blocked: empty required JSON body behavior is undefined.
+- `device-support` - Blocked: Google EMM policy update has a required body with only an optional array.
 
 ## Blockers
 
@@ -112,6 +120,9 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 
 - `dep-sync`: create requires an empty JSON object, whose implicit versus
   explicit CLI input behavior is not defined by the locked body rules.
+
+- `device-support`: Google EMM policy update requires a JSON body with only an
+  optional array property, so it depends on the unresolved explicit-body rule.
 
 ## Final status
 

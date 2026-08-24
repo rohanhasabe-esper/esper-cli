@@ -17,7 +17,7 @@ Excluded from Phase 2:
 
 | # | Packet | Operations | Top-level nouns | State |
 |---:|---|---:|---|---|
-| 1 | enterprise | 4 | `enterprise`, `enterprise-policy`, `enterprise-report` | Pending |
+| 1 | enterprise | 4 | `enterprise`, `enterprise-policy`, `enterprise-report` | Complete |
 | 2 | group | 18 | `device-group`, `group`, `group-eventfeed`, `group-report`, `group-thumbnail`, `legacy-device-group-command`, `sub-group` | Pending |
 | 3 | app-application | 53 | `app`, `app-info`, `app-instance`, `app-version`, `app-vpp`, `appleappstore`, `application`, `application-minimal`, `device-app`, `esper-app-version`, `install`, `installdevice`, `itunesapp`, `preferred-region`, `product`, `tenant-app`, `tenant-app-version`, `tenant-esper-app`, `version`, `webclip` | Pending |
 | 4 | blueprint | 15 | `blueprint`, `blueprint-revision`, `blueprint-version`, `revision` | Pending |

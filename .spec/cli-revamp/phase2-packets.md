@@ -21,7 +21,7 @@ Excluded from Phase 2:
 | 2 | group | 18 | `device-group`, `group`, `group-eventfeed`, `group-report`, `group-thumbnail`, `legacy-device-group-command`, `sub-group` | Blocked |
 | 3 | app-application | 53 | `app`, `app-info`, `app-instance`, `app-version`, `app-vpp`, `appleappstore`, `application`, `application-minimal`, `device-app`, `esper-app-version`, `install`, `installdevice`, `itunesapp`, `preferred-region`, `product`, `tenant-app`, `tenant-app-version`, `tenant-esper-app`, `version`, `webclip` | Blocked |
 | 4 | blueprint | 15 | `blueprint`, `blueprint-revision`, `blueprint-version`, `revision` | Blocked |
-| 5 | pipeline | 37 | `pipeline`, `pipeline-run`, `stage`, `stage-run`, `target`, `target-bulk`, `target-list`, `target-run` | Pending |
+| 5 | pipeline | 37 | `pipeline`, `pipeline-run`, `stage`, `stage-run`, `target`, `target-bulk`, `target-list`, `target-run` | Blocked |
 | 6 | token-user | 33 | `authn-user`, `dep-token`, `dep-token-based-on`, `dep-token-upload`, `different-user`, `invite`, `own-user`, `personal-access-token`, `renew-token`, `tenant-user`, `tenant-user-invite`, `tenant-vpptoken`, `token-info`, `user`, `user-delete`, `user-info`, `webtoken`, `webtoken-instance` | Pending |
 | 7 | alarm-alert | 13 | `alarm-rule`, `alarmhistory`, `alarmrule`, `alert-channel`, `alertchannel` | Pending |
 | 8 | apns | 5 | `apns-cert`, `apns-csr` | Pending |
@@ -48,6 +48,14 @@ Excluded from Phase 2:
 
 Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 
+### Packets 1-5
+
+- `enterprise` - Complete: all 4 operations have schema-shaped success and API-error golden coverage.
+- `group` - Blocked: route-scope and body-property `--enterprise` collision lacks a locked rule.
+- `app-application` - Blocked: merged routes require conditional query-flag enforcement not defined by conventions.
+- `blueprint` - Blocked: required bodies with no required properties lack a locked input rule.
+- `pipeline` - Blocked: seven required bodies with no required scalar input depend on the same missing rule.
+
 ## Blockers
 
 - `group`: `device-group create` requires `--enterprise` as both a route scope
@@ -64,6 +72,11 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
   properties. The locked body rules do not define whether empty input is valid
   or an explicit body/property flag is mandatory. Details are recorded in
   `inbox.md` and `spec.md` Issues.
+
+- `pipeline`: seven operations require request bodies with no required scalar
+  input, including top-level array and empty-object schemas. The locked body
+  rules do not define whether explicit `--body` is mandatory. Details are
+  recorded in `inbox.md` and `spec.md` Issues.
 
 ## Final status
 

@@ -40,7 +40,7 @@ Excluded from Phase 2:
 | 21 | provisioning-profile | 5 | `provisioning-profile`, `provisioning-profile-version` | Complete |
 | 22 | report-telemetry | 19 | `device-location`, `device-report`, `device-tile-report`, `event-feed`, `report-info`, `report-status`, `report-type`, `specific-location`, `status-metric`, `subscription`, `subscription-report`, `telemetry-graph-data` | Blocked |
 | 23 | role-scope | 7 | `role`, `scope` | Blocked |
-| 24 | seamless | 2 | `seamless` | Pending |
+| 24 | seamless | 2 | `seamless` | Blocked |
 | 25 | tile-ui | 10 | `tile-icon`, `tile-icon-apply`, `tile-icon-unapply`, `wallpaper` | Pending |
 | | **Total** | **328** | | |
 
@@ -155,6 +155,9 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `role-scope`: role create/update have only optional scalar body properties,
   and scope update has only optional arrays; all require bodies under an
   undefined explicit-input rule.
+
+- `seamless`: both create and upload require bodies with no required scalar
+  input, so invocation validation depends on the unresolved body rule.
 
 ## Final status
 

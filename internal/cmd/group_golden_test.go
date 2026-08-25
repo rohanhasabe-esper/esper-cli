@@ -25,10 +25,10 @@ func TestGroupCommandsGoldenFixtures(t *testing.T) {
 	tests := []groupFixtureTest{
 		{"device group list", []string{"device-group", "list", "--enterprise", "enterprise-1", "--limit", "1", "--offset", "0", "--all", "--json"}, http.MethodGet, "/enterprise/enterprise-1/devicegroup/", url.Values{"limit": {"1"}, "offset": {"0"}}, "", "device-group-list-success.json", "device-group-list-success.golden", http.StatusOK, true, false},
 		{"device group create", []string{"device-group", "create", "--enterprise", "enterprise-1", "--name", "Fixture Group", "--json"}, http.MethodPost, "/enterprise/enterprise-1/devicegroup/", nil, `{"name":"Fixture Group"}`, "device-group-create-success.json", "device-group-create-success.golden", http.StatusCreated, false, false},
-		{"group get", []string{"group", "get", "group-1", "enterprise-1", "--json"}, http.MethodGet, "/enterprise/enterprise-1/devicegroup/group-1/", nil, "", "group-get-success.json", "group-get-success.golden", http.StatusOK, false, false},
-		{"group update", []string{"group", "update", "group-1", "enterprise-1", "--action", "rename", "--name", "Renamed Group", "--json"}, http.MethodPut, "/enterprise/enterprise-1/devicegroup/group-1/", url.Values{"action": {"rename"}}, `{"name":"Renamed Group"}`, "group-update-success.json", "group-update-success.golden", http.StatusOK, false, false},
-		{"group delete", []string{"group", "delete", "group-1", "enterprise-1", "--yes", "--json"}, http.MethodDelete, "/enterprise/enterprise-1/devicegroup/group-1/", nil, "", "group-delete-success.json", "group-delete-success.golden", http.StatusNoContent, false, false},
-		{"group partial update", []string{"group", "partial-update", "group-1", "enterprise-1", "--name", "Partial Group", "--json"}, http.MethodPatch, "/enterprise/enterprise-1/devicegroup/group-1/", nil, `{"name":"Partial Group"}`, "group-partial-update-success.json", "group-partial-update-success.golden", http.StatusOK, false, false},
+		{"group get", []string{"group", "get", "enterprise-1", "group-1", "--json"}, http.MethodGet, "/enterprise/enterprise-1/devicegroup/group-1/", nil, "", "group-get-success.json", "group-get-success.golden", http.StatusOK, false, false},
+		{"group update", []string{"group", "update", "enterprise-1", "group-1", "--action", "rename", "--name", "Renamed Group", "--json"}, http.MethodPut, "/enterprise/enterprise-1/devicegroup/group-1/", url.Values{"action": {"rename"}}, `{"name":"Renamed Group"}`, "group-update-success.json", "group-update-success.golden", http.StatusOK, false, false},
+		{"group delete", []string{"group", "delete", "enterprise-1", "group-1", "--yes", "--json"}, http.MethodDelete, "/enterprise/enterprise-1/devicegroup/group-1/", nil, "", "group-delete-success.json", "group-delete-success.golden", http.StatusNoContent, false, false},
+		{"group partial update", []string{"group", "partial-update", "enterprise-1", "group-1", "--name", "Partial Group", "--json"}, http.MethodPatch, "/enterprise/enterprise-1/devicegroup/group-1/", nil, `{"name":"Partial Group"}`, "group-partial-update-success.json", "group-partial-update-success.golden", http.StatusOK, false, false},
 		{"group eventfeed list", []string{"group-eventfeed", "list", "--enterprise", "enterprise-1", "--group", "group-1", "--limit", "1", "--offset", "0", "--all", "--json"}, http.MethodGet, "/enterprise/enterprise-1/group/group-1/download/eventfeed/", url.Values{"limit": {"1"}, "offset": {"0"}}, "", "group-eventfeed-list-success.json", "group-eventfeed-list-success.golden", http.StatusOK, true, false},
 		{"group report get", []string{"group-report", "get", "--start-date", "2026-01-01T00:00:00Z", "--end-date", "2026-01-31T23:59:59Z", "--json"}, http.MethodGet, "/enterprise/report/group-report/", url.Values{"start_date": {"2026-01-01T00:00:00Z"}, "end_date": {"2026-01-31T23:59:59Z"}}, "", "group-report-get-success.json", "group-report-get-success.golden", http.StatusOK, false, false},
 		{"group thumbnail upload", []string{"group-thumbnail", "upload", "enterprise-1", "--image-file", image, "--json"}, http.MethodPost, "/enterprise/enterprise-1/devicegroup/thumbnail/", nil, "", "group-thumbnail-upload-success.json", "group-thumbnail-upload-success.golden", http.StatusOK, false, true},
@@ -55,10 +55,10 @@ func TestGroupCommandsAPIErrors(t *testing.T) {
 	tests := []groupFixtureTest{
 		{"device group list", []string{"device-group", "list", "--enterprise", "enterprise-1", "--json"}, http.MethodGet, "/enterprise/enterprise-1/devicegroup/", nil, "", "device-group-list-api-error.json", "", http.StatusBadRequest, false, false},
 		{"device group create", []string{"device-group", "create", "--enterprise", "enterprise-1", "--name", "Fixture Group", "--json"}, http.MethodPost, "/enterprise/enterprise-1/devicegroup/", nil, `{"name":"Fixture Group"}`, "device-group-create-api-error.json", "", http.StatusBadRequest, false, false},
-		{"group get", []string{"group", "get", "group-1", "enterprise-1", "--json"}, http.MethodGet, "/enterprise/enterprise-1/devicegroup/group-1/", nil, "", "group-get-api-error.json", "", http.StatusNotFound, false, false},
-		{"group update", []string{"group", "update", "group-1", "enterprise-1", "--name", "Renamed Group", "--json"}, http.MethodPut, "/enterprise/enterprise-1/devicegroup/group-1/", nil, `{"name":"Renamed Group"}`, "group-update-api-error.json", "", http.StatusBadRequest, false, false},
-		{"group delete", []string{"group", "delete", "group-1", "enterprise-1", "--yes", "--json"}, http.MethodDelete, "/enterprise/enterprise-1/devicegroup/group-1/", nil, "", "group-delete-api-error.json", "", http.StatusNotFound, false, false},
-		{"group partial update", []string{"group", "partial-update", "group-1", "enterprise-1", "--name", "Partial Group", "--json"}, http.MethodPatch, "/enterprise/enterprise-1/devicegroup/group-1/", nil, `{"name":"Partial Group"}`, "group-partial-update-api-error.json", "", http.StatusBadRequest, false, false},
+		{"group get", []string{"group", "get", "enterprise-1", "group-1", "--json"}, http.MethodGet, "/enterprise/enterprise-1/devicegroup/group-1/", nil, "", "group-get-api-error.json", "", http.StatusNotFound, false, false},
+		{"group update", []string{"group", "update", "enterprise-1", "group-1", "--name", "Renamed Group", "--json"}, http.MethodPut, "/enterprise/enterprise-1/devicegroup/group-1/", nil, `{"name":"Renamed Group"}`, "group-update-api-error.json", "", http.StatusBadRequest, false, false},
+		{"group delete", []string{"group", "delete", "enterprise-1", "group-1", "--yes", "--json"}, http.MethodDelete, "/enterprise/enterprise-1/devicegroup/group-1/", nil, "", "group-delete-api-error.json", "", http.StatusNotFound, false, false},
+		{"group partial update", []string{"group", "partial-update", "enterprise-1", "group-1", "--name", "Partial Group", "--json"}, http.MethodPatch, "/enterprise/enterprise-1/devicegroup/group-1/", nil, `{"name":"Partial Group"}`, "group-partial-update-api-error.json", "", http.StatusBadRequest, false, false},
 		{"group eventfeed list", []string{"group-eventfeed", "list", "--enterprise", "enterprise-1", "--group", "group-1", "--json"}, http.MethodGet, "/enterprise/enterprise-1/group/group-1/download/eventfeed/", nil, "", "group-eventfeed-list-api-error.json", "", http.StatusBadRequest, false, false},
 		{"group report get", []string{"group-report", "get", "--start-date", "2026-01-01T00:00:00Z", "--end-date", "2026-01-31T23:59:59Z", "--json"}, http.MethodGet, "/enterprise/report/group-report/", url.Values{"start_date": {"2026-01-01T00:00:00Z"}, "end_date": {"2026-01-31T23:59:59Z"}}, "", "group-report-get-api-error.json", "", http.StatusBadRequest, false, false},
 		{"group thumbnail upload", []string{"group-thumbnail", "upload", "enterprise-1", "--image-file", image, "--json"}, http.MethodPost, "/enterprise/enterprise-1/devicegroup/thumbnail/", nil, "", "group-thumbnail-upload-api-error.json", "", http.StatusBadRequest, false, true},
@@ -80,8 +80,8 @@ func TestGroupCommandsAPIErrors(t *testing.T) {
 func TestGroupCommandInputValidation(t *testing.T) {
 	for _, arguments := range [][]string{
 		{"device-group", "create", "--enterprise", "enterprise-1"},
-		{"group", "update", "group-1", "enterprise-1"},
-		{"group", "partial-update", "group-1", "enterprise-1"},
+		{"group", "update", "enterprise-1", "group-1"},
+		{"group", "partial-update", "enterprise-1", "group-1"},
 		{"device-group", "create", "--enterprise", "enterprise-1", "--body", `{}`, "--name", "Fixture Group"},
 	} {
 		command := NewRootCommand()
@@ -100,7 +100,7 @@ func TestGroupDestructiveCommandsRequireConfirmation(t *testing.T) {
 	t.Setenv(esperruntime.APIKeyVariable, "fixture-key")
 
 	for _, arguments := range [][]string{
-		{"group", "delete", "group-1", "enterprise-1", "--json"},
+		{"group", "delete", "enterprise-1", "group-1", "--json"},
 		{"group-thumbnail", "delete", "enterprise-1", "thumbnail-1", "--json"},
 		{"device-group", "delete", "group-1", "--pipeline", "pipeline-1", "--target-list", "target-list-1", "--json"},
 	} {

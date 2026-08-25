@@ -100,11 +100,57 @@ func addCommand(root *cobra.Command, commandPath []string, operations []Operatio
 	}
 	verb := commandPath[len(commandPath)-1]
 	summary := operations[0].Summary
-	command := &cobra.Command{Use: verb, Short: summary, Args: cobra.ArbitraryArgs, RunE: func(command *cobra.Command, args []string) error {
+	command := &cobra.Command{Use: commandUse(verb, operations), Short: summary, Long: commandLongHelp(summary, operations), Args: cobra.ArbitraryArgs, RunE: func(command *cobra.Command, args []string) error {
 		return run(command, args, operations, options)
 	}}
 	addFlags(command, operations)
 	parent.AddCommand(command)
+}
+
+func commandLongHelp(summary string, operations []Operation) string {
+	if len(operations) == 0 || strings.HasPrefix(strings.Join(operations[0].Command, " "), "api ") {
+		return summary
+	}
+	paths := map[string]bool{}
+	for _, candidate := range generatedOperations {
+		if candidate.AliasOf != "" || candidate.Noun != operations[0].Noun || candidate.Verb != operations[0].Verb {
+			continue
+		}
+		path := strings.Join(candidate.Command, " ")
+		if strings.HasPrefix(path, "api ") {
+			paths[path] = true
+		}
+	}
+	if len(paths) == 0 {
+		return summary
+	}
+	older := mapKeys(paths)
+	sort.Strings(older)
+	var output strings.Builder
+	output.WriteString(summary)
+	output.WriteString("\n\nOther API generations:\n")
+	for _, path := range older {
+		output.WriteString("  espercli ")
+		output.WriteString(path)
+		output.WriteByte('\n')
+	}
+	return strings.TrimSuffix(output.String(), "\n")
+}
+
+func commandUse(verb string, operations []Operation) string {
+	if len(operations) == 0 {
+		return verb
+	}
+	var parameters []string
+	for _, parameter := range pathParameters(operations[0]) {
+		if !parameter.Scope {
+			parameters = append(parameters, "<"+kebab(parameter.Name)+">")
+		}
+	}
+	if len(parameters) == 0 {
+		return verb
+	}
+	return verb + " " + strings.Join(parameters, " ")
 }
 
 func commandGroupSummary(segment string) string {
@@ -516,10 +562,7 @@ func resolvedPathValues(command *cobra.Command, operation Operation, args []stri
 func resolvedPathValuesWithContext(command *cobra.Command, operation Operation, args []string, active esperruntime.ActiveContext, verbose bool) (map[string]string, error) {
 	values := map[string]string{}
 	index := 0
-	for _, parameter := range operation.Parameters {
-		if parameter.In != "path" {
-			continue
-		}
+	for _, parameter := range pathParameters(operation) {
 		if parameter.Scope {
 			value := flagString(command, parameterFlagName(parameter))
 			if value == "" {
@@ -545,6 +588,27 @@ func resolvedPathValuesWithContext(command *cobra.Command, operation Operation, 
 		return nil, esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("unexpected positional arguments"))
 	}
 	return values, nil
+}
+
+func pathParameters(operation Operation) []Parameter {
+	var parameters []Parameter
+	for _, parameter := range operation.Parameters {
+		if parameter.In == "path" {
+			parameters = append(parameters, parameter)
+		}
+	}
+	sort.SliceStable(parameters, func(left, right int) bool {
+		leftIndex := strings.Index(operation.Path, "{"+parameters[left].Name+"}")
+		rightIndex := strings.Index(operation.Path, "{"+parameters[right].Name+"}")
+		if leftIndex < 0 {
+			leftIndex = len(operation.Path)
+		}
+		if rightIndex < 0 {
+			rightIndex = len(operation.Path)
+		}
+		return leftIndex < rightIndex
+	})
+	return parameters
 }
 
 func missingPathParameterError(parameter string) error {

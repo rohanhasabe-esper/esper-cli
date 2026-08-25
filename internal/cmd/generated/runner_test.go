@@ -433,3 +433,48 @@ func TestMissingContextErrorsIncludeSetHint(t *testing.T) {
 		t.Fatalf("missing scope error = %v", err)
 	}
 }
+
+func TestCommandUseIncludesPositionalPathParameters(t *testing.T) {
+	operations := []Operation{{Path: "/enterprise/{enterprise_id}/devices/{deviceId}/events/{event_id}", Parameters: []Parameter{
+		{Name: "event_id", In: "path", Required: true},
+		{Name: "deviceId", In: "path", Required: true},
+		{Name: "enterprise_id", In: "path", Scope: true, ScopeName: "enterprise"},
+		{Name: "limit", In: "query"},
+	}}}
+	if got, want := commandUse("get", operations), "get <device-id> <event-id>"; got != want {
+		t.Fatalf("commandUse() = %q, want %q", got, want)
+	}
+}
+
+func TestResolvedPathValuesFollowPathOrder(t *testing.T) {
+	operation := Operation{Path: "/devices/{device_id}/events/{event_id}", Parameters: []Parameter{
+		{Name: "event_id", In: "path", Required: true},
+		{Name: "device_id", In: "path", Required: true},
+	}}
+	command := &cobra.Command{Use: "get"}
+	values, err := resolvedPathValues(command, operation, []string{"device-1", "event-1"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if values["device_id"] != "device-1" || values["event_id"] != "event-1" {
+		t.Fatalf("resolved values = %#v", values)
+	}
+}
+
+func TestMergedCommandUseFollowsPrimaryRoute(t *testing.T) {
+	operations := []Operation{
+		{Verb: "get", Parameters: []Parameter{{Name: "operation_id", In: "path"}}},
+		{Verb: "get", Parameters: []Parameter{{Name: "stage_run_operation_id", In: "path"}}},
+	}
+	if got, want := commandUse("get", operations), "get <operation-id>"; got != want {
+		t.Fatalf("commandUse() = %q, want %q", got, want)
+	}
+}
+
+func TestCommandLongHelpListsOlderAPIGenerations(t *testing.T) {
+	operations := []Operation{{Command: []string{"application", "list"}, Noun: "application", Verb: "list"}}
+	help := commandLongHelp("List applications", operations)
+	if !strings.Contains(help, "Other API generations:") || !strings.Contains(help, "espercli api legacy application list") {
+		t.Fatalf("commandLongHelp() = %q", help)
+	}
+}

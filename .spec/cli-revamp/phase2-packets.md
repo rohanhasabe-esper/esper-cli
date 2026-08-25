@@ -21,7 +21,7 @@ Excluded from Phase 2:
 | 2 | group | 18 | `device-group`, `group`, `group-eventfeed`, `group-report`, `group-thumbnail`, `legacy-device-group-command`, `sub-group` | Complete |
 | 3 | app-application | 53 | `app`, `app-info`, `app-instance`, `app-version`, `app-vpp`, `appleappstore`, `application`, `application-minimal`, `device-app`, `esper-app-version`, `install`, `installdevice`, `itunesapp`, `preferred-region`, `product`, `tenant-app`, `tenant-app-version`, `tenant-esper-app`, `version`, `webclip` | Complete |
 | 4 | blueprint | 15 | `blueprint`, `blueprint-revision`, `blueprint-version`, `revision` | Complete |
-| 5 | pipeline | 37 | `pipeline`, `pipeline-run`, `stage`, `stage-run`, `target`, `target-bulk`, `target-list`, `target-run` | Blocked |
+| 5 | pipeline | 37 | `pipeline`, `pipeline-run`, `stage`, `stage-run`, `target`, `target-bulk`, `target-list`, `target-run` | Complete |
 | 6 | token-user | 33 | `authn-user`, `dep-token`, `dep-token-based-on`, `dep-token-upload`, `different-user`, `invite`, `own-user`, `personal-access-token`, `renew-token`, `tenant-user`, `tenant-user-invite`, `tenant-vpptoken`, `token-info`, `user`, `user-delete`, `user-info`, `webtoken`, `webtoken-instance` | Blocked |
 | 7 | alarm-alert | 13 | `alarm-rule`, `alarmhistory`, `alarmrule`, `alert-channel`, `alertchannel` | Blocked |
 | 8 | apns | 5 | `apns-cert`, `apns-csr` | Blocked |
@@ -54,7 +54,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `group` - Complete: all 18 operations have schema-shaped success/API-error golden coverage, including two `--all` flows and the route/body collision rule.
 - `app-application` - Complete: all 53 operations have explicit schema-shaped success/API-error fixtures and goldens, with operation-specific pagination coverage.
 - `blueprint` - Complete: all 15 operations have schema-shaped success and API-error goldens, including required optional-body inputs, recursive scopes, multipart, pagination, and destructive coverage.
-- `pipeline` - Blocked: seven required bodies with no required scalar input depend on the same missing rule.
+- `pipeline` - Complete: all 37 operations have schema-shaped success/API-error goldens, nine apps-envelope pagination flows, recursive scopes, required-body validation, and six destructive refusals.
 
 ### Packets 6-10
 
@@ -89,11 +89,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `pipeline`: seven operations require request bodies with no required scalar
-  input, including top-level array and empty-object schemas. The locked body
-  rules do not define whether explicit `--body` is mandatory. Details are
-  recorded in `inbox.md` and `spec.md` Issues.
 
 - `token-user`: legacy `user partial-update` requires a JSON body whose schema
   has no required properties. It depends on the unresolved required-body input
@@ -164,7 +159,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | group | Complete | - |
 | app-application | Complete | - |
 | blueprint | Complete | - |
-| pipeline | Blocked | Required bodies with no required scalar input. |
+| pipeline | Complete | - |
 | token-user | Blocked | Required body with no required properties. |
 | alarm-alert | Blocked | Required complex/body input and scope/body collision rules. |
 | apns | Blocked | Empty required body and binary plist output behavior. |
@@ -186,5 +181,5 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 7 packets complete (105 operations); 18 packets blocked (223
+Summary: 8 packets complete (142 operations); 17 packets blocked (186
 operations). All blockers are recorded in `inbox.md` and `spec.md` Issues.

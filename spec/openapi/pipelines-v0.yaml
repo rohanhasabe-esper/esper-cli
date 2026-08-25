@@ -163,7 +163,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "pipeline"
       },
@@ -524,7 +524,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "stage",
         "x-esper-scope-parent": "pipeline"
@@ -940,7 +940,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "target-list",
         "x-esper-scope-parent": "stage"
@@ -1518,7 +1518,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "target-list",
         "x-esper-scope-parent": "pipeline"
@@ -1940,7 +1940,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "target",
         "x-esper-scope-parent": "target-list"
@@ -2186,18 +2186,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "content": {
-                      "$ref": "#/components/schemas/Target"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Target"
                 }
               }
             }
@@ -3432,7 +3421,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "pipeline-run"
       }
@@ -3556,7 +3545,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "pipeline-run",
         "x-esper-scope-parent": "pipeline"
@@ -4001,7 +3990,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "stage-run",
         "x-esper-scope-parent": "pipeline-run"
@@ -4143,7 +4132,10 @@
                       "timeout"
                     ]
                   }
-                }
+                },
+                "required": [
+                  "status"
+                ]
               }
             }
           }
@@ -4484,7 +4476,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "target-run",
         "x-esper-scope-parent": "stage-run"
@@ -5092,7 +5084,10 @@
           "device_name": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "status"
+        ]
       },
       "TargetRun_POST": {
         "type": "object",
@@ -5316,7 +5311,10 @@
               "timeout"
             ]
           }
-        }
+        },
+        "required": [
+          "status"
+        ]
       },
       "PipelineRun_POST": {
         "type": "object"

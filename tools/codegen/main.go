@@ -244,7 +244,8 @@ func extractBody(content map[string]requestMedia, required bool, parameters []ge
 	for _, name := range value.Required {
 		requiredProperties[name] = true
 	}
-	body := &generatedBody{MediaType: mediaType, Required: required, Empty: scalarType(value) == "object" && len(value.Properties) == 0}
+	_, explicitlyObject := value.Type.(string)
+	body := &generatedBody{MediaType: mediaType, Required: required, Empty: explicitlyObject && scalarType(value) == "object" && len(value.Properties) == 0}
 	parameterByFlag := map[string]generatedParameter{}
 	for _, parameter := range parameters {
 		if parameter.In == "path" {

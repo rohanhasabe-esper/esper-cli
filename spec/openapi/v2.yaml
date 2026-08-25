@@ -6720,8 +6720,20 @@
                   "csv_file": {
                     "type": "string",
                     "format": "binary"
+                  },
+                  "platform": {
+                    "type": "string",
+                    "default": "APPLE",
+                    "enum": [
+                      "APPLE",
+                      "LINUX",
+                      "WINDOWS"
+                    ]
                   }
-                }
+                },
+                "required": [
+                  "csv_file"
+                ]
               }
             }
           }
@@ -6732,35 +6744,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "content": {
-                      "type": "object",
-                      "properties": {
-                        "count": {
-                          "type": "integer"
-                        },
-                        "previous": {
-                          "type": "string"
-                        },
-                        "next": {
-                          "type": "string"
-                        },
-                        "results": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/SeamlessRequest"
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/SeamlessSuccessResponse"
                 }
               }
             }
@@ -6770,7 +6754,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
                 }
               }
             }
@@ -6780,7 +6764,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
                 }
               }
             }
@@ -6790,7 +6774,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
                 }
               }
             }
@@ -6829,18 +6813,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "content": {
-                      "$ref": "#/components/schemas/SeamlessRequest"
-                    }
-                  }
+                  "$ref": "#/components/schemas/SeamlessSuccessResponse"
                 }
               }
             }
@@ -6850,7 +6823,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
                 }
               }
             }
@@ -6860,7 +6833,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
                 }
               }
             }
@@ -6870,7 +6843,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
                 }
               }
             }
@@ -7614,6 +7587,71 @@
           "callback_url"
         ]
       },
+      "SeamlessErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "content"
+        ]
+      },
+      "SeamlessSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer"
+              },
+              "prev": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "next": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "results": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SeamlessRequest"
+                }
+              }
+            },
+            "required": [
+              "count",
+              "prev",
+              "next",
+              "results"
+            ]
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
       "SeamlessRequestBody": {
         "type": "object",
         "properties": {
@@ -7627,23 +7665,57 @@
             "format": "uuid",
             "example": "3e41fd18-d53d-4673-a10a-23089cbb6b73"
           },
+          "alias": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 5
+          },
           "seamless_info": {
             "$ref": "#/components/schemas/SeamlessInfo"
           }
-        }
+        },
+        "required": [
+          "assigned_blueprint_id",
+          "seamless_info"
+        ]
       },
       "SeamlessInfo": {
         "type": "object",
         "properties": {
           "unique_ids": {
             "type": "string",
-            "example": "3e41fd18-d53d-4673-a10a-23089cbb6b73,3e41fd18-d53d-4673-a10a-23089cbb6b73"
+            "example": "3e41fd18-d53d-4673-a10a-23089cbb6b73"
           },
           "unique_id_type": {
             "type": "integer",
+            "enum": [
+              2,
+              3
+            ],
             "example": 2
+          },
+          "platform": {
+            "type": "string",
+            "default": "APPLE",
+            "enum": [
+              "APPLE",
+              "LINUX",
+              "WINDOWS"
+            ]
           }
-        }
+        },
+        "required": [
+          "unique_ids",
+          "unique_id_type"
+        ]
       },
       "SeamlessRequest": {
         "type": "object",
@@ -7657,22 +7729,66 @@
             "format": "uuid"
           },
           "group_id": {
-            "type": [
-              "string",
-              "null"
-            ],
+            "type": "string",
             "format": "uuid"
+          },
+          "alias": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "unique_ids": {
             "type": "string"
           },
           "unique_id_type": {
-            "type": "integer"
+            "type": "string",
+            "enum": [
+              "SERIAL",
+              "UUID"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "FAILED",
+              "IN_PROGRESS",
+              "IN_QUEUE",
+              "SUCCESS"
+            ]
+          },
+          "meta": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true
           },
           "tenant_id": {
             "type": "string"
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "APPLE",
+              "LINUX",
+              "WINDOWS"
+            ]
           }
-        }
+        },
+        "required": [
+          "id",
+          "assigned_blueprint_id",
+          "unique_ids",
+          "unique_id_type",
+          "status",
+          "meta",
+          "tenant_id",
+          "platform"
+        ]
       },
       "ConvergeCommand": {
         "type": "object",

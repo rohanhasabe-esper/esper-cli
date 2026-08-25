@@ -100,7 +100,7 @@ type generatedBody struct {
 	Properties []generatedProperty
 	AutoFill   []generatedAutoFill
 }
-type generatedAutoFill struct{ Name, Parameter, Type string }
+type generatedAutoFill struct{ Name, Parameter, Type, Format string }
 type generatedProperty struct {
 	Name, Type, Format string
 	Required, File     bool
@@ -270,7 +270,7 @@ func extractBody(content map[string]requestMedia, required bool, parameters []ge
 		file := mediaType == "multipart/form-data" && typeName == "string" && property.Format == "binary"
 		if parameter, collision := parameterByFlag[kebab(name)]; collision {
 			if requiredProperties[name] {
-				body.AutoFill = append(body.AutoFill, generatedAutoFill{Name: name, Parameter: parameter.Name, Type: typeName})
+				body.AutoFill = append(body.AutoFill, generatedAutoFill{Name: name, Parameter: parameter.Name, Type: typeName, Format: property.Format})
 			}
 			continue
 		}

@@ -181,6 +181,30 @@ func TestCollisionAutoFill(t *testing.T) {
 	}
 }
 
+func TestURLCollisionAutoFillUsesResourceURL(t *testing.T) {
+	operation := Operation{
+		Path:       "/enterprise/{enterprise_id}/policy/",
+		Parameters: []Parameter{{Name: "enterprise_id", In: "path", Scope: true, ScopeName: "enterprise"}},
+		Body:       &Body{MediaType: "application/json", Required: true, BodyOnly: true, AutoFill: []AutoFill{{Name: "enterprise", Parameter: "enterprise_id", Type: "string", Format: "url"}}},
+	}
+	command := &cobra.Command{Use: "create"}
+	addFlags(command, []Operation{operation})
+	if err := command.Flags().Set("enterprise", "enterprise-1"); err != nil {
+		t.Fatal(err)
+	}
+	if err := command.Flags().Set("body", `{"enterprise":"https://wrong.invalid/","policy":{}}`); err != nil {
+		t.Fatal(err)
+	}
+	body, _, err := bodyForValues(command, operation, map[string]string{"enterprise_id": "enterprise-1"})
+	if err != nil || string(body) != `{"enterprise":"/enterprise/enterprise-1/","policy":{}}` {
+		t.Fatalf("bodyForValues() = %s, %v", body, err)
+	}
+	body, err = qualifyAutoFillURLs(body, operation.Body, "https://develop-api.esper.cloud/api")
+	if err != nil || string(body) != `{"enterprise":"https://develop-api.esper.cloud/api/enterprise/enterprise-1/","policy":{}}` {
+		t.Fatalf("qualified body = %s, %v", body, err)
+	}
+}
+
 func TestOptionalBodyAutoFillRequiresBodyInput(t *testing.T) {
 	operation := Operation{
 		Parameters: []Parameter{{Name: "deviceId", In: "path", Scope: true, ScopeName: "device"}},

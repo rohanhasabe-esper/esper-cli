@@ -18,6 +18,17 @@ func TestExtractBodyRetainsRequirednessAndCollisionAutoFill(t *testing.T) {
 	}
 }
 
+func TestExtractBodyRetainsCollisionAutoFillFormat(t *testing.T) {
+	body := extractBody(map[string]requestMedia{
+		"application/json": {Schema: schema{Type: "object", Properties: map[string]schema{
+			"enterprise": {Type: "string", Format: "url"},
+		}, Required: []string{"enterprise"}}},
+	}, true, []generatedParameter{{Name: "enterprise_id", In: "path", Scope: true, ScopeName: "enterprise"}}, nil)
+	if len(body.AutoFill) != 1 || body.AutoFill[0].Format != "url" {
+		t.Fatalf("collision auto-fill = %#v", body.AutoFill)
+	}
+}
+
 func TestExtractBodyRequiredEmptyObject(t *testing.T) {
 	body := extractBody(map[string]requestMedia{"application/json": {Schema: schema{Type: "object"}}}, true, nil, nil)
 	if !body.Required || !body.Empty {

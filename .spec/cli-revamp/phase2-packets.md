@@ -36,7 +36,7 @@ Excluded from Phase 2:
 | 17 | emm | 9 | `emm`, `emm-account`, `emm-detail`, `emm-enrollment-begin`, `emm-enrollment-complete`, `emm-instance`, `emm-web-token` | Complete |
 | 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Complete |
 | 19 | geofence | 9 | `create-apply-geo-fence`, `geofence`, `the-geofence` | Complete |
-| 20 | policy | 5 | `policy` | Blocked |
+| 20 | policy | 5 | `policy` | Complete |
 | 21 | provisioning-profile | 5 | `provisioning-profile`, `provisioning-profile-version` | Complete |
 | 22 | report-telemetry | 19 | `device-location`, `device-report`, `device-tile-report`, `event-feed`, `report-info`, `report-status`, `report-type`, `specific-location`, `status-metric`, `subscription`, `subscription-report`, `telemetry-graph-data` | Blocked |
 | 23 | role-scope | 7 | `role`, `scope` | Blocked |
@@ -78,7 +78,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `emm` - Complete: all 9 operations have schema-shaped success/API-error golden coverage, including three pagination flows, validator-backed required inputs, transparent-proxy response envelopes, completion 201 handling, and internal auth-header exclusion.
 - `foundry` - Complete: all 6 operations have schema-shaped success/API-error golden coverage, including three apps-envelope pagination flows, platform-backed response envelopes and DTOs, build approval input, partial device-model update input, and internal auth-header exclusion.
 - `geofence` - Complete: all 9 published operations map to 6 canonical commands with schema-shaped success/API-error golden coverage, including three API aliases, body-only create, required full update inputs, partial-update presence, root pagination, and destructive refusal.
-- `policy` - Blocked: required wildcard bodies, complex properties, and scope/body collisions lack rules.
+- `policy` - Complete: all 5 operations have schema-shaped success/API-error golden coverage, including root pagination, platform-backed body-only writes, partial-update presence, and URL-valued enterprise auto-fill.
 
 ### Packets 21-25
 
@@ -89,9 +89,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `policy`: create and updates have required wildcard bodies plus unresolved
-  complex-property enforcement and `--enterprise` scope/body collisions.
 
 - `report-telemetry`: subscription add/update require an array-only
   `email_ids` body, but the locked rules do not define when explicit `--body`
@@ -131,13 +128,13 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | emm | Complete | - |
 | foundry | Complete | - |
 | geofence | Complete | - |
-| policy | Blocked | Wildcard/complex bodies and scope/body collisions. |
+| policy | Complete | - |
 | provisioning-profile | Complete | - |
 | report-telemetry | Blocked | Required array-only body input. |
 | role-scope | Blocked | Required bodies with optional scalar/array inputs. |
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 20 packets complete (285 operations); 5 packets blocked (43
+Summary: 21 packets complete (290 operations); 4 packets blocked (38
 operations). All remaining blockers are recorded in `inbox.md` and `spec.md`
 Issues.

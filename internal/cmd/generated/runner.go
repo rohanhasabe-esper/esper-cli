@@ -46,7 +46,7 @@ type Body struct {
 	Properties []Property
 	AutoFill   []AutoFill
 }
-type AutoFill struct{ Name, Parameter, Type string }
+type AutoFill struct{ Name, Parameter, Type, Format string }
 type Property struct {
 	Name, Type, Format string
 	Required, File     bool
@@ -210,6 +210,10 @@ func run(command *cobra.Command, args []string, operations []Operation, options 
 		return esperruntime.NewError(esperruntime.CategoryAuth, err)
 	}
 	credentials, err := esperruntime.ResolveCredentials(state.Config, options.Environment, options.APIKey)
+	if err != nil {
+		return err
+	}
+	body, err = qualifyAutoFillURLs(body, operation.Body, credentials.BaseURL())
 	if err != nil {
 		return err
 	}
@@ -441,7 +445,7 @@ func bodyForValues(command *cobra.Command, operation Operation, pathValues map[s
 	autoValues := map[string]any{}
 	// Optional bodies remain absent unless the caller supplies a body input.
 	if operation.Body.Required || bodyFlag || propertiesSet {
-		autoValues = bodyAutoFill(operation.Body, pathValues)
+		autoValues = bodyAutoFill(operation, pathValues)
 	}
 	if operation.Body.Required && !operation.Body.Empty && !bodyFlag && !propertiesSet && len(autoValues) == 0 {
 		return nil, "", esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("required request body needs at least one input: %s", strings.Join(bodyInputFlags(operation.Body), ", ")))
@@ -497,14 +501,63 @@ func bodyInputFlags(body *Body) []string {
 	return flags
 }
 
-func bodyAutoFill(body *Body, pathValues map[string]string) map[string]any {
+func bodyAutoFill(operation Operation, pathValues map[string]string) map[string]any {
 	values := map[string]any{}
-	for _, fill := range body.AutoFill {
+	for _, fill := range operation.Body.AutoFill {
 		if value, ok := pathValues[fill.Parameter]; ok {
+			if isURLFormat(fill.Format) && operation.Body.MediaType == "application/json" {
+				value = resourcePathForParameter(operation.Path, fill.Parameter, pathValues)
+			}
 			values[fill.Name] = typedValue(value, fill.Type)
 		}
 	}
 	return values
+}
+
+func resourcePathForParameter(operationPath, parameter string, pathValues map[string]string) string {
+	marker := "{" + parameter + "}"
+	index := strings.Index(operationPath, marker)
+	if index < 0 {
+		return pathValues[parameter]
+	}
+	path := operationPath[:index+len(marker)]
+	if !strings.HasSuffix(path, "/") {
+		path += "/"
+	}
+	for name, value := range pathValues {
+		path = strings.ReplaceAll(path, "{"+name+"}", value)
+	}
+	return path
+}
+
+func qualifyAutoFillURLs(data []byte, body *Body, baseURL string) ([]byte, error) {
+	if len(data) == 0 || body == nil || body.MediaType != "application/json" {
+		return data, nil
+	}
+	names := map[string]bool{}
+	for _, fill := range body.AutoFill {
+		if isURLFormat(fill.Format) {
+			names[fill.Name] = true
+		}
+	}
+	if len(names) == 0 {
+		return data, nil
+	}
+	var object map[string]any
+	if err := json.Unmarshal(data, &object); err != nil || object == nil {
+		return nil, esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("URL-valued path auto-fill requires a JSON object"))
+	}
+	for name := range names {
+		value, ok := object[name].(string)
+		if ok && strings.HasPrefix(value, "/") {
+			object[name] = strings.TrimRight(baseURL, "/") + value
+		}
+	}
+	return json.Marshal(object)
+}
+
+func isURLFormat(format string) bool {
+	return format == "url" || format == "uri"
 }
 
 func mergeAutoFillJSON(data []byte, values map[string]any) ([]byte, string, error) {

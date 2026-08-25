@@ -3411,6 +3411,24 @@
             }
           },
           {
+            "name": "created_on_gt",
+            "in": "query",
+            "description": "filter by policies created at or after this timestamp",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created_on_lt",
+            "in": "query",
+            "description": "filter by policies created at or before this timestamp",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
             "name": "limit",
             "in": "query",
             "description": "Number of results to return per page.",
@@ -3437,6 +3455,8 @@
                 "schema": {
                   "required": [
                     "count",
+                    "next",
+                    "previous",
                     "results"
                   ],
                   "type": "object",
@@ -3539,9 +3559,9 @@
         "requestBody": {
           "description": "The request body to create an Enteprise Policy",
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EnterprisePolicy"
+                "$ref": "#/components/schemas/EnterprisePolicyWrite"
               }
             }
           },
@@ -3642,7 +3662,8 @@
             "description": "A UUID string identifying enterprise.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -3727,15 +3748,16 @@
             "description": "A UUID string identifying enterprise.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
         "requestBody": {
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EnterprisePolicy"
+                "$ref": "#/components/schemas/EnterprisePolicyWrite"
               }
             }
           },
@@ -3931,13 +3953,14 @@
             "description": "A UUID string identifying enterprise.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
         "requestBody": {
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/EnterprisePolicyPartialUpdate"
               }
@@ -8308,58 +8331,29 @@
       "EnterprisePolicyPartialUpdate": {
         "type": "object",
         "properties": {
-          "uuid": {
-            "title": "UUID",
-            "type": "string",
-            "description": "Unique Policy identifier",
-            "format": "uuid",
-            "readOnly": true
-          },
           "enterprise": {
             "title": "Enterprise url",
             "type": "string",
             "description": "Url of the enterprise resource",
             "format": "url"
           },
-          "url": {
-            "title": "Policy URL",
-            "type": "string",
-            "description": "URL link to policy",
-            "format": "url",
-            "readOnly": true
-          },
           "name": {
             "title": "Policy Name",
+            "maxLength": 255,
+            "minLength": 1,
             "type": "string",
             "description": "Name of the Policy"
           },
           "description": {
             "title": "Policy Description",
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "Details regarding the Policy"
-          },
-          "device_count": {
-            "title": "Number of Devices with this policy applied",
-            "type": "integer",
-            "description": "Count of Devices with this policy applied",
-            "readOnly": true
           },
           "policy": {
             "$ref": "#/components/schemas/EnterprisePolicyData"
-          },
-          "updated_on": {
-            "title": "Updated On",
-            "type": "string",
-            "description": "Last-Updated Timestamp of Policy",
-            "format": "date-time",
-            "readOnly": true
-          },
-          "created_on": {
-            "title": "Created on",
-            "type": "string",
-            "description": "Creation Timestamp of Policy",
-            "format": "date-time",
-            "readOnly": true
           },
           "is_active": {
             "title": "Policy Active status",
@@ -8368,9 +8362,72 @@
           },
           "google_policy_id": {
             "title": "Google policy id",
+            "maxLength": 255,
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Id of the Google policy"
+          },
+          "is_template": {
+            "title": "Template status",
+            "type": "boolean",
+            "default": false,
+            "writeOnly": true
+          }
+        }
+      },
+      "EnterprisePolicyWrite": {
+        "required": [
+          "enterprise",
+          "name",
+          "policy"
+        ],
+        "type": "object",
+        "properties": {
+          "enterprise": {
+            "title": "Enterprise url",
             "type": "string",
-            "description": "Id of the Google policy",
-            "readOnly": true
+            "description": "Url of the enterprise resource",
+            "format": "url"
+          },
+          "name": {
+            "title": "Policy Name",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the Policy"
+          },
+          "description": {
+            "title": "Policy Description",
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Details regarding the Policy"
+          },
+          "google_policy_id": {
+            "title": "Google policy id",
+            "maxLength": 255,
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Id of the Google policy"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/EnterprisePolicyData"
+          },
+          "is_template": {
+            "title": "Template status",
+            "type": "boolean",
+            "default": false,
+            "writeOnly": true
+          },
+          "is_active": {
+            "title": "Policy Active status",
+            "type": "boolean",
+            "description": "Is this policy currently active"
           }
         }
       },
@@ -8378,6 +8435,15 @@
         "title": "Policy Data",
         "type": "object",
         "properties": {
+          "applications": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "kioskMode": {
+            "type": "boolean"
+          },
           "keyguardDisabled": {
             "type": "boolean",
             "description": "Should KeyGuard be disabled?"
@@ -8573,6 +8639,19 @@
           "deviceUpdatePolicy": {
             "type": "object",
             "properties": {
+              "passwordQuality": {
+                "type": "string",
+                "enum": [
+                  "PASSWORD_QUALITY_ALPHABETIC",
+                  "PASSWORD_QUALITY_ALPHANUMERIC",
+                  "PASSWORD_QUALITY_BIOMETRIC_WEAK",
+                  "PASSWORD_QUALITY_COMPLEX",
+                  "PASSWORD_QUALITY_NUMERIC",
+                  "PASSWORD_QUALITY_NUMERIC_COMPLEX",
+                  "PASSWORD_QUALITY_SOMETHING",
+                  "PASSWORD_QUALITY_UNSPECIFIED"
+                ]
+              },
               "type": {
                 "type": "string",
                 "description": "What type of installation is preferred?",
@@ -8612,12 +8691,26 @@
       },
       "EnterprisePolicy": {
         "required": [
+          "id",
+          "uuid",
           "enterprise",
+          "url",
           "name",
-          "policy"
+          "description",
+          "device_count",
+          "google_policy_id",
+          "policy",
+          "updated_on",
+          "created_on",
+          "is_active"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer",
+            "readOnly": true
+          },
           "uuid": {
             "title": "UUID",
             "type": "string",
@@ -8645,7 +8738,10 @@
           },
           "description": {
             "title": "Policy Description",
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "Details regarding the Policy"
           },
           "device_count": {
@@ -8656,7 +8752,10 @@
           },
           "google_policy_id": {
             "title": "Google policy id",
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "Id of the Google policy",
             "readOnly": true
           },

@@ -33,7 +33,7 @@ Excluded from Phase 2:
 | 14 | dep-sync | 3 | `dep-sync-request` | Complete |
 | 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Complete |
 | 16 | directory-record | 5 | `directory-record` | Complete |
-| 17 | emm | 9 | `emm`, `emm-account`, `emm-detail`, `emm-enrollment-begin`, `emm-enrollment-complete`, `emm-instance`, `emm-web-token` | Blocked |
+| 17 | emm | 9 | `emm`, `emm-account`, `emm-detail`, `emm-enrollment-begin`, `emm-enrollment-complete`, `emm-instance`, `emm-web-token` | Complete |
 | 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Blocked |
 | 19 | geofence | 9 | `create-apply-geo-fence`, `geofence`, `the-geofence` | Blocked |
 | 20 | policy | 5 | `policy` | Blocked |
@@ -75,7 +75,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 ### Packets 16-20
 
 - `directory-record` - Complete: all 5 operations have schema-shaped success/API-error golden coverage, including corrected limit-offset pagination, platform-backed body-only create/update inputs, exact bodyless 204 output, and destructive refusal.
-- `emm` - Blocked: detail/account create bodies have no required properties.
+- `emm` - Complete: all 9 operations have schema-shaped success/API-error golden coverage, including three pagination flows, validator-backed required inputs, transparent-proxy response envelopes, completion 201 handling, and internal auth-header exclusion.
 - `foundry` - Blocked: update bodies have only optional scalar properties.
 - `geofence` - Blocked: body rules and normalized same-generation aliases are undefined.
 - `policy` - Blocked: required wildcard bodies, complex properties, and scope/body collisions lack rules.
@@ -89,9 +89,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `emm`: EMM detail and account creation require JSON bodies with no required
-  properties, so they depend on the unresolved required-body rule.
 
 - `foundry`: build and device-model updates require JSON bodies whose scalar
   properties are all optional, so required input behavior is undefined.
@@ -138,7 +135,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | dep-sync | Complete | - |
 | device-support | Complete | - |
 | directory-record | Complete | - |
-| emm | Blocked | Required bodies with no required properties. |
+| emm | Complete | - |
 | foundry | Blocked | Required bodies with optional scalar inputs. |
 | geofence | Blocked | Body rules and normalized same-generation alias collision. |
 | policy | Blocked | Wildcard/complex bodies and scope/body collisions. |
@@ -148,6 +145,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 17 packets complete (261 operations); 8 packets blocked (67
+Summary: 18 packets complete (270 operations); 7 packets blocked (58
 operations). All remaining blockers are recorded in `inbox.md` and `spec.md`
 Issues.

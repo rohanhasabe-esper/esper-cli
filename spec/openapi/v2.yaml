@@ -6897,24 +6897,21 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Bearer token for authorization",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "201": {
             "description": "Successfully generated sign-up URL",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BeginGoogleEMMEnrollmentResponse"
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/BeginGoogleEMMEnrollmentResponse"
+                    }
+                  }
                 }
               }
             }
@@ -6972,17 +6969,6 @@
         "tags": [
           "8_Google Enterprise"
         ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Bearer token for authorization",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successfully retrieved enrollment status",
@@ -6997,7 +6983,7 @@
                         "count": {
                           "type": "integer"
                         },
-                        "previous": {
+                        "prev": {
                           "type": "string"
                         },
                         "next": {
@@ -7048,7 +7034,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "emm-detail"
       },
@@ -7067,24 +7053,21 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Bearer token for authorization",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "201": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GoogleEnterpriseDetails"
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/GoogleEnterpriseDetails"
+                    }
+                  }
                 }
               }
             }
@@ -7152,24 +7135,21 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Bearer token for authorization",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateWebTokenResponse"
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/CreateWebTokenResponse"
+                    }
+                  }
                 }
               }
             }
@@ -7217,17 +7197,6 @@
         "tags": [
           "8_Google Enterprise"
         ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Bearer token for authorization",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -7251,12 +7220,20 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Successfully completed EMM enrollment",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GoogleEnterpriseDetails"
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/GoogleEnterpriseDetails"
+                    }
+                  }
                 }
               }
             }
@@ -7314,17 +7291,6 @@
         "tags": [
           "8_Google Enterprise"
         ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Bearer token for authorization",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successfully retrieved Google Service Account",
@@ -7339,7 +7305,7 @@
                         "count": {
                           "type": "integer"
                         },
-                        "previous": {
+                        "prev": {
                           "type": "string"
                         },
                         "next": {
@@ -7390,7 +7356,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "emm-account"
       },
@@ -7409,24 +7375,21 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Bearer token for authorization",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "201": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GoogleServiceAccountDetails"
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/GoogleServiceAccountDetails"
+                    }
+                  }
                 }
               }
             }
@@ -7482,6 +7445,15 @@
   "components": {
     "schemas": {
       "GoogleServiceAccountDetails": {
+        "required": [
+          "google_enterprise_id",
+          "key_id",
+          "type",
+          "is_set",
+          "is_active",
+          "data",
+          "public_data"
+        ],
         "type": "object",
         "properties": {
           "tenant_id": {
@@ -7510,6 +7482,12 @@
           },
           "public_data": {
             "type": "string"
+          },
+          "is_synced_to_scapi": {
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "created_at": {
             "type": "string",
@@ -7554,6 +7532,14 @@
         ]
       },
       "GoogleEnterpriseDetails": {
+        "required": [
+          "google_enterprise_id",
+          "state",
+          "callback_url",
+          "signup_url",
+          "completion_token",
+          "enterprise_token"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -7580,6 +7566,12 @@
           "enterprise_token": {
             "type": "string"
           },
+          "is_synced_to_scapi": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -7596,6 +7588,12 @@
       "BeginGoogleEMMEnrollmentResponse": {
         "type": "object",
         "properties": {
+          "tenant_id": {
+            "type": "string"
+          },
+          "callback_url": {
+            "type": "string"
+          },
           "signup_url": {
             "type": "string"
           },

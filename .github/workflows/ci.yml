@@ -21,6 +21,8 @@ jobs:
         run: |
           go run ./tools/codegen
           git diff --exit-code -- internal/cmd/generated/zz_generated_commands.go
+      - name: Verify generated Esper skill
+        run: go run ./tools/skillgen --check
       - name: Lint formatting
         run: test -z "$(gofmt -l cmd internal tools)"
       - name: Build

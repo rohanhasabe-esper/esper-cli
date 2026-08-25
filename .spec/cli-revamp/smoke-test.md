@@ -213,3 +213,74 @@ unset ESPER_SMOKE_API_KEY ESPER_SMOKE_PING_BODY
 ```
 
 Expected output: none. Exit code: `0`.
+
+## Results 2026-08-25
+
+Environment: `develop`. Executor used the repository Go binary at
+`./dist/espercli-smoke` because the `espercli` found on `PATH` is the legacy
+Python installation and fails during import. No API key is included below.
+
+| Step | Command | Expected | Actual | Result |
+|---|---|---|---|---|
+| Safety preamble | `espercli context clear --all` | All four resources unset; exit 0 | PATH binary failed before command execution. The repository Go binary then cleared all four resources with exit 0 | FAIL |
+| Configuration precheck | `espercli configure show` | `develop`, redacted key; exit 0 | Initially unconfigured, exit 3. After human credential entry: `environment: develop`, redacted key ending `t8eN`, exit 0 | PASS |
+| 1. Configure | `espercli configure --environment develop` with key on stdin | `Configuration saved.`; exit 0 | Human completed the stdin prompt; subsequent `configure show` verified persisted environment and redacted key | PASS |
+| 2. Enterprise context | `espercli context set enterprise f44373cb-1800-43c6-aab3-c81f8b1f435c`; `context get enterprise` | Supplied ID twice; exit 0 | Supplied ID twice; both exits 0 | PASS |
+| 3a. Device list | `espercli device list --limit 5` | Top-level `count`, `next`, `previous`, `results` key/value block; exit 0 | One top-level `content` value containing `count`, `next`, `prev`, and five device results; exit 0 | FAIL |
+| 3b. Select device | `espercli device list --limit 1 --json \| jq -er '.results[0].id'` | Non-empty device ID; exit 0 | `device=null`; exit 1 because results are under `.content.results` | FAIL |
+| 4. Device show | `espercli device get "$ESPER_SMOKE_DEVICE_ID"` | Device key/value block; exit 0 | Not run because step 3b produced no device ID | SKIPPED |
+| 5. Pagination `--all` | `espercli device list --limit 2 --all` | One merged table; exit 0 | Not run. Step 3a reported 142,632 devices; this command would require approximately 71,316 live requests | SKIPPED |
+| 6. JSON through `jq` | `espercli device list --limit 2 --all --json \| jq ...` | `true`; exit 0 | Not run for the same request-volume reason as step 5 | SKIPPED |
+| 7. Ping | `espercli command create --body '<redacted device request>' --json \| jq ...` | JSON object; exit 0 | Not run because no device was selected | SKIPPED |
+| 8. Destructive prompt | `printf 'n\n' \| espercli device-request delete "$ESPER_SMOKE_DEVICE_ID"` | Exact target/count prompt, decline, exit 2, no API call | Not run because no exact device target was selected | SKIPPED |
+| 9. Secure ADB | `espercli --verbose secureadb connect` | Loopback ADB endpoint, successful bridge, metrics, exit 0 | Not run because no selected device could be checked for Remote ADB eligibility | SKIPPED |
+| 10. Cleanup | `unset ESPER_SMOKE_API_KEY ESPER_SMOKE_PING_BODY` | No output; exit 0 | No output; exit 0 | PASS |
+
+### Failure Evidence
+
+PATH binary preamble failure (before any API call):
+
+```text
+$ espercli context clear --all
+Traceback (most recent call last):
+  File "/Users/rohanhasabe/.local/bin/espercli", line 6, in <module>
+    from esper.cli.app import main_entry
+  File "/Users/rohanhasabe/Library/Application Support/pipx/venvs/espercli/lib/python3.14/site-packages/esper/cli/app.py", line 32, in <module>
+    from esper.cli.secureadb import app as secureadb_app
+  File "/Users/rohanhasabe/Library/Application Support/pipx/venvs/espercli/lib/python3.14/site-packages/esper/cli/secureadb.py", line 17, in <module>
+    from esper.ext.certs import cleanup_certs, create_self_signed_cert, save_device_certificate
+  File "/Users/rohanhasabe/Library/Application Support/pipx/venvs/espercli/lib/python3.14/site-packages/esper/ext/certs.py", line 4, in <module>
+    from cement.utils import fs
+ModuleNotFoundError: No module named 'cement'
+exit=1
+```
+
+Initial configuration precheck, later resolved by human credential entry:
+
+```text
+$ ./dist/espercli-smoke configure show
+error: auth: Esper credentials are not configured
+exit=3
+```
+
+Device-list output shape (device objects are omitted from committed evidence
+because they contain live identifiers, network details, serials, and location):
+
+```text
+$ ./dist/espercli-smoke device list --limit 5
+content  {"count":142632,"next":"https://develop-api.esper.cloud/api/v2/devices/?limit=5&offset=5","prev":null,"results":[<5 live device objects redacted>]}
+exit=0
+```
+
+Device selection failure:
+
+```text
+$ ./dist/espercli-smoke device list --limit 1 --json | jq -er '.results[0].id'
+device=null
+exit=1
+```
+
+No destructive operation was executed. No destructive confirmation was reached
+because the preceding selection step did not produce an exact target. The only
+live API requests completed during this run were the two read-only device-list
+requests in steps 3a and 3b.

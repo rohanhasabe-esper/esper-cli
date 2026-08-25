@@ -34,7 +34,7 @@ Excluded from Phase 2:
 | 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Complete |
 | 16 | directory-record | 5 | `directory-record` | Complete |
 | 17 | emm | 9 | `emm`, `emm-account`, `emm-detail`, `emm-enrollment-begin`, `emm-enrollment-complete`, `emm-instance`, `emm-web-token` | Complete |
-| 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Blocked |
+| 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Complete |
 | 19 | geofence | 9 | `create-apply-geo-fence`, `geofence`, `the-geofence` | Blocked |
 | 20 | policy | 5 | `policy` | Blocked |
 | 21 | provisioning-profile | 5 | `provisioning-profile`, `provisioning-profile-version` | Complete |
@@ -76,7 +76,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 
 - `directory-record` - Complete: all 5 operations have schema-shaped success/API-error golden coverage, including corrected limit-offset pagination, platform-backed body-only create/update inputs, exact bodyless 204 output, and destructive refusal.
 - `emm` - Complete: all 9 operations have schema-shaped success/API-error golden coverage, including three pagination flows, validator-backed required inputs, transparent-proxy response envelopes, completion 201 handling, and internal auth-header exclusion.
-- `foundry` - Blocked: update bodies have only optional scalar properties.
+- `foundry` - Complete: all 6 operations have schema-shaped success/API-error golden coverage, including three apps-envelope pagination flows, platform-backed response envelopes and DTOs, build approval input, partial device-model update input, and internal auth-header exclusion.
 - `geofence` - Blocked: body rules and normalized same-generation aliases are undefined.
 - `policy` - Blocked: required wildcard bodies, complex properties, and scope/body collisions lack rules.
 
@@ -89,9 +89,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `foundry`: build and device-model updates require JSON bodies whose scalar
-  properties are all optional, so required input behavior is undefined.
 
 - `geofence`: wildcard/required body behavior is unresolved, and normalizing
   the malformed geofence nouns creates an undefined same-generation command
@@ -136,7 +133,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | device-support | Complete | - |
 | directory-record | Complete | - |
 | emm | Complete | - |
-| foundry | Blocked | Required bodies with optional scalar inputs. |
+| foundry | Complete | - |
 | geofence | Blocked | Body rules and normalized same-generation alias collision. |
 | policy | Blocked | Wildcard/complex bodies and scope/body collisions. |
 | provisioning-profile | Complete | - |
@@ -145,6 +142,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 18 packets complete (270 operations); 7 packets blocked (58
+Summary: 19 packets complete (276 operations); 6 packets blocked (52
 operations). All remaining blockers are recorded in `inbox.md` and `spec.md`
 Issues.

@@ -106,6 +106,39 @@ func TestRequiredParametersAreConditionalOnSelectedRoute(t *testing.T) {
 	}
 }
 
+func TestRequireOneOfParameters(t *testing.T) {
+	operation := Operation{
+		RequireOneOf: []string{"request", "device"},
+		Parameters: []Parameter{
+			{Name: "request", In: "query"},
+			{Name: "device", In: "query"},
+		},
+	}
+	command := &cobra.Command{Use: "list"}
+	addFlags(command, []Operation{operation})
+	if err := validateRequiredParameters(command, operation); err == nil || esperruntime.ExitCode(err) != 2 || !strings.Contains(err.Error(), "--request, --device") {
+		t.Fatalf("missing one-of error = %v", err)
+	}
+	if usage := command.Flags().Lookup("request").Usage; !strings.Contains(usage, "at least one required") {
+		t.Fatalf("--request usage = %q", usage)
+	}
+	if err := command.Flags().Set("device", "device-1"); err != nil {
+		t.Fatal(err)
+	}
+	if err := validateRequiredParameters(command, operation); err != nil {
+		t.Fatalf("one-of validation = %v", err)
+	}
+}
+
+func TestRequiredParameterHelp(t *testing.T) {
+	operation := Operation{Parameters: []Parameter{{Name: "parent_group_ids", In: "query", Required: true}}}
+	command := &cobra.Command{Use: "list"}
+	addFlags(command, []Operation{operation})
+	if usage := command.Flags().Lookup("parent-group-ids").Usage; usage != "parent-group-ids (required)" {
+		t.Fatalf("required flag usage = %q", usage)
+	}
+}
+
 func TestRequiredBodyPropertiesAreConditionalOnBodyInput(t *testing.T) {
 	tests := []struct {
 		name      string

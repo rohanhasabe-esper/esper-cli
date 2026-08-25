@@ -24,6 +24,7 @@ type Operation struct {
 	Verb             string
 	Pagination       string
 	ResponseEnvelope string
+	RequireOneOf     []string
 	Destructive      bool
 	ScopeParent      string
 	Summary          string
@@ -167,6 +168,11 @@ func addFlags(command *cobra.Command, operations []Operation) {
 			}
 			required := false
 			description := parameterFlagName(parameter)
+			if contains(operation.RequireOneOf, parameter.Name) {
+				description += " (at least one required from: " + formatFlagNames(operation.RequireOneOf) + ")"
+			} else if parameter.Required && parameterRequiredForAllOperations(operations, parameter) {
+				description += " (required)"
+			}
 			if parameter.Scope {
 				description = "scope routes to " + operation.Path
 			}
@@ -197,6 +203,22 @@ func addFlags(command *cobra.Command, operations []Operation) {
 			addStringFlag(command, property.Name, false, property.Enum, property.Name, seen)
 		}
 	}
+}
+
+func parameterRequiredForAllOperations(operations []Operation, wanted Parameter) bool {
+	for _, operation := range operations {
+		found := false
+		for _, parameter := range operation.Parameters {
+			if parameter.Name == wanted.Name && parameter.In == wanted.In && parameter.Required {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+	return len(operations) > 0
 }
 
 func addStringFlag(command *cobra.Command, name string, required bool, values []string, description string, seen map[string]bool) {
@@ -326,7 +348,23 @@ func validateRequiredParameters(command *cobra.Command, operation Operation) err
 			return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("required flag --%s is not set", kebab(parameter.Name)))
 		}
 	}
+	if len(operation.RequireOneOf) > 0 {
+		for _, name := range operation.RequireOneOf {
+			if command.Flags().Changed(kebab(name)) {
+				return nil
+			}
+		}
+		return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("at least one of %s is required", formatFlagNames(operation.RequireOneOf)))
+	}
 	return nil
+}
+
+func formatFlagNames(names []string) string {
+	flags := make([]string, 0, len(names))
+	for _, name := range names {
+		flags = append(flags, "--"+kebab(name))
+	}
+	return strings.Join(flags, ", ")
 }
 
 func allPages(command *cobra.Command, client *esperruntime.HTTPClient, operation Operation, response []byte) ([]byte, error) {

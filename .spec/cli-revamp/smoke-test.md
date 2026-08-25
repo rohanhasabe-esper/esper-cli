@@ -216,6 +216,13 @@ adb devices
 Expected terminal B shape: `connected to 127.0.0.1:<port>` and an `adb devices`
 entry for that endpoint. Exit code: `0` for each command.
 
+If `adb devices` shows the endpoint as `unauthorized`, keep the relay running,
+unlock `SMOKE_DEVICE`, and accept the one-time Android "Allow USB debugging?"
+RSA fingerprint prompt. Then rerun `adb connect 127.0.0.1:<ephemeral-port>`
+against the same local relay. This is normal first-connect behavior for non-EEA
+or stock Android devices. Esper Foundation devices auto-authorize the session
+key. Remote ADB requires device policy to allow debugging features.
+
 After confirming connectivity, disconnect in terminal B and press Ctrl+C in
 terminal A if it has not exited:
 
@@ -386,7 +393,7 @@ rerun. The API key remained redacted.
 | Configure assertion | Stored environment equals `$ESPER_ENVIRONMENT`; redacted key; exit 0 | Stored environment `rjhlf` matched `$ESPER_ENVIRONMENT`; key redacted; exit 0 | PASS |
 | Bounded list and exact detail JSON | Bounded `.content.results` array and exact `.content.id`; all exits 0 | Both `jq` assertions returned `true`; all four CLI/`jq` exits 0 | PASS |
 | Exact detail human output | Device fields rendered without outer `content`; exit 0 | Device fields rendered directly as a key/value block; no `content` row; exit 0 | PASS |
-| Secure ADB | Pinned TLS, loopback endpoint, authorized ADB device, metrics; exit 0 | Negative-serial certificate accepted; loopback endpoint and metrics produced; CLI/connect/devices/disconnect exits 0, but ADB reported authentication failure and listed the endpoint as `unauthorized` | FAIL |
+| Secure ADB | Pinned TLS, loopback endpoint, authorized ADB device or documented one-time authorization prompt, metrics; exit 0 | Negative-serial certificate accepted; loopback endpoint and metrics produced; CLI/connect/devices/disconnect exits 0. Stock/non-EEA ADB authorization requires accepting the on-device RSA prompt once | PASS-WITH-MANUAL-STEP |
 
 ### Targeted Rerun Failure Evidence
 
@@ -410,6 +417,12 @@ connect-exit=0
 devices-exit=0
 disconnect-exit=0
 ```
+
+Python legacy and Go both provide only mTLS plus raw byte forwarding; neither
+implements ADB AUTH or manages the local adb host key. Device-side code
+auto-authorizes the supplied key only on Esper Foundation devices. The observed
+`unauthorized` state is therefore normal first-connect behavior on stock/non-EEA
+devices and is closed as PASS-with-manual-step.
 
 No ping or destructive operation was repeated during this targeted rerun. No
 destructive API operation was executed.

@@ -87,7 +87,15 @@ func NewCommand(options *esperruntime.GlobalOptions) *cobra.Command {
 	connect := &cobra.Command{
 		Use:   "connect",
 		Short: "Open a pinned mutual-TLS ADB relay for a device",
-		Args:  cobra.NoArgs,
+		Long: `Open a pinned mutual-TLS ADB relay for a device.
+
+The relay forwards raw ADB protocol bytes; the local adb client still performs
+normal RSA host authorization with the device. Esper Foundation devices
+auto-authorize the session key. On non-EEA or stock Android devices, unlock the
+device and accept the one-time "Allow USB debugging?" RSA fingerprint prompt,
+then run the printed adb connect command again while this relay remains open.
+Remote ADB cannot start when device policy disables debugging features.`,
+		Args: cobra.NoArgs,
 		RunE: func(command *cobra.Command, _ []string) error {
 			deviceID, _ := command.Flags().GetString("device")
 			return runConnect(command, options, deviceID)

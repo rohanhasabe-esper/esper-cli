@@ -67,6 +67,19 @@ func TestGenerateClientCertificate(t *testing.T) {
 	}
 }
 
+func TestConnectHelpDocumentsADBHostAuthorization(t *testing.T) {
+	command := NewCommand(&esperruntime.GlobalOptions{})
+	connect, _, err := command.Find([]string{"connect"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, expected := range []string{"RSA host authorization", "Esper Foundation", "Allow USB debugging?", "disables debugging features"} {
+		if !strings.Contains(connect.Long, expected) {
+			t.Fatalf("connect help does not contain %q:\n%s", expected, connect.Long)
+		}
+	}
+}
+
 func TestPrepareCertificatesReplacesFilesWithPrivatePermissions(t *testing.T) {
 	directory := filepath.Join(t.TempDir(), "certs")
 	if err := os.MkdirAll(directory, 0o755); err != nil {

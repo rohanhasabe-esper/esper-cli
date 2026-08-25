@@ -1795,8 +1795,7 @@
             "in": "query",
             "description": "Number of results to return per page.",
             "schema": {
-              "type": "integer",
-              "default": 20
+              "type": "integer"
             }
           },
           {
@@ -1804,8 +1803,7 @@
             "in": "query",
             "description": "Return results from this index.",
             "schema": {
-              "type": "integer",
-              "default": 0
+              "type": "integer"
             }
           }
         ],
@@ -1817,6 +1815,8 @@
                 "schema": {
                   "required": [
                     "count",
+                    "next",
+                    "previous",
                     "results"
                   ],
                   "type": "object",
@@ -1927,11 +1927,15 @@
                   "image_file": {
                     "type": "string",
                     "description": "Valid file to upload",
-                    "format": "path"
+                    "format": "binary"
                   },
                   "orientation": {
                     "type": "string",
-                    "description": "Orientation of image e.g. landscape"
+                    "description": "Orientation of image e.g. landscape",
+                    "enum": [
+                      "portrait",
+                      "landscape"
+                    ]
                   }
                 }
               }
@@ -2281,6 +2285,22 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
@@ -2291,6 +2311,8 @@
                 "schema": {
                   "required": [
                     "count",
+                    "next",
+                    "previous",
                     "results"
                   ],
                   "type": "object",
@@ -2360,7 +2382,7 @@
           }
         ],
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
         "x-esper-noun": "tile-icon",
         "x-esper-scope-parent": "enterprise"
@@ -2402,11 +2424,25 @@
                   "icon_file": {
                     "type": "string",
                     "description": "Valid file to upload",
-                    "format": "path"
+                    "format": "binary"
                   },
                   "device_model": {
                     "type": "string",
                     "description": "Device model"
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "mobile",
+                      "tablet",
+                      "rugged",
+                      "pos",
+                      "digital_signage",
+                      "kiosk"
+                    ]
+                  },
+                  "custom": {
+                    "type": "boolean"
                   },
                   "enterprise": {
                     "type": "string",
@@ -2805,6 +2841,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "type": "object",
                 "required": [
                   "model"
                 ],
@@ -2825,6 +2862,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "object",
+                  "required": [
+                    "model"
+                  ],
                   "properties": {
                     "model": {
                       "type": "string",
@@ -2881,7 +2922,7 @@
             "apiKey": []
           }
         ],
-        "x-esper-destructive": false,
+        "x-esper-destructive": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "remove",
         "x-esper-noun": "tile-icon-unapply"
@@ -6591,6 +6632,9 @@
       },
       "ApplyTileIcon": {
         "type": "object",
+        "required": [
+          "icon"
+        ],
         "properties": {
           "icon": {
             "type": [
@@ -6616,13 +6660,21 @@
             ]
           },
           "devices": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
+            "maxItems": 100,
             "items": {
               "type": "string"
             }
           },
           "groups": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
+            "maxItems": 10,
             "items": {
               "type": "string"
             }
@@ -6667,19 +6719,25 @@
             "format": "uuid"
           },
           "enterprise": {
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
           },
           "image_file": {
             "type": "string",
             "format": "url"
           },
           "thumbnail": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "url"
           },
           "orientation": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "portrait",
+              "landscape"
+            ]
           },
           "is_active": {
             "type": "boolean"

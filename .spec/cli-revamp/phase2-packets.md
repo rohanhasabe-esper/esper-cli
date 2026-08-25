@@ -18,7 +18,7 @@ Excluded from Phase 2:
 | # | Packet | Operations | Top-level nouns | State |
 |---:|---|---:|---|---|
 | 1 | enterprise | 4 | `enterprise`, `enterprise-policy`, `enterprise-report` | Complete |
-| 2 | group | 18 | `device-group`, `group`, `group-eventfeed`, `group-report`, `group-thumbnail`, `legacy-device-group-command`, `sub-group` | Blocked |
+| 2 | group | 18 | `device-group`, `group`, `group-eventfeed`, `group-report`, `group-thumbnail`, `legacy-device-group-command`, `sub-group` | Complete |
 | 3 | app-application | 53 | `app`, `app-info`, `app-instance`, `app-version`, `app-vpp`, `appleappstore`, `application`, `application-minimal`, `device-app`, `esper-app-version`, `install`, `installdevice`, `itunesapp`, `preferred-region`, `product`, `tenant-app`, `tenant-app-version`, `tenant-esper-app`, `version`, `webclip` | Blocked |
 | 4 | blueprint | 15 | `blueprint`, `blueprint-revision`, `blueprint-version`, `revision` | Blocked |
 | 5 | pipeline | 37 | `pipeline`, `pipeline-run`, `stage`, `stage-run`, `target`, `target-bulk`, `target-list`, `target-run` | Blocked |
@@ -51,7 +51,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 ### Packets 1-5
 
 - `enterprise` - Complete: all 4 operations have schema-shaped success and API-error golden coverage.
-- `group` - Blocked: route-scope and body-property `--enterprise` collision lacks a locked rule.
+- `group` - Complete: all 18 operations have schema-shaped success/API-error golden coverage, including two `--all` flows and the route/body collision rule.
 - `app-application` - Blocked: merged routes require conditional query-flag enforcement not defined by conventions.
 - `blueprint` - Blocked: required bodies with no required properties lack a locked input rule.
 - `pipeline` - Blocked: seven required bodies with no required scalar input depend on the same missing rule.
@@ -89,11 +89,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `group`: `device-group create` requires `--enterprise` as both a route scope
-  and a scalar JSON body property, but the locked conventions define no
-  collision rule. The source body is also incorrectly advertised as `*/*`.
-  Details are recorded in `inbox.md` and `spec.md` Issues.
 
 - `app-application`: merged `device-app list` routes have different required
   query flags, but the locked scoped-collection rules do not define
@@ -176,7 +171,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | Packet | State | Blocker |
 |---|---|---|
 | enterprise | Complete | - |
-| group | Blocked | Scope/body `--enterprise` collision and wildcard body media. |
+| group | Complete | - |
 | app-application | Blocked | Merged routes need conditional required query flags. |
 | blueprint | Blocked | Required body with no required properties. |
 | pipeline | Blocked | Required bodies with no required scalar input. |
@@ -201,5 +196,5 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 4 packets complete (19 operations); 21 packets blocked (309
+Summary: 5 packets complete (37 operations); 20 packets blocked (291
 operations). All blockers are recorded in `inbox.md` and `spec.md` Issues.

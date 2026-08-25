@@ -185,9 +185,7 @@
                   "type": "object",
                   "properties": {
                     "content": {
-                      "items": {
-                        "$ref": "#/components/schemas/DeviceSubGroup"
-                      }
+                      "$ref": "#/components/schemas/DeviceSubGroup"
                     }
                   }
                 }
@@ -225,6 +223,7 @@
             }
           }
         },
+        "x-esper-platform-source": "src/services/shoonyacloud/shoonyapoc/api/enterprise/views/device_group.py:346-381",
         "security": [
           {
             "apiKey": []

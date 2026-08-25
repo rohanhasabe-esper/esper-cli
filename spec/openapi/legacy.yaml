@@ -2646,7 +2646,7 @@
         ],
         "requestBody": {
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DeviceGroupUpdate"
               }
@@ -2712,6 +2712,11 @@
           }
         ],
         "x-codegen-request-body-name": "data",
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/urls.py:250-252",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/views/device_group.py:163-245",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/serializers/device_group.py:61-243"
+        ],
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
@@ -2850,7 +2855,7 @@
         ],
         "requestBody": {
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DeviceGroupUpdate"
               }
@@ -2916,6 +2921,11 @@
           }
         ],
         "x-codegen-request-body-name": "data",
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/urls.py:250-252",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/views/device_group.py:163-262",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/serializers/device_group.py:61-440"
+        ],
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "update",
@@ -3064,7 +3074,7 @@
         ],
         "requestBody": {
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DeviceGroupPartialUpdate"
               }
@@ -3140,6 +3150,11 @@
           }
         ],
         "x-codegen-request-body-name": "data",
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/urls.py:250-252",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/views/device_group.py:163-262",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/serializers/device_group.py:61-440"
+        ],
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "partial-update",

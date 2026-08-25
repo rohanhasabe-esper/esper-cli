@@ -38,7 +38,7 @@ Excluded from Phase 2:
 | 19 | geofence | 9 | `create-apply-geo-fence`, `geofence`, `the-geofence` | Complete |
 | 20 | policy | 5 | `policy` | Complete |
 | 21 | provisioning-profile | 5 | `provisioning-profile`, `provisioning-profile-version` | Complete |
-| 22 | report-telemetry | 19 | `device-location`, `device-report`, `device-tile-report`, `event-feed`, `report-info`, `report-status`, `report-type`, `specific-location`, `status-metric`, `subscription`, `subscription-report`, `telemetry-graph-data` | Blocked |
+| 22 | report-telemetry | 19 | `device-location`, `device-report`, `device-tile-report`, `event-feed`, `report-info`, `report-status`, `report-type`, `specific-location`, `status-metric`, `subscription`, `subscription-report`, `telemetry-graph-data` | Complete |
 | 23 | role-scope | 7 | `role`, `scope` | Blocked |
 | 24 | seamless | 2 | `seamless` | Blocked |
 | 25 | tile-ui | 10 | `tile-icon`, `tile-icon-apply`, `tile-icon-unapply`, `wallpaper` | Blocked |
@@ -83,16 +83,12 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 ### Packets 21-25
 
 - `provisioning-profile` - Complete: all 5 operations have success/API-error goldens, multipart, pagination, scope, and destructive coverage.
-- `report-telemetry` - Blocked: required array-only subscription input lacks explicit-body enforcement.
+- `report-telemetry` - Complete: all 19 operations have schema-shaped success/API-error golden coverage, including four limit-offset flows, body-only subscription writes, optional PATCH input, v1/v2 command namespacing, reports-api envelopes, internal-header exclusion, and destructive refusal.
 - `role-scope` - Blocked: required bodies have only optional scalar or array inputs.
 - `seamless` - Blocked: both operations require bodies without required scalar input.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `report-telemetry`: subscription add/update require an array-only
-  `email_ids` body, but the locked rules do not define when explicit `--body`
-  is mandatory.
 
 - `role-scope`: role create/update have only optional scalar body properties,
   and scope update has only optional arrays; all require bodies under an
@@ -130,11 +126,11 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | geofence | Complete | - |
 | policy | Complete | - |
 | provisioning-profile | Complete | - |
-| report-telemetry | Blocked | Required array-only body input. |
+| report-telemetry | Complete | - |
 | role-scope | Blocked | Required bodies with optional scalar/array inputs. |
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 21 packets complete (290 operations); 4 packets blocked (38
+Summary: 22 packets complete (309 operations); 3 packets blocked (19
 operations). All remaining blockers are recorded in `inbox.md` and `spec.md`
 Issues.

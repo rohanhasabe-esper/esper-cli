@@ -256,7 +256,8 @@
             "description": "A UUID string identifying this enterprise.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -13886,17 +13887,35 @@
       },
       "StatusMetricsV2": {
         "type": "object",
+        "required": [
+          "last_seen",
+          "low_risk",
+          "high_risk",
+          "medium_risk",
+          "secure",
+          "low_battery",
+          "under_provisioning",
+          "unprovisioned_devices",
+          "recently_added",
+          "unspecified",
+          "total_devices_under_risk"
+        ],
         "properties": {
           "last_seen": {
             "type": "object",
+            "required": [
+              "first_period",
+              "second_period",
+              "third_period"
+            ],
             "properties": {
-              "less_than_30_minutes": {
+              "first_period": {
                 "type": "integer"
               },
-              "less_than_1_day": {
+              "second_period": {
                 "type": "integer"
               },
-              "greater_than_1_day": {
+              "third_period": {
                 "type": "integer"
               }
             }
@@ -13917,6 +13936,9 @@
             "type": "integer"
           },
           "under_provisioning": {
+            "type": "integer"
+          },
+          "unprovisioned_devices": {
             "type": "integer"
           },
           "recently_added": {

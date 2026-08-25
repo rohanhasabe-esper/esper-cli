@@ -235,6 +235,9 @@ func fixtureSchemaValidateType(document, schema map[string]any, value any, path 
 		if !ok {
 			return fmt.Errorf("%s must be an array", path)
 		}
+		if maxItems, ok := schema["maxItems"].(float64); ok && len(items) > int(maxItems) {
+			return fmt.Errorf("%s must contain at most %d items", path, int(maxItems))
+		}
 		if item, ok := schema["items"].(map[string]any); ok {
 			for index, child := range items {
 				if err := fixtureSchemaValidate(document, item, child, fmt.Sprintf("%s[%d]", path, index), resolving); err != nil {

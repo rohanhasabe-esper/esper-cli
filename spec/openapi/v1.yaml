@@ -222,7 +222,8 @@
             "description": "A UUID string identifying this enterprise.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -231,7 +232,8 @@
             "description": "A UUID string identifying the device",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -261,6 +263,8 @@
                 "schema": {
                   "required": [
                     "count",
+                    "next",
+                    "previous",
                     "results"
                   ],
                   "type": "object",
@@ -2904,7 +2908,8 @@
             "description": "A UUID string identifying this enterprise.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -2932,6 +2937,8 @@
                 "schema": {
                   "required": [
                     "count",
+                    "next",
+                    "previous",
                     "results"
                   ],
                   "type": "object",
@@ -3028,7 +3035,8 @@
             "description": "A UUID string identifying this enterprise.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -3115,7 +3123,8 @@
             "description": "A UUID string identifying this enterprise.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -3132,7 +3141,7 @@
             "description": "Filter device-tile reports created after a given timestamp.",
             "schema": {
               "type": "string",
-              "format": "datetime"
+              "format": "date-time"
             }
           },
           {
@@ -3141,7 +3150,7 @@
             "description": "Flter device-tile reports created before a given timestamp.",
             "schema": {
               "type": "string",
-              "format": "datetime"
+              "format": "date-time"
             }
           },
           {
@@ -3150,7 +3159,7 @@
             "description": "Filter device-tile reports provisioned after a given timestamp.",
             "schema": {
               "type": "string",
-              "format": "datetime"
+              "format": "date-time"
             }
           },
           {
@@ -3159,7 +3168,7 @@
             "description": "Filter device-tile reports provisioned before a given timestamp.",
             "schema": {
               "type": "string",
-              "format": "datetime"
+              "format": "date-time"
             }
           },
           {
@@ -3168,7 +3177,7 @@
             "description": "Filter device-tile reports updated after a given timestamp.",
             "schema": {
               "type": "string",
-              "format": "datetime"
+              "format": "date-time"
             }
           },
           {
@@ -3177,7 +3186,7 @@
             "description": "Filter device-tile reports updated before a given timestamp.",
             "schema": {
               "type": "string",
-              "format": "datetime"
+              "format": "date-time"
             }
           },
           {
@@ -3186,7 +3195,7 @@
             "description": "Filter device-tile reports last seen after a given timestamp.",
             "schema": {
               "type": "string",
-              "format": "datetime"
+              "format": "date-time"
             }
           },
           {
@@ -3195,7 +3204,7 @@
             "description": "Filter device-tile reports last seen before a given timestamp.",
             "schema": {
               "type": "string",
-              "format": "datetime"
+              "format": "date-time"
             }
           },
           {
@@ -3289,7 +3298,6 @@
             "description": "Filter device-tile reports by availability of group. True returns device-tiles with no group. False returns device-tiles with group.",
             "schema": {
               "type": "string",
-              "format": "boolean",
               "description": "Allowed values are True, False, true, false, 1, 0."
             }
           },
@@ -3338,7 +3346,7 @@
             "in": "query",
             "description": "Filter device-tile reports by geofence application.",
             "schema": {
-              "type": "boolean"
+              "type": "string"
             }
           },
           {
@@ -3354,7 +3362,7 @@
             "in": "query",
             "description": "Filter device-tile reports by android version.",
             "schema": {
-              "type": "integer"
+              "type": "string"
             }
           },
           {
@@ -3362,7 +3370,7 @@
             "in": "query",
             "description": "Filter device-tile reports by multiple android versions.",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "description": "List of android versions- comma separated."
             }
           },
@@ -3450,20 +3458,11 @@
             }
           },
           {
-            "name": "location",
-            "in": "query",
-            "description": "Filter device-tile reports by location.",
-            "schema": {
-              "type": "string",
-              "description": "City or state can be used to filter location."
-            }
-          },
-          {
             "name": "active_connection",
             "in": "query",
             "description": "Filter device-tile reports by active connection status.",
             "schema": {
-              "type": "boolean"
+              "type": "string"
             }
           },
           {
@@ -3475,11 +3474,27 @@
             }
           },
           {
-            "name": "has_seamlessInfo",
+            "name": "seamless_info",
             "in": "query",
             "description": "Filter device-tile reports by seamless information.",
             "schema": {
-              "type": "boolean"
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "schema": {
+              "type": "integer"
             }
           }
         ],
@@ -3491,6 +3506,8 @@
                 "schema": {
                   "required": [
                     "count",
+                    "next",
+                    "previous",
                     "results"
                   ],
                   "type": "object",
@@ -3560,7 +3577,7 @@
           }
         ],
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
         "x-esper-noun": "device-tile-report",
         "x-esper-scope-parent": "enterprise"
@@ -3587,7 +3604,8 @@
             "description": "A UUID string identifying this enterprise.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -3674,7 +3692,8 @@
             "description": "A UUID string identifying this enterprise.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -6216,6 +6235,19 @@
       },
       "StatusMetrics": {
         "type": "object",
+        "required": [
+          "active",
+          "in_active",
+          "low_risk",
+          "high_risk",
+          "medium_risk",
+          "secure",
+          "low_battery",
+          "under_provisioning",
+          "recently_added",
+          "unspecified",
+          "total_devices_under_risk"
+        ],
         "properties": {
           "active": {
             "type": "integer"
@@ -6486,33 +6518,56 @@
       },
       "DeviceLocations": {
         "type": "object",
+        "required": [
+          "id",
+          "device",
+          "enterprise",
+          "latitude",
+          "longitude",
+          "altitude",
+          "city",
+          "state",
+          "country",
+          "zipcode",
+          "last_updated_on",
+          "status_id"
+        ],
         "properties": {
           "id": {
             "type": "integer"
           },
           "latitude": {
-            "type": "number",
-            "format": "double"
+            "type": "string"
           },
           "longitude": {
-            "type": "number",
-            "format": "double"
+            "type": "string"
           },
           "altitude": {
-            "type": "number",
-            "format": "double"
+            "type": "string"
           },
           "city": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
-          "status": {
-            "type": "string"
+          "state": {
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "country": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "zipcode": {
-            "type": "integer"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "last_updated_on": {
             "type": "string",
@@ -6525,6 +6580,12 @@
           "enterprise": {
             "type": "string",
             "format": "url"
+          },
+          "status_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
           }
         }
       },

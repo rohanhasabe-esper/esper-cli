@@ -7512,16 +7512,6 @@
               }
             }
           },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReportsErrorResponse"
-                }
-              }
-            }
-          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -7671,6 +7661,16 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportsErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -8283,12 +8283,20 @@
     "schemas": {
       "GetReportResponseDownload": {
         "type": "object",
+        "required": [
+          "content"
+        ],
         "properties": {
           "content": {
             "type": "object",
+            "required": [
+              "id",
+              "status"
+            ],
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               },
               "status": {
                 "type": "string",
@@ -8297,8 +8305,7 @@
                   "RUNNING",
                   "SUCCEEDED",
                   "FAILED",
-                  "CANCELED",
-                  "CLOSED"
+                  "CANCELED"
                 ]
               },
               "schema": {
@@ -8338,12 +8345,20 @@
       },
       "GetReportResponsePreview": {
         "type": "object",
+        "required": [
+          "content"
+        ],
         "properties": {
           "content": {
             "type": "object",
+            "required": [
+              "id",
+              "status"
+            ],
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               },
               "status": {
                 "type": "string",
@@ -8352,8 +8367,7 @@
                   "RUNNING",
                   "SUCCEEDED",
                   "FAILED",
-                  "CANCELED",
-                  "CLOSED"
+                  "CANCELED"
                 ]
               },
               "schema": {
@@ -8388,10 +8402,11 @@
                 "type": "array",
                 "items": {
                   "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "items": {}
                 }
+              },
+              "truncated": {
+                "type": "boolean"
               }
             }
           }
@@ -8399,12 +8414,20 @@
       },
       "CreateReportResponse": {
         "type": "object",
+        "required": [
+          "content"
+        ],
         "properties": {
           "content": {
             "type": "object",
+            "required": [
+              "id",
+              "status"
+            ],
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               },
               "status": {
                 "type": "string",
@@ -8413,8 +8436,7 @@
                   "RUNNING",
                   "SUCCEEDED",
                   "FAILED",
-                  "CANCELED",
-                  "CLOSED"
+                  "CANCELED"
                 ]
               }
             }
@@ -8439,7 +8461,7 @@
             "example": "2024-08-28T00:00:00Z"
           },
           "end_time": {
-            "description": "End time of the report in UTC format. Example: \"2024-08-29T00:00:00Z\". Must be a date and time later than July 1st, 2024 and equal to the start_time.",
+            "description": "End time of the report in UTC format. Example: \"2024-08-29T00:00:00Z\". Must be a date and time later than July 1st, 2024 and greater than or equal to start_time.",
             "type": "string",
             "format": "date-time",
             "example": "2024-08-28T00:00:00Z"
@@ -8578,6 +8600,11 @@
       },
       "ReportsErrorResponse": {
         "type": "object",
+        "required": [
+          "status",
+          "error",
+          "message"
+        ],
         "properties": {
           "status": {
             "type": "integer"
@@ -8592,14 +8619,30 @@
       },
       "GetReportTypesResponse": {
         "type": "object",
+        "required": [
+          "content"
+        ],
         "properties": {
           "content": {
             "type": "object",
+            "required": [
+              "report_types"
+            ],
             "properties": {
               "report_types": {
-                "type": "array",
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "items": {
                   "type": "object",
+                  "required": [
+                    "name",
+                    "display_name",
+                    "description",
+                    "last_generated_at",
+                    "available_from"
+                  ],
                   "properties": {
                     "name": {
                       "type": "string"
@@ -8611,10 +8654,12 @@
                       "type": "string"
                     },
                     "last_generated_at": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "date-time"
                     },
                     "available_from": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "date-time"
                     }
                   }
                 }

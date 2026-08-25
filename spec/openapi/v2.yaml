@@ -2442,7 +2442,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "limit-offset",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "device-heartbeat-list"
       }
@@ -3024,7 +3024,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "google-account",
         "x-esper-scope-parent": "device"
@@ -3668,7 +3668,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "limit-offset",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "rv-activity-feed"
       }

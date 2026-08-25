@@ -438,7 +438,11 @@ func bodyForValues(command *cobra.Command, operation Operation, pathValues map[s
 	if operation.Body.BodyOnly && !bodyFlag {
 		return nil, "", esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("--body is required"))
 	}
-	autoValues := bodyAutoFill(operation.Body, pathValues)
+	autoValues := map[string]any{}
+	// Optional bodies remain absent unless the caller supplies a body input.
+	if operation.Body.Required || bodyFlag || propertiesSet {
+		autoValues = bodyAutoFill(operation.Body, pathValues)
+	}
 	if operation.Body.Required && !operation.Body.Empty && !bodyFlag && !propertiesSet && len(autoValues) == 0 {
 		return nil, "", esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("required request body needs at least one input: %s", strings.Join(bodyInputFlags(operation.Body), ", ")))
 	}

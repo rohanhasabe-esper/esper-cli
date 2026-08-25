@@ -181,6 +181,27 @@ func TestCollisionAutoFill(t *testing.T) {
 	}
 }
 
+func TestOptionalBodyAutoFillRequiresBodyInput(t *testing.T) {
+	operation := Operation{
+		Parameters: []Parameter{{Name: "deviceId", In: "path", Scope: true, ScopeName: "device"}},
+		Body:       &Body{MediaType: "application/json", AutoFill: []AutoFill{{Name: "device_id", Parameter: "deviceId", Type: "string"}}},
+	}
+	command := &cobra.Command{Use: "create"}
+	addFlags(command, []Operation{operation})
+	pathValues := map[string]string{"deviceId": "device-1"}
+	body, _, err := bodyForValues(command, operation, pathValues)
+	if err != nil || body != nil {
+		t.Fatalf("omitted optional body = %s, %v", body, err)
+	}
+	if err := command.Flags().Set("body", `{"device_id":"wrong"}`); err != nil {
+		t.Fatal(err)
+	}
+	body, _, err = bodyForValues(command, operation, pathValues)
+	if err != nil || string(body) != `{"device_id":"device-1"}` {
+		t.Fatalf("optional raw body auto-fill = %s, %v", body, err)
+	}
+}
+
 func TestRecursiveScopesLeaveResourceIDPositional(t *testing.T) {
 	operation := Operation{Path: "/stages/{stage_id}/runs/{run_id}/commands/{command_id}", ScopeParent: "run", Parameters: []Parameter{
 		{Name: "stage_id", In: "path", Scope: true, ScopeName: "stage"},

@@ -31,7 +31,7 @@ Excluded from Phase 2:
 | 12 | converge | 3 | `converge` | Complete |
 | 13 | custom-action | 6 | `custom-action`, `script` | Complete |
 | 14 | dep-sync | 3 | `dep-sync-request` | Complete |
-| 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Blocked |
+| 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Complete |
 | 16 | directory-record | 5 | `directory-record` | Blocked |
 | 17 | emm | 9 | `emm`, `emm-account`, `emm-detail`, `emm-enrollment-begin`, `emm-enrollment-complete`, `emm-instance`, `emm-web-token` | Blocked |
 | 18 | foundry | 6 | `foundry-build`, `foundry-device-model`, `foundry-event` | Blocked |
@@ -70,7 +70,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `converge` - Complete: all 3 operations have goldens and apps-envelope `--all` coverage.
 - `custom-action` - Complete: all 6 operations have schema-shaped success/API-error golden coverage, including composed-schema body-only create, partial update inputs, apps-envelope pagination, script retrieval, and destructive refusal.
 - `dep-sync` - Complete: all 3 operations have schema-shaped success/API-error golden coverage, including apps-envelope pagination and automatic `{}` for the required empty create body.
-- `device-support` - Blocked: Google EMM policy update has a required body with only an optional array.
+- `device-support` - Complete: all 15 operations have schema-shaped success/API-error golden coverage, including five pagination flows, explicit array-only policy input, optional Google-account body omission, route/body auto-fill, and two destructive refusals.
 
 ### Packets 16-20
 
@@ -89,9 +89,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `device-support`: Google EMM policy update requires a JSON body with only an
-  optional array property, so it depends on the unresolved explicit-body rule.
 
 - `directory-record`: create and update require JSON bodies without required
   properties, so their input enforcement depends on the unresolved body rule.
@@ -142,7 +139,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | converge | Complete | - |
 | custom-action | Complete | - |
 | dep-sync | Complete | - |
-| device-support | Blocked | Required body with optional array-only input. |
+| device-support | Complete | - |
 | directory-record | Blocked | Required bodies with no required properties. |
 | emm | Blocked | Required bodies with no required properties. |
 | foundry | Blocked | Required bodies with optional scalar inputs. |
@@ -154,6 +151,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 15 packets complete (241 operations); 10 packets blocked (87
+Summary: 16 packets complete (256 operations); 9 packets blocked (72
 operations). All remaining blockers are recorded in `inbox.md` and `spec.md`
 Issues.

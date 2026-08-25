@@ -5208,7 +5208,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
         "x-esper-noun": "directory-record",
         "x-esper-scope-parent": "enterprise"
@@ -5464,6 +5464,9 @@
     "schemas": {
       "DirectoryRecordUpdate": {
         "title": "DirectoryRecordUpdate",
+        "required": [
+          "unique_identifiers"
+        ],
         "type": "object",
         "properties": {
           "unique_identifiers": {
@@ -5521,6 +5524,9 @@
       },
       "DirectoryRecordCreate": {
         "title": "DirectoryRecordCreate",
+        "required": [
+          "unique_identifiers"
+        ],
         "type": "object",
         "properties": {
           "unique_identifiers": {

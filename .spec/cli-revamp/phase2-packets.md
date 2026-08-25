@@ -39,9 +39,9 @@ Excluded from Phase 2:
 | 20 | policy | 5 | `policy` | Complete |
 | 21 | provisioning-profile | 5 | `provisioning-profile`, `provisioning-profile-version` | Complete |
 | 22 | report-telemetry | 19 | `device-location`, `device-report`, `device-tile-report`, `event-feed`, `report-info`, `report-status`, `report-type`, `specific-location`, `status-metric`, `subscription`, `subscription-report`, `telemetry-graph-data` | Complete |
-| 23 | role-scope | 7 | `role`, `scope` | Blocked |
-| 24 | seamless | 2 | `seamless` | Blocked |
-| 25 | tile-ui | 10 | `tile-icon`, `tile-icon-apply`, `tile-icon-unapply`, `wallpaper` | Blocked |
+| 23 | role-scope | 7 | `role`, `scope` | Complete |
+| 24 | seamless | 2 | `seamless` | Complete |
+| 25 | tile-ui | 10 | `tile-icon`, `tile-icon-apply`, `tile-icon-unapply`, `wallpaper` | Complete |
 | | **Total** | **328** | | |
 
 ## Checkpoint summaries
@@ -84,22 +84,13 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 
 - `provisioning-profile` - Complete: all 5 operations have success/API-error goldens, multipart, pagination, scope, and destructive coverage.
 - `report-telemetry` - Complete: all 19 operations have schema-shaped success/API-error golden coverage, including four limit-offset flows, body-only subscription writes, optional PATCH input, v1/v2 command namespacing, reports-api envelopes, internal-header exclusion, and destructive refusal.
-- `role-scope` - Blocked: required bodies have only optional scalar or array inputs.
-- `seamless` - Blocked: both operations require bodies without required scalar input.
-- `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
+- `role-scope` - Complete: all 7 operations have schema-shaped success/API-error golden coverage, including role filters, required partial-body input, array-only scope updates, role scoping, internal-header exclusion, and destructive refusal.
+- `seamless` - Complete: both operations have schema-shaped success/API-error golden coverage, including required multipart upload, required complex body-only create, platform response envelopes, UUID validation, body modes, and internal-header exclusion.
+- `tile-ui` - Complete: all 10 operations have schema-shaped success/API-error golden coverage, including two limit-offset flows, multipart uploads, raw UUID scope/body auto-fill, apply body modes, and three destructive refusals.
 
 ## Blockers
 
-- `role-scope`: role create/update have only optional scalar body properties,
-  and scope update has only optional arrays; all require bodies under an
-  undefined explicit-input rule.
-
-- `seamless`: both create and upload require bodies with no required scalar
-  input, so invocation validation depends on the unresolved body rule.
-
-- `tile-ui`: tile-icon add collides `--enterprise` between route and body, and
-  tile-icon apply requires complex-only input without an enforcement rule.
-  Unapply also needs its destructive overlay corrected after unblock.
+None.
 
 ## Final status
 
@@ -127,10 +118,8 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | policy | Complete | - |
 | provisioning-profile | Complete | - |
 | report-telemetry | Complete | - |
-| role-scope | Blocked | Required bodies with optional scalar/array inputs. |
-| seamless | Blocked | Required bodies with no required scalar input. |
-| tile-ui | Blocked | Scope/body collision and required complex-only input. |
+| role-scope | Complete | - |
+| seamless | Complete | - |
+| tile-ui | Complete | - |
 
-Summary: 22 packets complete (309 operations); 3 packets blocked (19
-operations). All remaining blockers are recorded in `inbox.md` and `spec.md`
-Issues.
+Summary: all 25 packets complete (328 operations); no Phase 2 blockers remain.

@@ -1952,7 +1952,7 @@
           }
         ],
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
         "x-esper-noun": "command",
         "x-esper-scope-parent": "enterprise"
@@ -1985,7 +1985,7 @@
         "requestBody": {
           "description": "The request body to create a command for set of devices or groups",
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/V0CommandRequest"
               }
@@ -2178,7 +2178,7 @@
           }
         ],
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "get",
         "x-esper-noun": "status"
       }
@@ -3287,7 +3287,7 @@
           }
         ],
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "get",
         "x-esper-noun": "command-history"
       }
@@ -4696,7 +4696,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "limit-offset",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "operation-list"
       },
@@ -4837,16 +4837,18 @@
                   "state": {
                     "type": "string",
                     "enum": [
-                      "FAILED",
-                      "CANCELLED",
-                      "TIMEOUT",
-                      "SCHEDULED"
+                      "CANCELLED"
                     ],
                     "description": "The new status of the operation"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "description": "Reason for cancelling the operation"
                   }
                 },
                 "required": [
-                  "status"
+                  "state",
+                  "reason"
                 ]
               },
               "examples": {
@@ -4890,7 +4892,7 @@
             }
           }
         },
-        "x-esper-destructive": false,
+        "x-esper-destructive": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "update",
         "x-esper-noun": "operation"
@@ -5057,7 +5059,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
         "x-esper-noun": "operation",
         "x-esper-scope-parent": "device"
@@ -5171,10 +5173,14 @@
                 "properties": {
                   "operation_type": {
                     "type": "string",
+                    "deprecated": true,
                     "example": "CONVERGE"
                   },
                   "state": {
                     "type": "string",
+                    "enum": [
+                      "CANCELLATION_REQUESTED"
+                    ],
                     "example": "SUCCESS"
                   },
                   "service_id": {
@@ -5185,7 +5191,10 @@
                     "type": "string",
                     "example": "test"
                   }
-                }
+                },
+                "required": [
+                  "state"
+                ]
               }
             }
           }
@@ -5247,7 +5256,7 @@
             }
           }
         },
-        "x-esper-destructive": false,
+        "x-esper-destructive": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "update",
         "x-esper-noun": "device-operation"
@@ -5551,7 +5560,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "limit-offset",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "command-request"
       },
@@ -5937,7 +5946,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "limit-offset",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "command-request-status"
       }
@@ -6079,6 +6088,9 @@
               }
             }
           },
+          "304": {
+            "description": "Not Modified"
+          },
           "400": {
             "description": "Bad request",
             "content": {
@@ -6110,7 +6122,7 @@
             }
           }
         },
-        "x-esper-destructive": false,
+        "x-esper-destructive": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "update",
         "x-esper-noun": "command-status"

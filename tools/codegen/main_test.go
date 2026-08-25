@@ -49,3 +49,14 @@ func TestAliasesUseCanonicalCommand(t *testing.T) {
 		t.Fatalf("alias command = %#v", operations[1])
 	}
 }
+
+func TestPipelineCommandAndOperationAlwaysUseSideFamilyPrefix(t *testing.T) {
+	operations := []generatedOperation{
+		{Generation: "pipelines-v0", Noun: "command", Verb: "list", ScopeParent: "target-run"},
+		{Generation: "pipelines-v0", Noun: "operation", Verb: "get", ScopeParent: "stage-run"},
+	}
+	assignCommands(operations)
+	if operations[0].Noun != "pipeline-command" || operations[1].Noun != "pipeline-operation" {
+		t.Fatalf("pipeline nouns = %#v", operations)
+	}
+}

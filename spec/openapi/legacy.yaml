@@ -2234,7 +2234,7 @@
           }
         ],
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "get",
         "x-esper-noun": "status"
       }

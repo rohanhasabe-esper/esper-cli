@@ -295,6 +295,12 @@ func successMedia(responses map[string]response) string {
 }
 
 func assignCommands(operations []generatedOperation) {
+	for index := range operations {
+		operation := &operations[index]
+		if operation.Generation == "pipelines-v0" && (operation.Noun == "command" || operation.Noun == "operation") {
+			operation.Noun = "pipeline-" + operation.Noun
+		}
+	}
 	type candidate struct{ index, rank int }
 	groups := map[string][]candidate{}
 	for index := range operations {
@@ -319,7 +325,7 @@ func assignCommands(operations []generatedOperation) {
 		}
 		for _, candidate := range candidates {
 			operation := &operations[candidate.index]
-			if prefix, side := sideFamilyPrefixes[operation.Generation]; side && operation.ScopeParent == "" {
+			if prefix, side := sideFamilyPrefixes[operation.Generation]; side && operation.Generation != "pipelines-v0" && operation.ScopeParent == "" {
 				operation.Noun = prefix + "-" + operation.Noun
 			}
 		}

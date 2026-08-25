@@ -25,7 +25,7 @@ Excluded from Phase 2:
 | 6 | token-user | 33 | `authn-user`, `dep-token`, `dep-token-based-on`, `dep-token-upload`, `different-user`, `invite`, `own-user`, `personal-access-token`, `renew-token`, `tenant-user`, `tenant-user-invite`, `tenant-vpptoken`, `token-info`, `user`, `user-delete`, `user-info`, `webtoken`, `webtoken-instance` | Complete |
 | 7 | alarm-alert | 13 | `alarm-rule`, `alarm-history`, `alert-channel` | Complete |
 | 8 | apns | 5 | `apns-cert`, `apns-csr` | Complete |
-| 9 | command-operation | 37 | `command`, `command-history`, `command-inbox`, `command-request`, `command-request-status`, `command-status`, `device-operation`, `operation`, `operation-list`, `stat`, `status` | Blocked |
+| 9 | command-operation | 37 | `command`, `command-history`, `command-inbox`, `command-request`, `command-request-status`, `command-status`, `device-operation`, `operation`, `operation-list`, `pipeline-command`, `pipeline-operation`, `stat`, `status` | Complete |
 | 10 | connection | 2 | `connection`, `custom-connection` | Blocked |
 | 11 | content | 7 | `content`, `download`, `remote-file` | Complete |
 | 12 | converge | 3 | `converge` | Complete |
@@ -61,7 +61,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `token-user` - Complete: all 33 operations have schema-shaped success/API-error golden coverage, including raw DEP output, multipart, pagination, body-only inputs, recursive scopes, and six destructive refusals.
 - `alarm-alert` - Complete: all 13 operations have schema-shaped success and API-error golden coverage, including body-only create/replace, enterprise auto-fill, PATCH partial input, nested history scope, pagination, and destructive refusals.
 - `apns` - Complete: all 5 operations have schema-shaped success/API-error golden coverage, including corrected apps-envelope pagination, raw CSR output, multipart upload, and destructive confirmation.
-- `command-operation` - Blocked: required-body inputs and a scope/body flag collision lack locked rules.
+- `command-operation` - Complete: all 37 operations have schema-shaped success/API-error golden coverage, including 13 pagination flows, side-family collisions, multi-parent scope selection, body input modes, cancellation bodies, bodyless 304 handling, and six destructive refusals.
 - `connection` - Blocked: custom connection update has a required body with no required scalar input.
 
 ### Packets 11-15
@@ -89,10 +89,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `command-operation`: ten required-body operations depend on the missing input
-  rule, and v0 command create also collides `--enterprise` between scope and
-  body. Details are recorded in `inbox.md` and `spec.md` Issues.
 
 - `connection`: custom connection update requires a JSON body whose scalar
   properties are optional and whose `config` property is object-only. It
@@ -151,7 +147,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | token-user | Complete | - |
 | alarm-alert | Complete | - |
 | apns | Complete | - |
-| command-operation | Blocked | Required body input and scope/body collision rules. |
+| command-operation | Complete | - |
 | connection | Blocked | Required body with optional scalar/object-only input. |
 | content | Complete | - |
 | converge | Complete | - |
@@ -169,6 +165,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 11 packets complete (193 operations); 14 packets blocked (135
+Summary: 12 packets complete (230 operations); 13 packets blocked (98
 operations). All remaining blockers are recorded in `inbox.md` and `spec.md`
 Issues.

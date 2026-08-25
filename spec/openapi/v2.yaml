@@ -2528,10 +2528,24 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "results": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/DeviceAppsResponse"
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "prev": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/DeviceAppsResponse"
+                          }
+                        }
                       }
                     }
                   }
@@ -2571,7 +2585,8 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "limit-offset",
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-platform-source": "src/services/device-api/api/deviceapps/handler/read.go:15-124",
         "x-esper-verb": "list",
         "x-esper-noun": "device-app",
         "x-esper-scope-parent": "device"
@@ -2616,23 +2631,28 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "count": {
-                      "type": "integer"
-                    },
-                    "prev": {
-                      "type": "string"
-                    },
-                    "next": {
-                      "type": "string"
-                    },
-                    "results": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "device_id": {
-                            "type": "string",
-                            "format": "uuid"
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "prev": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "device_id": {
+                                "type": "string",
+                                "format": "uuid"
+                              }
+                            }
                           }
                         }
                       }
@@ -2674,7 +2694,8 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-platform-source": "src/services/device-api/api/deviceapps/handler/read.go:74-124",
         "x-esper-verb": "list",
         "x-esper-noun": "device-app"
       }
@@ -3791,7 +3812,8 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-platform-source": "src/services/apple-external-management-provider/api/itunesappinfo/handler/handler.go:65-75",
         "x-esper-verb": "list",
         "x-esper-noun": "itunesapp"
       }

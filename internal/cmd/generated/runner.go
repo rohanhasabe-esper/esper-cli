@@ -223,6 +223,13 @@ func run(command *cobra.Command, args []string, operations []Operation, options 
 			headers[parameter.Name] = []string{flagString(command, parameter.Name)}
 		}
 	}
+	if operation.Pagination == "limit-offset" || operation.Pagination == "apps-envelope" {
+		for _, name := range []string{"limit", "offset"} {
+			if command.Flags().Changed(name) {
+				query[name] = []string{flagString(command, name)}
+			}
+		}
+	}
 	client := esperruntime.NewHTTPClient(credentials)
 	response, err := client.DoWithContentTypeAndHeaders(command.Context(), operation.Method, requestPath, query, headers, body, contentType, operation.SuccessMedia)
 	if err != nil {

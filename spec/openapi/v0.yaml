@@ -1808,7 +1808,7 @@
           }
         ],
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
         "x-esper-noun": "install",
         "x-esper-scope-parent": "product"

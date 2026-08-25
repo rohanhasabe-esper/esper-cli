@@ -19,7 +19,7 @@ Excluded from Phase 2:
 |---:|---|---:|---|---|
 | 1 | enterprise | 4 | `enterprise`, `enterprise-policy`, `enterprise-report` | Complete |
 | 2 | group | 18 | `device-group`, `group`, `group-eventfeed`, `group-report`, `group-thumbnail`, `legacy-device-group-command`, `sub-group` | Complete |
-| 3 | app-application | 53 | `app`, `app-info`, `app-instance`, `app-version`, `app-vpp`, `appleappstore`, `application`, `application-minimal`, `device-app`, `esper-app-version`, `install`, `installdevice`, `itunesapp`, `preferred-region`, `product`, `tenant-app`, `tenant-app-version`, `tenant-esper-app`, `version`, `webclip` | Blocked |
+| 3 | app-application | 53 | `app`, `app-info`, `app-instance`, `app-version`, `app-vpp`, `appleappstore`, `application`, `application-minimal`, `device-app`, `esper-app-version`, `install`, `installdevice`, `itunesapp`, `preferred-region`, `product`, `tenant-app`, `tenant-app-version`, `tenant-esper-app`, `version`, `webclip` | Complete |
 | 4 | blueprint | 15 | `blueprint`, `blueprint-revision`, `blueprint-version`, `revision` | Blocked |
 | 5 | pipeline | 37 | `pipeline`, `pipeline-run`, `stage`, `stage-run`, `target`, `target-bulk`, `target-list`, `target-run` | Blocked |
 | 6 | token-user | 33 | `authn-user`, `dep-token`, `dep-token-based-on`, `dep-token-upload`, `different-user`, `invite`, `own-user`, `personal-access-token`, `renew-token`, `tenant-user`, `tenant-user-invite`, `tenant-vpptoken`, `token-info`, `user`, `user-delete`, `user-info`, `webtoken`, `webtoken-instance` | Blocked |
@@ -52,7 +52,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 
 - `enterprise` - Complete: all 4 operations have schema-shaped success and API-error golden coverage.
 - `group` - Complete: all 18 operations have schema-shaped success/API-error golden coverage, including two `--all` flows and the route/body collision rule.
-- `app-application` - Blocked: merged routes require conditional query-flag enforcement not defined by conventions.
+- `app-application` - Complete: all 53 operations have explicit schema-shaped success/API-error fixtures and goldens, with operation-specific pagination coverage.
 - `blueprint` - Blocked: required bodies with no required properties lack a locked input rule.
 - `pipeline` - Blocked: seven required bodies with no required scalar input depend on the same missing rule.
 
@@ -89,11 +89,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `app-application`: merged `device-app list` routes have different required
-  query flags, but the locked scoped-collection rules do not define
-  route-conditional required-flag enforcement. Details are recorded in
-  `inbox.md` and `spec.md` Issues.
 
 - `blueprint`: two operations require a request body but require none of its
   properties. The locked body rules do not define whether empty input is valid
@@ -172,7 +167,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 |---|---|---|
 | enterprise | Complete | - |
 | group | Complete | - |
-| app-application | Blocked | Merged routes need conditional required query flags. |
+| app-application | Complete | - |
 | blueprint | Blocked | Required body with no required properties. |
 | pipeline | Blocked | Required bodies with no required scalar input. |
 | token-user | Blocked | Required body with no required properties. |
@@ -196,5 +191,5 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 5 packets complete (37 operations); 20 packets blocked (291
+Summary: 6 packets complete (90 operations); 19 packets blocked (238
 operations). All blockers are recorded in `inbox.md` and `spec.md` Issues.

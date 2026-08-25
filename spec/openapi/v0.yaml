@@ -6423,10 +6423,16 @@
                           "type": "integer"
                         },
                         "previous": {
-                          "type": "string"
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "next": {
-                          "type": "string"
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "results": {
                           "type": "array",
@@ -6451,6 +6457,16 @@
               }
             }
           },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
@@ -6463,7 +6479,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "limit-offset",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "apns-cert"
       },
@@ -6492,10 +6508,10 @@
           "200": {
             "description": "Created",
             "content": {
-              "application/x-plist": {
+              "text/plain; charset=utf-8": {
                 "schema": {
                   "type": "string",
-                  "format": "binary"
+                  "format": "byte"
                 }
               }
             }
@@ -6588,6 +6604,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
                 }
               }
             }
@@ -6742,7 +6768,7 @@
           }
         ],
         "responses": {
-          "204": {
+          "200": {
             "description": "Deleted APNs certificate",
             "content": {
               "application/json": {
@@ -6769,6 +6795,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
                 }
               }
             }
@@ -8712,12 +8748,10 @@
             ]
           },
           "created_by": {
-            "type": "number",
-            "format": "int32"
+            "type": "string"
           },
           "updated_by": {
-            "type": "number",
-            "format": "int32"
+            "type": "string"
           },
           "created_at": {
             "type": "string",

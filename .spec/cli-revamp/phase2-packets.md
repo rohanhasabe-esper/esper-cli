@@ -26,7 +26,7 @@ Excluded from Phase 2:
 | 7 | alarm-alert | 13 | `alarm-rule`, `alarm-history`, `alert-channel` | Complete |
 | 8 | apns | 5 | `apns-cert`, `apns-csr` | Complete |
 | 9 | command-operation | 37 | `command`, `command-history`, `command-inbox`, `command-request`, `command-request-status`, `command-status`, `device-operation`, `operation`, `operation-list`, `pipeline-command`, `pipeline-operation`, `stat`, `status` | Complete |
-| 10 | connection | 2 | `connection`, `custom-connection` | Blocked |
+| 10 | connection | 2 | `connection`, `custom-connection` | Complete |
 | 11 | content | 7 | `content`, `download`, `remote-file` | Complete |
 | 12 | converge | 3 | `converge` | Complete |
 | 13 | custom-action | 6 | `custom-action`, `script` | Blocked |
@@ -62,7 +62,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `alarm-alert` - Complete: all 13 operations have schema-shaped success and API-error golden coverage, including body-only create/replace, enterprise auto-fill, PATCH partial input, nested history scope, pagination, and destructive refusals.
 - `apns` - Complete: all 5 operations have schema-shaped success/API-error golden coverage, including corrected apps-envelope pagination, raw CSR output, multipart upload, and destructive confirmation.
 - `command-operation` - Complete: all 37 operations have schema-shaped success/API-error golden coverage, including 13 pagination flows, side-family collisions, multi-parent scope selection, body input modes, cancellation bodies, bodyless 304 handling, and six destructive refusals.
-- `connection` - Blocked: custom connection update has a required body with no required scalar input.
+- `connection` - Complete: both operations have schema-shaped success/API-error golden coverage, including tenant scope, optional filtering, body-only update input, body file/stdin handling, and internal-header exclusion.
 
 ### Packets 11-15
 
@@ -89,10 +89,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `connection`: custom connection update requires a JSON body whose scalar
-  properties are optional and whose `config` property is object-only. It
-  depends on the unresolved required-body rule.
 
 - `custom-action`: create requires object-only properties and update has no
   required scalar input. Both depend on the unresolved required-body/property
@@ -148,7 +144,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | alarm-alert | Complete | - |
 | apns | Complete | - |
 | command-operation | Complete | - |
-| connection | Blocked | Required body with optional scalar/object-only input. |
+| connection | Complete | - |
 | content | Complete | - |
 | converge | Complete | - |
 | custom-action | Blocked | Required complex properties and body-only update input. |
@@ -165,6 +161,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 12 packets complete (230 operations); 13 packets blocked (98
+Summary: 13 packets complete (232 operations); 12 packets blocked (96
 operations). All remaining blockers are recorded in `inbox.md` and `spec.md`
 Issues.

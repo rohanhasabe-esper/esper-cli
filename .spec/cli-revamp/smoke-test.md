@@ -8,17 +8,34 @@ credentials or production devices.
 - Build or install the `espercli` binary from the `go-rewrite` branch.
 - Install `jq` and Android platform tools (`adb`).
 - Use a dev API key and a dev device on which Remote ADB is enabled.
+- Export `SMOKE_DEVICE` as the ID of a dev device you own and may ping/debug.
 - Run the checklist in Bash, with `espercli`, `jq`, and `adb` on `PATH`.
 
 ```bash
-set -o pipefail
+set -euo pipefail
 command -v bash
-command -v espercli
 command -v jq
 command -v adb
+: "${SMOKE_DEVICE:?export SMOKE_DEVICE as an owned dev device ID}"
+espercli version
 ```
 
-Expected: each command prints an executable path. Exit code: `0` for each.
+Expected: dependency checks print executable paths, and `espercli version`
+prints `espercli <version> (commit ..., built ...)`. Exit code: `0` for each.
+If `espercli version` starts Python, raises an import error, or does not print Go
+build metadata, a legacy Python CLI is earlier on `PATH`. Remove that install or
+bypass it before continuing:
+
+```bash
+type -a espercli
+mkdir -p dist
+go build -o dist/espercli ./cmd/espercli
+export PATH="$PWD/dist:$PATH"
+hash -r
+espercli version
+```
+
+Do not continue until the version command identifies the Go CLI.
 
 ## 1. Configure credentials
 
@@ -59,37 +76,39 @@ unredacted key must not appear. Exit code: `0`.
 ```bash
 read -rp "Dev enterprise ID: " ESPER_SMOKE_ENTERPRISE_ID
 espercli context set enterprise "$ESPER_SMOKE_ENTERPRISE_ID"
+ESPER_SMOKE_CONTEXT_SET_EXIT="$?"
 espercli context get enterprise
-printf 'exit=%s\n' "$?"
+ESPER_SMOKE_CONTEXT_GET_EXIT="$?"
+printf 'set-exit=%s\nget-exit=%s\n' \
+  "$ESPER_SMOKE_CONTEXT_SET_EXIT" "$ESPER_SMOKE_CONTEXT_GET_EXIT"
+test "$ESPER_SMOKE_CONTEXT_SET_EXIT" -eq 0
+test "$ESPER_SMOKE_CONTEXT_GET_EXIT" -eq 0
 ```
 
 Expected shape: `enterprise: <the supplied ID>` from both context commands.
 Exit code: `0`.
 
-## 3. List devices and select one
+## 3. Verify the explicitly selected device
 
-Human-readable list envelope:
-
-```bash
-espercli device list --limit 5
-printf 'exit=%s\n' "$?"
-```
-
-Expected shape: a key/value block containing `count`, `next`, `previous`, and
-the serialized `results` collection. Exit code: `0`.
-
-Select the first dev device from the raw JSON envelope:
+Use a bounded query for the exact human-supplied device ID. Never select the
+first device from this shared dev tenant.
 
 ```bash
-export ESPER_SMOKE_DEVICE_ID="$(
-  espercli device list --limit 1 --json |
-    jq -er '.results[0].id'
+ESPER_SMOKE_DEVICE_JSON="$(
+  espercli device list --limit 5 --search "$SMOKE_DEVICE" --json
 )"
-printf 'device=%s\n' "$ESPER_SMOKE_DEVICE_ID"
+printf '%s\n' "$ESPER_SMOKE_DEVICE_JSON" |
+  jq -e --arg device "$SMOKE_DEVICE" \
+    '.content.results | any(.id == $device)'
+ESPER_SMOKE_DEVICE_EXIT="$?"
+export ESPER_SMOKE_DEVICE_ID="$SMOKE_DEVICE"
+printf 'exit=%s\n' "$ESPER_SMOKE_DEVICE_EXIT"
+test "$ESPER_SMOKE_DEVICE_EXIT" -eq 0
 ```
 
-Expected shape: `device=<non-empty device ID>`. Exit code: `0`. Stop if `jq`
-reports no device.
+Expected stdout: `true`, followed by `exit=0`. The raw API shape is an
+apps-envelope with results at `.content.results`. Stop if the supplied device is
+not present in the bounded result.
 
 ## 4. Show the selected device
 
@@ -101,20 +120,20 @@ printf 'exit=%s\n' "$?"
 Expected shape: a key/value block containing at least the selected device ID,
 name, and state. Exit code: `0`.
 
-## 5. Verify pagination with `--all`
+## 5. Verify pagination with `--all` on groups
 
 ```bash
-espercli device list --limit 2 --all
+espercli device-group list --limit 100 --all
 printf 'exit=%s\n' "$?"
 ```
 
-Expected shape: one merged human-readable table containing all accessible dev
-devices, not one envelope per page. Exit code: `0`.
+Expected shape: one merged human-readable table containing the dev enterprise's
+groups, not one envelope per page. Exit code: `0`.
 
 ## 6. Verify `--json` through `jq`
 
 ```bash
-espercli device list --limit 2 --all --json |
+espercli device-group list --limit 100 --all --json |
   jq -e 'type == "array" and all(.[]; has("id"))'
 printf 'exit=%s\n' "$?"
 ```
@@ -129,7 +148,7 @@ active enterprise context supplies `enterprise_id`.
 
 ```bash
 ESPER_SMOKE_PING_BODY="$(
-  jq -nc --arg device "$ESPER_SMOKE_DEVICE_ID" \
+  jq -nc --arg device "$SMOKE_DEVICE" \
     '{command_type:"DEVICE", devices:[$device], command:"UPDATE_HEARTBEAT", schedule:"IMMEDIATE"}'
 )"
 espercli command create --body "$ESPER_SMOKE_PING_BODY" --json |
@@ -148,7 +167,7 @@ Answer `n`; this must stop before an API request is sent.
 
 ```bash
 set +e
-printf 'n\n' | espercli device-request delete "$ESPER_SMOKE_DEVICE_ID"
+printf 'n\n' | espercli device-request delete "$SMOKE_DEVICE"
 ESPER_SMOKE_CANCEL_EXIT="$?"
 set -e
 printf 'exit=%s\n' "$ESPER_SMOKE_CANCEL_EXIT"
@@ -161,21 +180,20 @@ must not delete or unenroll the device.
 
 ## 9. Connect Secure ADB
 
-Store the selected device as active, then start the relay in terminal A:
+Start the relay for the exact selected device in terminal A:
 
 ```bash
-espercli context set device "$ESPER_SMOKE_DEVICE_ID"
 set +e
-espercli --verbose secureadb connect
+espercli --verbose secureadb connect --device "$SMOKE_DEVICE"
 ESPER_SMOKE_SECUREADB_EXIT="$?"
 set -e
 printf 'secureadb-exit=%s\n' "$ESPER_SMOKE_SECUREADB_EXIT"
+test "$ESPER_SMOKE_SECUREADB_EXIT" -eq 0
 ```
 
 Expected terminal A shape:
 
 ```text
-context: using active device ... for device_id
 context: using active enterprise ... for enterprise_id
 Secure ADB relay ready. Run:
 adb connect 127.0.0.1:<ephemeral-port>
@@ -209,7 +227,7 @@ command is interrupted before the local ADB client connects,
 ## 10. Remove shell secrets
 
 ```bash
-unset ESPER_SMOKE_API_KEY ESPER_SMOKE_PING_BODY
+unset ESPER_SMOKE_API_KEY ESPER_SMOKE_PING_BODY ESPER_SMOKE_DEVICE_JSON
 ```
 
 Expected output: none. Exit code: `0`.
@@ -284,3 +302,69 @@ No destructive operation was executed. No destructive confirmation was reached
 because the preceding selection step did not produce an exact target. The only
 live API requests completed during this run were the two read-only device-list
 requests in steps 3a and 3b.
+
+## Results 2026-08-25 Rerun
+
+Environment reported by the switched dev tenant: `rjhlf`. Human-supplied owned
+device: `be51677d-d0f4-4a08-a06d-cea69429b5a8`. Enterprise:
+`18757e17-abb8-464d-b88b-c5ee4897c793`. The API key remained redacted.
+
+| Step | Command | Expected | Actual | Result |
+|---|---|---|---|---|
+| Safety reset | `espercli context clear --all` | All four resources unset; exit 0 | All four resources unset; exit 0 | PASS |
+| Go binary preamble | `espercli version` | Go build metadata; exit 0 | `espercli dev (commit unknown, built unknown)`; exit 0 | PASS |
+| 1. Configuration | `espercli configure show` | Environment `develop`, redacted key; exit 0 | Environment `rjhlf`, redacted key; exit 0 | FAIL |
+| 2. Enterprise context | `context set/get enterprise 18757e17-abb8-464d-b88b-c5ee4897c793` | Exact enterprise twice; exits 0 | Exact enterprise twice; exits 0 | PASS |
+| 3. Bounded owned-device query | `device list --limit 5 --search "$SMOKE_DEVICE" --json` with exact-ID `jq` assertion | `true`; exits 0 | CLI exit 0; assertion returned `false`, exit 1 | FAIL |
+| 4. Exact device get | `device get "$SMOKE_DEVICE"` | Top-level device key/value block; exit 0 | One `content` key containing the exact device object; exit 0 | FAIL |
+| 5. Group pagination | `device-group list --limit 100 --all` | One merged group table; exit 0 | One-row merged `All devices` group table; exit 0 | PASS |
+| 6. Group JSON pagination | `device-group list --limit 100 --all --json \| jq ...` | `true`; exit 0 | `true`; exit 0 | PASS |
+| 7. Ping | `command create` with `UPDATE_HEARTBEAT` targeting only `SMOKE_DEVICE` | JSON object; exit 0 | `true`; exit 0 | PASS |
+| 8. Destructive prompt | `device-request delete "$SMOKE_DEVICE"` without `--yes`, answer `n` | Exact target and count, cancellation, exit 2, no API request | Prompt named `/device/v0/devices/be51677d-d0f4-4a08-a06d-cea69429b5a8/` and `1 target(s)`; declined; exit 2 | PASS |
+| 9. Secure ADB | `secureadb connect --device "$SMOKE_DEVICE"` | Loopback endpoint, ADB bridge, metrics; exit 0 | Active enterprise applied, then `device certificate is not valid PEM`; exit 1; no local endpoint | FAIL |
+| 10. Cleanup | `unset ESPER_SMOKE_API_KEY ESPER_SMOKE_PING_BODY ESPER_SMOKE_DEVICE_JSON` | No output; exit 0 | No output; exit 0 | PASS |
+
+### Rerun Failure Evidence
+
+Configuration shape mismatch:
+
+```text
+$ espercli configure show
+environment: rjhlf
+api_key: **************************zgTj
+exit=0
+```
+
+Bounded explicit-device assertion:
+
+```text
+$ espercli device list --limit 5 --search "$SMOKE_DEVICE" --json |
+    jq -e --arg device "$SMOKE_DEVICE" '.content.results | any(.id == $device)'
+false
+cli-exit=0
+jq-exit=1
+```
+
+The exact device lookup succeeded, proving ownership/tenant targeting, but the
+human output retained an additional response envelope. Live device fields are
+redacted from committed evidence:
+
+```text
+$ espercli device get "$SMOKE_DEVICE"
+content  {"id":"be51677d-d0f4-4a08-a06d-cea69429b5a8","tenant_id":"18757e17-abb8-464d-b88b-c5ee4897c793",<live device fields redacted>}
+exit=0
+```
+
+Secure ADB single attempt:
+
+```text
+$ espercli --verbose secureadb connect --device "$SMOKE_DEVICE"
+context: using active enterprise 18757e17-abb8-464d-b88b-c5ee4897c793 for enterprise_id
+error: api: device certificate is not valid PEM
+secureadb-exit=1
+```
+
+No destructive API operation was executed. The exact destructive target was
+declined at the prompt. The only mutating command request was the permitted
+`UPDATE_HEARTBEAT` ping. Secure ADB created its temporary negotiation session but
+did not open a local listener because certificate validation failed.

@@ -2161,7 +2161,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Device information for the Tenant.\nResponse format depends on pagination type used:\n- **Offset-based**: Returns `count`, `prev`, `next` (URLs), `results`\n- **Cursor-based**: Returns `results`, `next_cursor`, `prev_cursor`\n",
+            "description": "Device information for the Tenant.\nResponse format depends on pagination type used:\n- **Offset-based**: Returns `count`, `prev`, `next` (URLs), `results`\n- **Cursor-based**: Returns `results`, `next_cursor`, `prev_cursor`\n\nLive apps-envelope evidence: `.spec/cli-revamp/smoke-test.md`, Results 2026-08-25.\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -2214,7 +2214,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "limit-offset",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "device"
       }
@@ -11119,7 +11119,7 @@
             "type": "integer",
             "description": "Total number of devices matching the query"
           },
-          "previous": {
+          "prev": {
             "type": [
               "string",
               "null"

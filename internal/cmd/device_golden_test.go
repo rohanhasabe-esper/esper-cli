@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	esperruntime "github.com/esper-io/esper-cli/internal/runtime"
@@ -66,6 +67,40 @@ func TestDeviceCommandsGoldenFixtures(t *testing.T) {
 				t.Fatalf("output mismatch\nwant:\n%s\ngot:\n%s", want, output.String())
 			}
 		})
+	}
+}
+
+func TestDeviceListAllUnwrapsAppsEnvelope(t *testing.T) {
+	first := readDeviceFixture(t, "list-all-first-page.json")
+	second := readDeviceFixture(t, "list-all-second-page.json")
+	var server *httptest.Server
+	server = httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if request.URL.Path != "/v2/devices/" {
+			t.Errorf("request path = %q", request.URL.Path)
+		}
+		writer.Header().Set("Content-Type", "application/json")
+		if request.URL.Query().Get("offset") == "1" {
+			_, _ = writer.Write(second)
+			return
+		}
+		response := strings.ReplaceAll(string(first), "NEXT_URL", server.URL+"/v2/devices/?offset=1")
+		_, _ = writer.Write([]byte(response))
+	}))
+	defer server.Close()
+	t.Setenv(esperruntime.EnvironmentVariable, server.URL)
+	t.Setenv(esperruntime.APIKeyVariable, "fixture-key")
+
+	command := NewRootCommand()
+	var output bytes.Buffer
+	command.SetOut(&output)
+	command.SetErr(&output)
+	command.SetArgs([]string{"device", "list", "--all", "--json"})
+	if err := command.Execute(); err != nil {
+		t.Fatalf("Execute() error = %v", err)
+	}
+	want := string(readDeviceFixture(t, "list-all-success.golden"))
+	if output.String() != want {
+		t.Fatalf("output mismatch\nwant:\n%s\ngot:\n%s", want, output.String())
 	}
 }
 

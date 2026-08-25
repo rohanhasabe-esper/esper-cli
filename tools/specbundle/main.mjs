@@ -398,7 +398,7 @@ function verbFor(method, apiPath, operation, collectionPaths) {
 
 function paginationFor(apiPath, operation, verb) {
   if (verb !== "list" || !operationHasPagination(operation)) return "none";
-  if (/^\/(apps\/v0|v2\/(itunesapps|tenant-apps|appleappstore|apps|webclips|provisioning-profiles|preferred-regions|esper-apps|tenant-esper-apps))/.test(apiPath)) {
+  if (apiPath === "/v2/devices/" || /^\/(apps\/v0|v2\/(itunesapps|tenant-apps|appleappstore|apps|webclips|provisioning-profiles|preferred-regions|esper-apps|tenant-esper-apps))/.test(apiPath)) {
     return "apps-envelope";
   }
   return "limit-offset";

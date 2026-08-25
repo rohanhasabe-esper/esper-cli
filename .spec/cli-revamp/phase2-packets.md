@@ -22,7 +22,7 @@ Excluded from Phase 2:
 | 3 | app-application | 53 | `app`, `app-info`, `app-instance`, `app-version`, `app-vpp`, `appleappstore`, `application`, `application-minimal`, `device-app`, `esper-app-version`, `install`, `installdevice`, `itunesapp`, `preferred-region`, `product`, `tenant-app`, `tenant-app-version`, `tenant-esper-app`, `version`, `webclip` | Complete |
 | 4 | blueprint | 15 | `blueprint`, `blueprint-revision`, `blueprint-version`, `revision` | Complete |
 | 5 | pipeline | 37 | `pipeline`, `pipeline-run`, `stage`, `stage-run`, `target`, `target-bulk`, `target-list`, `target-run` | Complete |
-| 6 | token-user | 33 | `authn-user`, `dep-token`, `dep-token-based-on`, `dep-token-upload`, `different-user`, `invite`, `own-user`, `personal-access-token`, `renew-token`, `tenant-user`, `tenant-user-invite`, `tenant-vpptoken`, `token-info`, `user`, `user-delete`, `user-info`, `webtoken`, `webtoken-instance` | Blocked |
+| 6 | token-user | 33 | `authn-user`, `dep-token`, `dep-token-based-on`, `dep-token-upload`, `different-user`, `invite`, `own-user`, `personal-access-token`, `renew-token`, `tenant-user`, `tenant-user-invite`, `tenant-vpptoken`, `token-info`, `user`, `user-delete`, `user-info`, `webtoken`, `webtoken-instance` | Complete |
 | 7 | alarm-alert | 13 | `alarm-rule`, `alarmhistory`, `alarmrule`, `alert-channel`, `alertchannel` | Blocked |
 | 8 | apns | 5 | `apns-cert`, `apns-csr` | Blocked |
 | 9 | command-operation | 37 | `command`, `command-history`, `command-inbox`, `command-request`, `command-request-status`, `command-status`, `device-operation`, `operation`, `operation-list`, `stat`, `status` | Blocked |
@@ -58,7 +58,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 
 ### Packets 6-10
 
-- `token-user` - Blocked: legacy user partial-update depends on the missing required-body input rule.
+- `token-user` - Complete: all 33 operations have schema-shaped success/API-error golden coverage, including raw DEP output, multipart, pagination, body-only inputs, recursive scopes, and six destructive refusals.
 - `alarm-alert` - Blocked: required body/object inputs and scope/body flag collisions lack locked rules.
 - `apns` - Blocked: empty required body and binary plist output behavior are undefined.
 - `command-operation` - Blocked: required-body inputs and a scope/body flag collision lack locked rules.
@@ -89,10 +89,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `token-user`: legacy `user partial-update` requires a JSON body whose schema
-  has no required properties. It depends on the unresolved required-body input
-  rule recorded in `inbox.md` and `spec.md` Issues.
 
 - `alarm-alert`: required body/object-only inputs lack a locked enforcement
   rule, and create routes collide `--enterprise` between scope and body.
@@ -160,7 +156,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | app-application | Complete | - |
 | blueprint | Complete | - |
 | pipeline | Complete | - |
-| token-user | Blocked | Required body with no required properties. |
+| token-user | Complete | - |
 | alarm-alert | Blocked | Required complex/body input and scope/body collision rules. |
 | apns | Blocked | Empty required body and binary plist output behavior. |
 | command-operation | Blocked | Required body input and scope/body collision rules. |
@@ -181,5 +177,5 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 8 packets complete (142 operations); 17 packets blocked (186
+Summary: 9 packets complete (175 operations); 16 packets blocked (153
 operations). All blockers are recorded in `inbox.md` and `spec.md` Issues.

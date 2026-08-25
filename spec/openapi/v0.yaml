@@ -419,7 +419,7 @@
           }
         ],
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
         "x-esper-noun": "webtoken",
         "x-esper-scope-parent": "emm"
@@ -604,7 +604,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "webtoken-instance"
+        "x-esper-noun": "webtoken-instance",
+        "x-esper-scope-parent": "emm"
       },
       "put": {
         "x-badges": [
@@ -707,7 +708,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "update",
-        "x-esper-noun": "webtoken-instance"
+        "x-esper-noun": "webtoken-instance",
+        "x-esper-scope-parent": "emm"
       },
       "patch": {
         "x-badges": [
@@ -810,7 +812,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "patch",
-        "x-esper-noun": "webtoken-instance"
+        "x-esper-noun": "webtoken-instance",
+        "x-esper-scope-parent": "emm"
       },
       "delete": {
         "x-badges": [
@@ -917,7 +920,8 @@
         "x-esper-destructive": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "delete",
-        "x-esper-noun": "webtoken-instance"
+        "x-esper-noun": "webtoken-instance",
+        "x-esper-scope-parent": "emm"
       }
     },
     "/v0/enterprise/{enterprise_id}/emm/{emm_id}/product/": {
@@ -6870,7 +6874,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "tenant-vpptoken"
       },
@@ -7214,7 +7218,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "dep-token"
       }

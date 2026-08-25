@@ -77,7 +77,8 @@ func renderSkill(operations []generated.Operation) []byte {
 	output.WriteString("6. Do not call an API operation merely to discover whether it is safe. Use help and the command reference.\n\n")
 	output.WriteString("## Hand-Written Commands\n\n")
 	output.WriteString("- `espercli secureadb connect --device <id>` - Open a pinned mutual-TLS ADB relay.\n")
-	output.WriteString("- `espercli completion <bash|fish|powershell|zsh>` - Write a shell completion script to stdout.\n\n")
+	output.WriteString("- `espercli completion <bash|fish|powershell|zsh>` - Write a shell completion script to stdout.\n")
+	output.WriteString("- `espercli version` - Show build version, commit, and date.\n\n")
 	output.WriteString("## Spec-Generated Command Tree\n\n")
 	output.WriteString("Commands marked **destructive** require confirmation or `--yes`. Use each command's `--help` for positional arguments, request-body flags, scope flags, and pagination options.\n")
 

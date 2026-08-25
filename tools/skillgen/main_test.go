@@ -39,6 +39,7 @@ func TestRenderSkillIncludesGeneratedAndHandWrittenCommands(t *testing.T) {
 	}))
 	for _, expected := range []string{
 		"`espercli secureadb connect --device <id>`",
+		"`espercli version`",
 		"`espercli device list` - List devices",
 		"`espercli device delete` - Delete device **destructive**",
 	} {

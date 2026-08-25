@@ -21,6 +21,7 @@ You are an Esper fleet management assistant. Translate the user's request into t
 
 - `espercli secureadb connect --device <id>` - Open a pinned mutual-TLS ADB relay.
 - `espercli completion <bash|fish|powershell|zsh>` - Write a shell completion script to stdout.
+- `espercli version` - Show build version, commit, and date.
 
 ## Spec-Generated Command Tree
 

@@ -456,7 +456,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
-        "x-esper-noun": "alertchannel",
+        "x-esper-noun": "alert-channel",
         "x-esper-scope-parent": "enterprise"
       },
       "post": {
@@ -487,7 +487,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateAlertChannelsV1"
+                "$ref": "#/components/schemas/AlertChannelCreateReplaceV1"
               }
             }
           },
@@ -553,7 +553,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
-        "x-esper-noun": "alertchannel",
+        "x-esper-noun": "alert-channel",
         "x-esper-scope-parent": "enterprise"
       }
     },
@@ -641,7 +641,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "alert-channel"
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
       },
       "put": {
         "x-badges": [
@@ -681,7 +682,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateAlertChannelsV1"
+                "$ref": "#/components/schemas/AlertChannelCreateReplaceV1"
               }
             }
           },
@@ -747,7 +748,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "update",
-        "x-esper-noun": "alert-channel"
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
       },
       "patch": {
         "x-badges": [
@@ -842,7 +844,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "patch",
-        "x-esper-noun": "alert-channel"
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
       },
       "delete": {
         "x-badges": [
@@ -941,7 +944,8 @@
         "x-esper-destructive": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "delete",
-        "x-esper-noun": "alert-channel"
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/v1/enterprise/{enterprise_id}/alarmrules/": {
@@ -1106,7 +1110,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
-        "x-esper-noun": "alarmrule",
+        "x-esper-noun": "alarm-rule",
         "x-esper-scope-parent": "enterprise"
       },
       "post": {
@@ -1137,7 +1141,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateAlarmRule"
+                "$ref": "#/components/schemas/AlarmRuleCreateReplaceV1"
               }
             }
           },
@@ -1203,7 +1207,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "add",
-        "x-esper-noun": "alarmrule",
+        "x-esper-noun": "alarm-rule",
         "x-esper-scope-parent": "enterprise"
       }
     },
@@ -1291,7 +1295,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "alarm-rule"
+        "x-esper-noun": "alarm-rule",
+        "x-esper-scope-parent": "enterprise"
       },
       "put": {
         "x-badges": [
@@ -1330,7 +1335,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateAlarmRule"
+                "$ref": "#/components/schemas/AlarmRuleCreateReplaceV1"
               }
             }
           },
@@ -1396,7 +1401,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "update",
-        "x-esper-noun": "alarm-rule"
+        "x-esper-noun": "alarm-rule",
+        "x-esper-scope-parent": "enterprise"
       },
       "patch": {
         "x-badges": [
@@ -1500,7 +1506,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "patch",
-        "x-esper-noun": "alarm-rule"
+        "x-esper-noun": "alarm-rule",
+        "x-esper-scope-parent": "enterprise"
       },
       "delete": {
         "x-badges": [
@@ -1598,7 +1605,8 @@
         "x-esper-destructive": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "delete",
-        "x-esper-noun": "alarm-rule"
+        "x-esper-noun": "alarm-rule",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/v1/enterprise/{enterprise_id}/alarmrules/{alarm_id}/alarmhistory/": {
@@ -1633,6 +1641,22 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
           }
         ],
         "responses": {
@@ -1641,7 +1665,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AlarmHistory"
+                  "required": [
+                    "total",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "total": { "type": "integer" },
+                    "next": { "type": ["string", "null"], "format": "url" },
+                    "previous": { "type": ["string", "null"], "format": "url" },
+                    "results": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/AlarmHistory" }
+                    }
+                  }
                 }
               }
             }
@@ -1683,9 +1720,10 @@
           }
         ],
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "get",
-        "x-esper-noun": "alarmhistory"
+        "x-esper-noun": "alarm-history",
+        "x-esper-scope-parent": "enterprise"
       }
     },
     "/v1/enterprise/{enterprise_id}/wallpaper/": {
@@ -6513,7 +6551,7 @@
           "devices": {
             "type": "array",
             "items": {
-              "format": "string"
+              "type": "string"
             }
           },
           "groups": {
@@ -6602,7 +6640,7 @@
           "group_id": {
             "type": "array",
             "items": {
-              "format": "string"
+              "type": "string"
             },
             "description": "lists group id's in uuid format"
           },
@@ -6621,13 +6659,6 @@
       },
       "UpdateAlarmRule": {
         "type": "object",
-        "required": [
-          "enterprise",
-          "name",
-          "metric",
-          "conditions",
-          "realert_interval"
-        ],
         "properties": {
           "id": {
             "type": "string",
@@ -6659,6 +6690,8 @@
             "type": "string"
           },
           "conditions": {
+            "type": "object",
+            "required": ["value", "unit", "comparator"],
             "properties": {
               "value": {
                 "type": "number",
@@ -6710,12 +6743,6 @@
           },
           "repeat_times": {
             "type": "integer"
-          },
-          "trigger_count": {
-            "type": "integer"
-          },
-          "daily_trigger_count": {
-            "type": "integer"
           }
         }
       },
@@ -6731,7 +6758,10 @@
             "format": "uuid"
           },
           "devices": {
-            "properties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
               "id": {
                 "type": "string",
                 "format": "uuid"
@@ -6746,11 +6776,17 @@
                 ]
               }
             }
+            }
           },
           "groups": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "path": { "type": ["string", "null"] }
+              }
             }
           },
           "name": {
@@ -6763,6 +6799,7 @@
             "type": "string"
           },
           "conditions": {
+            "type": "object",
             "properties": {
               "value": {
                 "type": "number",
@@ -6795,7 +6832,11 @@
           "alert_channels": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" }
+              }
             }
           },
           "created_on": {
@@ -6826,15 +6867,12 @@
       "UpdateAlertChannelsV1": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer"
-          },
           "properties": {
             "type": "object",
             "properties": {
               "to_address": {
-                "type": "string",
-                "format": "email"
+                "type": "array",
+                "items": { "type": "string", "format": "email" }
               }
             }
           },
@@ -6844,14 +6882,6 @@
           "type": {
             "type": "string",
             "description": "format of alert. e.g. email"
-          },
-          "created_on": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updated_on": {
-            "type": "string",
-            "format": "date-time"
           },
           "enterprise": {
             "type": "string",
@@ -6869,8 +6899,8 @@
             "type": "object",
             "properties": {
               "to_address": {
-                "type": "string",
-                "format": "email"
+                "type": "array",
+                "items": { "type": "string", "format": "email" }
               }
             }
           },
@@ -6896,9 +6926,60 @@
           "linked_alerts": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "alarm_name": { "type": "string" },
+                "type": { "type": "string" }
+              }
             }
           }
+        }
+      },
+      "AlertChannelCreateReplaceV1": {
+        "type": "object",
+        "required": ["enterprise", "name", "type", "properties"],
+        "properties": {
+          "enterprise": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "to_address": { "type": "array", "items": { "type": "string", "format": "email" } }
+            }
+          }
+        }
+      },
+      "AlarmRuleCreateReplaceV1": {
+        "type": "object",
+        "required": ["enterprise", "name", "metric", "conditions", "realert_interval"],
+        "properties": {
+          "enterprise": { "type": "string", "format": "uuid" },
+          "devices": { "type": "array", "items": { "type": "string" } },
+          "groups": { "type": "array", "items": { "type": "string" } },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "metric": { "type": "string" },
+          "conditions": {
+            "type": "object",
+            "required": ["value", "unit", "comparator"],
+            "properties": {
+              "value": { "type": "number" },
+              "unit": { "type": "string", "enum": ["Percent", "Count"] },
+              "comparator": {
+                "type": "string",
+                "enum": ["GreaterThanThreshold", "GreaterThanOrEqualToThreshold", "LessThanThreshold", "LessThanOrEqualToThreshold", "Frequency"]
+              },
+              "toggle_state": { "type": "boolean" }
+            }
+          },
+          "action_emails": { "type": "array", "items": { "type": "string", "format": "email" } },
+          "actions": { "type": "array", "items": { "type": "string" } },
+          "alert_channels": { "type": "array", "items": { "type": "string" } },
+          "is_active": { "type": "boolean" },
+          "realert_interval": { "type": "integer" },
+          "repeat_times": { "type": "integer" }
         }
       },
       "EventFeed": {

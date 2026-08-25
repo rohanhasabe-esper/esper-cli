@@ -13,7 +13,7 @@ import (
 
 var methods = map[string]bool{"get": true, "post": true, "put": true, "patch": true, "delete": true}
 var coreGenerationRank = map[string]int{"legacy": 0, "v0": 1, "v1": 2, "v2": 3, "v3": 4}
-var pathResourceNames = map[string]string{"devicegroup": "device-group", "devicegroups": "device-group", "operationlists": "operation-list", "pipelines": "pipeline", "runs": "pipeline-run", "stageruns": "stage-run", "stages": "stage", "targetlists": "target-list", "targetruns": "target-run", "targets": "target"}
+var pathResourceNames = map[string]string{"alarmrules": "alarm-rule", "devicegroup": "device-group", "devicegroups": "device-group", "operationlists": "operation-list", "pipelines": "pipeline", "runs": "pipeline-run", "stageruns": "stage-run", "stages": "stage", "targetlists": "target-list", "targetruns": "target-run", "targets": "target"}
 var sideFamilyPrefixes = map[string]string{"authn2": "authn", "authz2": "authz", "foundry": "foundry", "geofence": "geofence", "pipelines-v0": "pipeline"}
 
 type document struct {

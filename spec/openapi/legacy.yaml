@@ -5649,7 +5649,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
         "x-esper-noun": "blueprint",
         "x-esper-scope-parent": "devicegroup"
@@ -5798,7 +5798,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "blueprint"
+        "x-esper-noun": "blueprint",
+        "x-esper-scope-parent": "devicegroup"
       },
       "patch": {
         "x-badges": [
@@ -5881,7 +5882,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "partial-update",
-        "x-esper-noun": "blueprint"
+        "x-esper-noun": "blueprint",
+        "x-esper-scope-parent": "devicegroup"
       },
       "delete": {
         "x-badges": [
@@ -5937,7 +5939,8 @@
         "x-esper-destructive": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "delete",
-        "x-esper-noun": "blueprint"
+        "x-esper-noun": "blueprint",
+        "x-esper-scope-parent": "devicegroup"
       }
     },
     "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/{blueprint_id}/revisions/": {
@@ -6017,7 +6020,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
         "x-esper-noun": "revision",
         "x-esper-scope-parent": "blueprint"
@@ -6088,7 +6091,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "blueprint-revision"
+        "x-esper-noun": "blueprint-revision",
+        "x-esper-scope-parent": "blueprint"
       }
     },
     "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/restore/": {
@@ -6169,7 +6173,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "restore",
-        "x-esper-noun": "blueprint-revision"
+        "x-esper-noun": "blueprint-revision",
+        "x-esper-scope-parent": "devicegroup"
       }
     },
     "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/upload/": {
@@ -6250,7 +6255,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "upload",
-        "x-esper-noun": "blueprint"
+        "x-esper-noun": "blueprint",
+        "x-esper-scope-parent": "devicegroup"
       }
     },
     "/graph/{category}/{metric}/": {

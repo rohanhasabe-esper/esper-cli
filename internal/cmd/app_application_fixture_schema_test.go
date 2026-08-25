@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"strings"
 	"testing"
@@ -88,6 +89,9 @@ func fixtureSchemaResponseForStatus(document, operation map[string]any, status i
 		return nil
 	}
 	response, ok := responses[strconv.Itoa(status)].(map[string]any)
+	if !ok {
+		response, ok = responses["default"].(map[string]any)
+	}
 	if !ok {
 		return nil
 	}
@@ -173,6 +177,14 @@ func fixtureSchemaValidate(document, schema map[string]any, value any, path stri
 			}
 			return fmt.Errorf("%s does not match %s", path, key)
 		}
+	}
+	if values, ok := schema["enum"].([]any); ok {
+		for _, candidate := range values {
+			if reflect.DeepEqual(candidate, value) {
+				return nil
+			}
+		}
+		return fmt.Errorf("%s must be one of %v", path, values)
 	}
 	types := fixtureSchemaTypes(schema["type"])
 	if len(types) == 0 {

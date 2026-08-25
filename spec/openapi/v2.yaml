@@ -477,7 +477,7 @@
           }
         },
         "x-esper-destructive": false,
-        "x-esper-pagination": "none",
+        "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "blueprint",
         "summary": "List blueprint"
@@ -687,7 +687,7 @@
                     "code": {
                       "type": "string",
                       "enum": [
-                        201
+                        "201"
                       ]
                     }
                   }
@@ -711,7 +711,7 @@
                     "code": {
                       "type": "string",
                       "enum": [
-                        3456
+                        "3456"
                       ]
                     }
                   }
@@ -735,7 +735,7 @@
                     "code": {
                       "type": "string",
                       "enum": [
-                        3456
+                        "3456"
                       ]
                     }
                   }
@@ -774,28 +774,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "content": {
-                      "$ref": "#/components/schemas/BlueprintV2"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "code": {
-                      "type": "string",
-                      "enum": [
-                        201
-                      ]
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Success"
           },
           "404": {
             "description": "Resource not found",
@@ -813,7 +792,7 @@
                     "code": {
                       "type": "string",
                       "enum": [
-                        201
+                        "201"
                       ]
                     }
                   }
@@ -1013,7 +992,7 @@
                     "code": {
                       "type": "string",
                       "enum": [
-                        201
+                        "201"
                       ]
                     }
                   }
@@ -1037,7 +1016,7 @@
                     "code": {
                       "type": "string",
                       "enum": [
-                        201
+                        "201"
                       ]
                     }
                   }
@@ -1050,7 +1029,8 @@
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
         "x-esper-noun": "blueprint-version",
-        "summary": "Get blueprint-version"
+        "summary": "Get blueprint-version",
+        "x-esper-scope-parent": "blueprint"
       }
     },
     "/v2/custom-actions/": {

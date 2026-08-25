@@ -404,6 +404,10 @@ function paginationFor(apiPath, operation, verb) {
   return "limit-offset";
 }
 
+function serviceFamily(apiPath) {
+  return apiPath.split("/").filter(Boolean).slice(0, 2).join("/");
+}
+
 function scopeParentFor(apiPath, verb, generation) {
   const segments = apiPath.split("/").filter(Boolean);
   if (generation !== "pipelines-v0") {
@@ -449,6 +453,16 @@ function annotateOperations(spec, generation) {
   }
   let operationCount = 0;
   const commands = new Map();
+  const appsEnvelopeFamilies = new Set();
+  for (const [apiPath, pathItem] of Object.entries(spec.paths)) {
+    for (const [method, operation] of Object.entries(pathItem)) {
+      if (!methods.has(method)) continue;
+      const verb = verbFor(method, apiPath, operation, collectionPaths);
+      if (paginationFor(apiPath, operation, verb) === "apps-envelope") {
+        appsEnvelopeFamilies.add(serviceFamily(apiPath));
+      }
+    }
+  }
   for (const [apiPath, pathItem] of Object.entries(spec.paths)) {
     for (const [method, operation] of Object.entries(pathItem)) {
       if (!methods.has(method)) continue;
@@ -460,6 +474,9 @@ function annotateOperations(spec, generation) {
       operation["x-esper-destructive"] = method === "delete" ||
         /\b(delete|remove|wipe|factory|revoke|terminate|uninstall|unapply)\b/i.test(`${operation.operationId ?? ""} ${operation.summary ?? ""}`);
       operation["x-esper-pagination"] = paginationFor(apiPath, operation, verb);
+      if (appsEnvelopeFamilies.has(serviceFamily(apiPath))) {
+        operation["x-esper-response-envelope"] = "apps-envelope";
+      }
       operation["x-esper-verb"] = verb;
       operation["x-esper-noun"] = noun;
       if (!operation.summary) operation.summary = `${verb.charAt(0).toUpperCase()}${verb.slice(1)} ${noun}`;

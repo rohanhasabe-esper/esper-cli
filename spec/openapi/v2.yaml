@@ -635,6 +635,7 @@
         },
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
+        "x-esper-response-envelope": "apps-envelope",
         "x-esper-verb": "get",
         "x-esper-noun": "blueprint",
         "summary": "Get blueprint"
@@ -2321,6 +2322,7 @@
         },
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
+        "x-esper-response-envelope": "apps-envelope",
         "x-esper-verb": "get",
         "x-esper-noun": "device"
       }

@@ -17,6 +17,7 @@ command -v bash
 command -v jq
 command -v adb
 : "${SMOKE_DEVICE:?export SMOKE_DEVICE as an owned dev device ID}"
+: "${ESPER_ENVIRONMENT:?export ESPER_ENVIRONMENT for the dev tenant}"
 espercli version
 ```
 
@@ -43,10 +44,9 @@ Set the dev environment name and enter the API key without putting it in shell
 history:
 
 ```bash
-export ESPER_SMOKE_ENVIRONMENT=develop
 read -rsp "Dev Esper API key: " ESPER_SMOKE_API_KEY; printf '\n'
 espercli configure \
-  --environment "$ESPER_SMOKE_ENVIRONMENT" <<<"$ESPER_SMOKE_API_KEY"
+  --environment "$ESPER_ENVIRONMENT" <<<"$ESPER_SMOKE_API_KEY"
 printf 'exit=%s\n' "$?"
 ```
 
@@ -68,8 +68,8 @@ printf 'exit=%s\n' "$?"
 ```
 
 Expected shape: two lines named `environment` and `api_key`; the environment is
-`develop`, and the API key is masked except for its final four characters. The
-unredacted key must not appear. Exit code: `0`.
+the exact value of `$ESPER_ENVIRONMENT`, and the API key is masked except for its
+final four characters. The unredacted key must not appear. Exit code: `0`.
 
 ## 2. Set enterprise context
 
@@ -90,25 +90,31 @@ Exit code: `0`.
 
 ## 3. Verify the explicitly selected device
 
-Use a bounded query for the exact human-supplied device ID. Never select the
-first device from this shared dev tenant.
+Use a bounded query to verify the corrected list envelope, then select only the
+exact human-supplied device through its detail endpoint. Never select the first
+device from a shared dev tenant.
 
 ```bash
 ESPER_SMOKE_DEVICE_JSON="$(
-  espercli device list --limit 5 --search "$SMOKE_DEVICE" --json
+  espercli device list --limit 5 --json
 )"
 printf '%s\n' "$ESPER_SMOKE_DEVICE_JSON" |
-  jq -e --arg device "$SMOKE_DEVICE" \
-    '.content.results | any(.id == $device)'
+  jq -e '.content.results | type == "array" and length <= 5'
 ESPER_SMOKE_DEVICE_EXIT="$?"
+ESPER_SMOKE_DEVICE_DETAIL="$(espercli device get "$SMOKE_DEVICE" --json)"
+printf '%s\n' "$ESPER_SMOKE_DEVICE_DETAIL" |
+  jq -e --arg device "$SMOKE_DEVICE" '.content.id == $device'
+ESPER_SMOKE_DEVICE_DETAIL_EXIT="$?"
 export ESPER_SMOKE_DEVICE_ID="$SMOKE_DEVICE"
-printf 'exit=%s\n' "$ESPER_SMOKE_DEVICE_EXIT"
+printf 'list-exit=%s\ndetail-exit=%s\n' \
+  "$ESPER_SMOKE_DEVICE_EXIT" "$ESPER_SMOKE_DEVICE_DETAIL_EXIT"
 test "$ESPER_SMOKE_DEVICE_EXIT" -eq 0
+test "$ESPER_SMOKE_DEVICE_DETAIL_EXIT" -eq 0
 ```
 
-Expected stdout: `true`, followed by `exit=0`. The raw API shape is an
-apps-envelope with results at `.content.results`. Stop if the supplied device is
-not present in the bounded result.
+Expected stdout: `true` twice, followed by `list-exit=0` and `detail-exit=0`.
+Both raw responses remain apps envelopes; the selected ID is verified at
+`.content.id` and never inferred from list order.
 
 ## 4. Show the selected device
 
@@ -118,7 +124,7 @@ printf 'exit=%s\n' "$?"
 ```
 
 Expected shape: a key/value block containing at least the selected device ID,
-name, and state. Exit code: `0`.
+name, and state, with no outer `content` row. Exit code: `0`.
 
 ## 5. Verify pagination with `--all` on groups
 
@@ -227,7 +233,7 @@ command is interrupted before the local ADB client connects,
 ## 10. Remove shell secrets
 
 ```bash
-unset ESPER_SMOKE_API_KEY ESPER_SMOKE_PING_BODY ESPER_SMOKE_DEVICE_JSON
+unset ESPER_SMOKE_API_KEY ESPER_SMOKE_PING_BODY ESPER_SMOKE_DEVICE_JSON ESPER_SMOKE_DEVICE_DETAIL
 ```
 
 Expected output: none. Exit code: `0`.
@@ -368,3 +374,42 @@ No destructive API operation was executed. The exact destructive target was
 declined at the prompt. The only mutating command request was the permitted
 `UPDATE_HEARTBEAT` ping. Secure ADB created its temporary negotiation session but
 did not open a local listener because certificate validation failed.
+
+## Results 2026-08-25 Targeted Rerun
+
+Only the four previously failed checks were rerun. Environment:
+`$ESPER_ENVIRONMENT=rjhlf`. Device and enterprise were unchanged from the prior
+rerun. The API key remained redacted.
+
+| Failed step rerun | Expected | Actual | Result |
+|---|---|---|---|
+| Configure assertion | Stored environment equals `$ESPER_ENVIRONMENT`; redacted key; exit 0 | Stored environment `rjhlf` matched `$ESPER_ENVIRONMENT`; key redacted; exit 0 | PASS |
+| Bounded list and exact detail JSON | Bounded `.content.results` array and exact `.content.id`; all exits 0 | Both `jq` assertions returned `true`; all four CLI/`jq` exits 0 | PASS |
+| Exact detail human output | Device fields rendered without outer `content`; exit 0 | Device fields rendered directly as a key/value block; no `content` row; exit 0 | PASS |
+| Secure ADB | Pinned TLS, loopback endpoint, authorized ADB device, metrics; exit 0 | Negative-serial certificate accepted; loopback endpoint and metrics produced; CLI/connect/devices/disconnect exits 0, but ADB reported authentication failure and listed the endpoint as `unauthorized` | FAIL |
+
+### Targeted Rerun Failure Evidence
+
+The certificate parser and pinned TLS stages succeeded. The remaining failure is
+ADB protocol authorization after the local bridge opened:
+
+```text
+$ espercli --verbose secureadb connect --device "$SMOKE_DEVICE"
+context: using active enterprise 18757e17-abb8-464d-b88b-c5ee4897c793 for enterprise_id
+Secure ADB relay ready. Run:
+adb connect 127.0.0.1:<ephemeral-port>
+failed to authenticate to 127.0.0.1:<ephemeral-port>
+List of devices attached
+<physical dev device>  device
+127.0.0.1:<ephemeral-port>  unauthorized
+disconnected 127.0.0.1:<ephemeral-port>
+Session duration: 436ms
+Bytes transferred: 1373
+secureadb-exit=0
+connect-exit=0
+devices-exit=0
+disconnect-exit=0
+```
+
+No ping or destructive operation was repeated during this targeted rerun. No
+destructive API operation was executed.

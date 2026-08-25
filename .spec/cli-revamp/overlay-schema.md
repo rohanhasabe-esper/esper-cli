@@ -15,6 +15,7 @@ Overlay annotations added to the canonical OpenAPI files under `spec/openapi/`. 
 
 | Field | Type | Meaning |
 |---|---|---|
+| `x-esper-response-envelope` | enum: `apps-envelope` | Successful JSON responses are wrapped in `{code,message,content}`. `--json` preserves the raw envelope; human output renders `content`. Derived service-wide when the service has an `apps-envelope` list. |
 | `x-esper-hidden` | bool | Operation exists in spec but gets no generated command (deprecated or device-facing). |
 | `x-esper-scope-parent` | string | Present on a parent-scoped collection operation; names the parent noun whose path parameter becomes the scope flag. Triggers the "Scoped collections" merge rule in conventions.md. |
 | `x-esper-examples` | list | `{description, command, response-fixture}` triples; fixture is a path under `spec/fixtures/`. Used for docs, `/esper` skill generation, and golden tests. |

@@ -16,21 +16,22 @@ import (
 )
 
 type Operation struct {
-	Generation   string
-	Command      []string
-	Method       string
-	Path         string
-	Noun         string
-	Verb         string
-	Pagination   string
-	Destructive  bool
-	ScopeParent  string
-	Summary      string
-	OperationID  string
-	AliasOf      string
-	SuccessMedia string
-	Parameters   []Parameter
-	Body         *Body
+	Generation       string
+	Command          []string
+	Method           string
+	Path             string
+	Noun             string
+	Verb             string
+	Pagination       string
+	ResponseEnvelope string
+	Destructive      bool
+	ScopeParent      string
+	Summary          string
+	OperationID      string
+	AliasOf          string
+	SuccessMedia     string
+	Parameters       []Parameter
+	Body             *Body
 }
 type Parameter struct {
 	Name, In, Type  string
@@ -297,6 +298,10 @@ func run(command *cobra.Command, args []string, operations []Operation, options 
 	}
 	if options.JSON {
 		return esperruntime.WriteJSON(command.OutOrStdout(), response)
+	}
+	response, err = esperruntime.UnwrapResponseEnvelope(response, operation.ResponseEnvelope)
+	if err != nil {
+		return esperruntime.NewError(esperruntime.CategoryAPI, err)
 	}
 	return esperruntime.WriteHuman(command.OutOrStdout(), response)
 }

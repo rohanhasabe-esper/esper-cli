@@ -104,6 +104,34 @@ func TestDeviceListAllUnwrapsAppsEnvelope(t *testing.T) {
 	}
 }
 
+func TestDeviceGetHumanUnwrapsAppsEnvelope(t *testing.T) {
+	response := readDeviceFixture(t, "get-success.json")
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
+		writer.Header().Set("Content-Type", "application/json")
+		_, _ = writer.Write(response)
+	}))
+	defer server.Close()
+	t.Setenv(esperruntime.EnvironmentVariable, server.URL)
+	t.Setenv(esperruntime.APIKeyVariable, "fixture-key")
+
+	command := NewRootCommand()
+	var output bytes.Buffer
+	command.SetOut(&output)
+	command.SetErr(&output)
+	command.SetArgs([]string{"device", "get", "device-1"})
+	if err := command.Execute(); err != nil {
+		t.Fatalf("Execute() error = %v", err)
+	}
+	for _, expected := range []string{"id", "device-1", "name", "Kiosk One", "state", "ONLINE"} {
+		if !strings.Contains(output.String(), expected) {
+			t.Fatalf("human output does not contain %q:\n%s", expected, output.String())
+		}
+	}
+	if strings.Contains(output.String(), "content") || strings.Contains(output.String(), "Device retrieved") {
+		t.Fatalf("human output retained response envelope:\n%s", output.String())
+	}
+}
+
 func readDeviceFixture(t *testing.T, name string) []byte {
 	t.Helper()
 	path := filepath.Join("..", "..", "spec", "fixtures", "device", name)

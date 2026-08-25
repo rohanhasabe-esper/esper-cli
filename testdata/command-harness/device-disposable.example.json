@@ -1,0 +1,26 @@
+{
+  "name": "disposable device removal",
+  "disposable_enterprise": "${ENTERPRISE}",
+  "steps": [
+    {
+      "name": "verify device",
+      "args": ["device", "get", "${DEVICE}", "--json"],
+      "expected_exit": 0,
+      "mutation": false
+    },
+    {
+      "name": "remove disposable device",
+      "args": ["device-request", "delete", "${DEVICE}", "--yes", "--json"],
+      "expected_exit": 0,
+      "mutation": true
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "clear active context",
+      "args": ["context", "clear", "--all"],
+      "expected_exit": 0,
+      "mutation": false
+    }
+  ]
+}

@@ -3350,6 +3350,8 @@
                 "schema": {
                   "required": [
                     "count",
+                    "next",
+                    "previous",
                     "results"
                   ],
                   "type": "object",
@@ -3387,7 +3389,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3397,7 +3399,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3407,7 +3409,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3441,9 +3443,9 @@
         "operationId": "getGeofence",
         "parameters": [
           {
-            "name": "geofence_id",
+            "name": "enterprise_id",
             "in": "path",
-            "description": "A UUID string identifying the geofence.",
+            "description": "A UUID string identifying the enterprise.",
             "required": true,
             "schema": {
               "type": "string",
@@ -3451,9 +3453,9 @@
             }
           },
           {
-            "name": "enterprise_id",
+            "name": "geofence_id",
             "in": "path",
-            "description": "A UUID string identifying the enterprise.",
+            "description": "A UUID string identifying the geofence.",
             "required": true,
             "schema": {
               "type": "string",
@@ -3477,7 +3479,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3487,7 +3489,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3497,7 +3499,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3528,9 +3530,9 @@
         "operationId": "updateGeofence",
         "parameters": [
           {
-            "name": "geofence_id",
+            "name": "enterprise_id",
             "in": "path",
-            "description": "A UUID string identifying the geofence.",
+            "description": "A UUID string identifying the enterprise.",
             "required": true,
             "schema": {
               "type": "string",
@@ -3538,9 +3540,9 @@
             }
           },
           {
-            "name": "enterprise_id",
+            "name": "geofence_id",
             "in": "path",
-            "description": "A UUID string identifying the enterprise.",
+            "description": "A UUID string identifying the geofence.",
             "required": true,
             "schema": {
               "type": "string",
@@ -3550,9 +3552,9 @@
         ],
         "requestBody": {
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Geofence"
+                "$ref": "#/components/schemas/GeofenceReplace"
               }
             }
           },
@@ -3574,7 +3576,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3584,7 +3586,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3594,7 +3596,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3604,7 +3606,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3636,9 +3638,9 @@
         "operationId": "deleteGeofence",
         "parameters": [
           {
-            "name": "geofence_id",
+            "name": "enterprise_id",
             "in": "path",
-            "description": "A UUID string identifying the geofence.",
+            "description": "A UUID string identifying the enterprise.",
             "required": true,
             "schema": {
               "type": "string",
@@ -3646,9 +3648,9 @@
             }
           },
           {
-            "name": "enterprise_id",
+            "name": "geofence_id",
             "in": "path",
-            "description": "A UUID string identifying the enterprise.",
+            "description": "A UUID string identifying the geofence.",
             "required": true,
             "schema": {
               "type": "string",
@@ -3665,7 +3667,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3675,7 +3677,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3685,7 +3687,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3695,7 +3697,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3726,9 +3728,9 @@
         "operationId": "partialUpdateGeofence",
         "parameters": [
           {
-            "name": "geofence_id",
+            "name": "enterprise_id",
             "in": "path",
-            "description": "A UUID string identifying the geofence.",
+            "description": "A UUID string identifying the enterprise.",
             "required": true,
             "schema": {
               "type": "string",
@@ -3736,9 +3738,9 @@
             }
           },
           {
-            "name": "enterprise_id",
+            "name": "geofence_id",
             "in": "path",
-            "description": "A UUID string identifying the enterprise.",
+            "description": "A UUID string identifying the geofence.",
             "required": true,
             "schema": {
               "type": "string",
@@ -3748,7 +3750,7 @@
         ],
         "requestBody": {
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/GeofenceUpdate"
               }
@@ -3772,7 +3774,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3782,7 +3784,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3792,7 +3794,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3802,7 +3804,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3848,7 +3850,7 @@
         ],
         "requestBody": {
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/GeofenceCreate"
               }
@@ -3872,7 +3874,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3882,7 +3884,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3892,7 +3894,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -3907,7 +3909,7 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "create",
-        "x-esper-noun": "create-apply-geo-fence",
+        "x-esper-noun": "geofence",
         "x-esper-scope-parent": "enterprise"
       },
       "get": {
@@ -3967,6 +3969,8 @@
                 "schema": {
                   "required": [
                     "count",
+                    "next",
+                    "previous",
                     "results"
                   ],
                   "type": "object",
@@ -4004,7 +4008,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -4014,7 +4018,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -4024,7 +4028,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -4038,7 +4042,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "list",
-        "x-esper-noun": "create-apply-geo-fence",
+        "x-esper-noun": "geofence",
+        "x-esper-alias-of": "getAllGeofences",
         "x-esper-scope-parent": "enterprise"
       }
     },
@@ -4094,7 +4099,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -4104,7 +4109,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -4114,7 +4119,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -4128,7 +4133,8 @@
         "x-esper-destructive": false,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
-        "x-esper-noun": "the-geofence"
+        "x-esper-noun": "geofence",
+        "x-esper-alias-of": "getGeofence"
       },
       "delete": {
         "x-badges": [
@@ -4174,7 +4180,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -4184,7 +4190,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -4194,7 +4200,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -4204,7 +4210,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
                 }
               }
             }
@@ -4218,7 +4224,8 @@
         "x-esper-destructive": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "delete",
-        "x-esper-noun": "the-geofence"
+        "x-esper-noun": "geofence",
+        "x-esper-alias-of": "deleteGeofence"
       }
     },
     "/device/v0/devices/{id}/": {
@@ -10922,6 +10929,12 @@
         ]
       },
       "GeofenceCreate": {
+        "required": [
+          "name",
+          "latitude",
+          "longitude",
+          "devices"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -10948,7 +10961,7 @@
           },
           "radius": {
             "title": "Geofence radius",
-            "type": "integer",
+            "type": "number",
             "description": "The radius within which the geofence should be applied"
           },
           "radius_unit": {
@@ -10978,7 +10991,8 @@
             "type": "array",
             "description": "List of ids of devices on which the geofence is to be applied",
             "items": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         }
@@ -10993,7 +11007,10 @@
           },
           "description": {
             "title": "Geofence description",
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "A description about the geofence"
           },
           "latitude": {
@@ -11010,7 +11027,69 @@
           },
           "radius": {
             "title": "Geofence radius",
-            "type": "integer",
+            "type": "number",
+            "description": "The radius within which the geofence should be applied"
+          },
+          "radius_unit": {
+            "title": "Unit of radius",
+            "type": "string",
+            "description": "The unit in which the radius is taken, eg - kilometers, meters etc",
+            "enum": [
+              "KILOMETERS",
+              "METERS",
+              "MILES"
+            ]
+          },
+          "device_actions": {
+            "title": "Device Actions",
+            "type": "array",
+            "description": "The actions to be performed on the device",
+            "items": {
+              "type": "string",
+              "enum": [
+                "LOCK_DOWN",
+                "BEEP"
+              ]
+            }
+          }
+        }
+      },
+      "GeofenceReplace": {
+        "required": [
+          "name",
+          "latitude",
+          "longitude"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Geofence name",
+            "type": "string",
+            "description": "Name of the geofence"
+          },
+          "description": {
+            "title": "Geofence description",
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A description about the geofence"
+          },
+          "latitude": {
+            "title": "Geofence latitude",
+            "type": "string",
+            "description": "Latitude corresponding to the geofence",
+            "format": "decimal"
+          },
+          "longitude": {
+            "title": "Geofence longitude",
+            "type": "string",
+            "description": "Longitude corresponding to the geofence",
+            "format": "decimal"
+          },
+          "radius": {
+            "title": "Geofence radius",
+            "type": "number",
             "description": "The radius within which the geofence should be applied"
           },
           "radius_unit": {
@@ -11039,9 +11118,19 @@
       },
       "Geofence": {
         "required": [
+          "id",
+          "name",
+          "description",
+          "enterprise",
           "latitude",
           "longitude",
-          "name"
+          "radius",
+          "radius_unit",
+          "device_actions",
+          "device_count",
+          "created_by",
+          "created_on",
+          "updated_on"
         ],
         "type": "object",
         "properties": {
@@ -11059,7 +11148,10 @@
           },
           "description": {
             "title": "Geofence description",
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "A description about the geofence"
           },
           "enterprise": {
@@ -11083,7 +11175,10 @@
           },
           "radius": {
             "title": "Geofence radius",
-            "type": "integer",
+            "type": [
+              "number",
+              "null"
+            ],
             "description": "The radius within which the geofence should be applied"
           },
           "radius_unit": {
@@ -12088,6 +12183,31 @@
         }
       },
       "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "title": "Messages describing the error",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "title": "Message describing the error",
+            "type": "string"
+          },
+          "status": {
+            "title": "alias name",
+            "type": "integer"
+          }
+        }
+      },
+      "GeofenceErrorResponse": {
+        "required": [
+          "errors",
+          "message",
+          "status"
+        ],
         "type": "object",
         "properties": {
           "errors": {

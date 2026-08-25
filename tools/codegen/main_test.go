@@ -32,6 +32,34 @@ func TestExtractBodyRequiredRootArrayIsNotEmptyObject(t *testing.T) {
 	}
 }
 
+func TestExtractBodyComposedRequiredComplexPropertyIsBodyOnly(t *testing.T) {
+	schemas := map[string]schema{
+		"Create": {AllOf: []schema{
+			{Ref: "#/components/schemas/Base"},
+			{Type: "object", Properties: map[string]schema{"options": {Type: "array"}}, Required: []string{"options"}},
+		}},
+		"Base": {Type: "object", Properties: map[string]schema{
+			"name":       {Type: "string"},
+			"properties": {Type: "object"},
+		}, Required: []string{"name", "properties"}},
+	}
+	body := extractBody(map[string]requestMedia{"application/json": {Schema: schema{Ref: "#/components/schemas/Create"}}}, true, nil, schemas)
+	if !body.Required || !body.BodyOnly || len(body.Properties) != 0 {
+		t.Fatalf("body metadata = %#v", body)
+	}
+}
+
+func TestResolveCyclicSchemaReferenceStops(t *testing.T) {
+	schemas := map[string]schema{
+		"First":  {Ref: "#/components/schemas/Second"},
+		"Second": {Ref: "#/components/schemas/First"},
+	}
+	resolved := resolve(schema{Ref: "#/components/schemas/First"}, schemas)
+	if resolved.Ref == "" {
+		t.Fatalf("resolved cyclic schema = %#v", resolved)
+	}
+}
+
 func TestScopeParameterNamesIncludesAncestorsOnly(t *testing.T) {
 	scopes := scopeParameterNames("/stages/{stage_id}/runs/{run_id}/commands/{command_id}", "run")
 	if scopes["stage_id"] != "stage" || scopes["run_id"] != "pipeline-run" || scopes["command_id"] != "" {

@@ -29,7 +29,7 @@ Excluded from Phase 2:
 | 10 | connection | 2 | `connection`, `custom-connection` | Complete |
 | 11 | content | 7 | `content`, `download`, `remote-file` | Complete |
 | 12 | converge | 3 | `converge` | Complete |
-| 13 | custom-action | 6 | `custom-action`, `script` | Blocked |
+| 13 | custom-action | 6 | `custom-action`, `script` | Complete |
 | 14 | dep-sync | 3 | `dep-sync-request` | Blocked |
 | 15 | device-support | 15 | `device-eventfeed`, `device-google-account-emm-managed`, `device-google-account-policy`, `device-heartbeat`, `device-heartbeat-list`, `device-request`, `devicestate`, `foundation-version-list`, `google-account`, `rv-activity-feed` | Blocked |
 | 16 | directory-record | 5 | `directory-record` | Blocked |
@@ -68,7 +68,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 
 - `content` - Complete: all 7 operations have success/API-error goldens, including multipart and `--all` coverage.
 - `converge` - Complete: all 3 operations have goldens and apps-envelope `--all` coverage.
-- `custom-action` - Blocked: required complex properties and body-only update input lack locked enforcement.
+- `custom-action` - Complete: all 6 operations have schema-shaped success/API-error golden coverage, including composed-schema body-only create, partial update inputs, apps-envelope pagination, script retrieval, and destructive refusal.
 - `dep-sync` - Blocked: empty required JSON body behavior is undefined.
 - `device-support` - Blocked: Google EMM policy update has a required body with only an optional array.
 
@@ -89,10 +89,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 - `tile-ui` - Blocked: scope/body collision and required complex apply input lack locked rules.
 
 ## Blockers
-
-- `custom-action`: create requires object-only properties and update has no
-  required scalar input. Both depend on the unresolved required-body/property
-  enforcement rule recorded in the steering files.
 
 - `dep-sync`: create requires an empty JSON object, whose implicit versus
   explicit CLI input behavior is not defined by the locked body rules.
@@ -147,7 +143,7 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | connection | Complete | - |
 | content | Complete | - |
 | converge | Complete | - |
-| custom-action | Blocked | Required complex properties and body-only update input. |
+| custom-action | Complete | - |
 | dep-sync | Blocked | Empty required JSON body behavior. |
 | device-support | Blocked | Required body with optional array-only input. |
 | directory-record | Blocked | Required bodies with no required properties. |
@@ -161,6 +157,6 @@ Progress summaries are appended here after packets 5, 10, 15, 20, and 25.
 | seamless | Blocked | Required bodies with no required scalar input. |
 | tile-ui | Blocked | Scope/body collision and required complex-only input. |
 
-Summary: 13 packets complete (232 operations); 12 packets blocked (96
+Summary: 14 packets complete (238 operations); 11 packets blocked (90
 operations). All remaining blockers are recorded in `inbox.md` and `spec.md`
 Issues.

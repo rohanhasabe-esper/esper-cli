@@ -66,6 +66,7 @@ type schema struct {
 	Enum       []any             `json:"enum"`
 	Properties map[string]schema `json:"properties"`
 	Required   []string          `json:"required"`
+	AllOf      []schema          `json:"allOf"`
 }
 
 type generatedOperation struct {
@@ -207,7 +208,14 @@ func scopeParameterNames(apiPath, scopeParent string) map[string]string {
 }
 
 func resolve(value schema, schemas map[string]schema) schema {
+	return resolveWithSeen(value, schemas, map[string]bool{})
+}
+
+func resolveWithSeen(value schema, schemas map[string]schema, resolving map[string]bool) schema {
 	if !strings.HasPrefix(value.Ref, "#/components/schemas/") {
+		return value
+	}
+	if resolving[value.Ref] {
 		return value
 	}
 	name := strings.TrimPrefix(value.Ref, "#/components/schemas/")
@@ -215,7 +223,9 @@ func resolve(value schema, schemas map[string]schema) schema {
 	if !ok {
 		return value
 	}
-	return resolve(resolved, schemas)
+	resolving[value.Ref] = true
+	defer delete(resolving, value.Ref)
+	return resolveWithSeen(resolved, schemas, resolving)
 }
 
 func resolveParameter(value parameter, parameters map[string]parameter) parameter {
@@ -253,13 +263,7 @@ func extractBody(content map[string]requestMedia, required bool, parameters []ge
 			parameterByFlag[kebab(parameter.ScopeName)] = parameter
 		}
 	}
-	for _, name := range value.Required {
-		property, ok := value.Properties[name]
-		if !ok || isScalar(scalarType(resolve(property, schemas))) {
-			continue
-		}
-		body.BodyOnly = true
-	}
+	body.BodyOnly = hasRequiredComplexProperty(value, schemas, map[string]bool{})
 	for _, name := range sortedKeys(value.Properties) {
 		property := resolve(value.Properties[name], schemas)
 		typeName := scalarType(property)
@@ -279,6 +283,35 @@ func extractBody(content map[string]requestMedia, required bool, parameters []ge
 		body.Properties = append(body.Properties, generatedProperty{Name: name, Type: typeName, Format: property.Format, Required: requiredProperties[name], File: file, Enum: stringEnum(property.Enum)})
 	}
 	return body
+}
+
+// hasRequiredComplexProperty preserves composed request schemas while applying
+// the body-only rule to required complex properties from every allOf member.
+func hasRequiredComplexProperty(value schema, schemas map[string]schema, resolving map[string]bool) bool {
+	if strings.HasPrefix(value.Ref, "#/components/schemas/") {
+		if resolving[value.Ref] {
+			return false
+		}
+		resolved, ok := schemas[strings.TrimPrefix(value.Ref, "#/components/schemas/")]
+		if !ok {
+			return false
+		}
+		resolving[value.Ref] = true
+		defer delete(resolving, value.Ref)
+		return hasRequiredComplexProperty(resolved, schemas, resolving)
+	}
+	for _, name := range value.Required {
+		property, ok := value.Properties[name]
+		if ok && !isScalar(scalarType(resolve(property, schemas))) {
+			return true
+		}
+	}
+	for _, member := range value.AllOf {
+		if hasRequiredComplexProperty(member, schemas, resolving) {
+			return true
+		}
+	}
+	return false
 }
 
 func successMedia(responses map[string]response) string {

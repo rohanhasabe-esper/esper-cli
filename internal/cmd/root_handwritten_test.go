@@ -21,6 +21,15 @@ func TestSecureADBCommandRegistered(t *testing.T) {
 	}
 }
 
+func TestStateCommandsRegistered(t *testing.T) {
+	for _, path := range [][]string{{"configure"}, {"configure", "show"}, {"context", "set"}, {"context", "get"}, {"context", "clear"}} {
+		command, _, err := NewRootCommand().Find(path)
+		if err != nil || command.CommandPath() != "espercli "+strings.Join(path, " ") {
+			t.Fatalf("find %v = %q, %v", path, command.CommandPath(), err)
+		}
+	}
+}
+
 func TestVersionCommand(t *testing.T) {
 	originalVersion, originalCommit, originalDate := version.Version, version.Commit, version.Date
 	t.Cleanup(func() {

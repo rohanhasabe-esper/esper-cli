@@ -170,9 +170,20 @@ func addStringFlag(command *cobra.Command, name string, required bool, values []
 }
 
 func run(command *cobra.Command, args []string, operations []Operation, options *esperruntime.GlobalOptions) error {
+	store, err := esperruntime.NewStateStore()
+	if err != nil {
+		return esperruntime.NewError(esperruntime.CategoryAuth, err)
+	}
+	state, err := store.Load()
+	if err != nil {
+		return esperruntime.NewError(esperruntime.CategoryAuth, err)
+	}
+	if err := applyScopeContextFallbacks(command, operations, state.Active, options.Verbose); err != nil {
+		return err
+	}
 	operation, err := selectOperation(command, operations)
 	if err != nil {
-		return err
+		return addScopeContextHint(command, operations, state.Active, err)
 	}
 	if options.JSON && !isJSONMedia(operation.SuccessMedia) {
 		return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("--json is not supported for %s responses", operation.SuccessMedia))
@@ -180,14 +191,11 @@ func run(command *cobra.Command, args []string, operations []Operation, options 
 	if err := validateRequiredParameters(command, operation); err != nil {
 		return err
 	}
-	requestPath, err := replacePath(command, operation, args)
+	pathValues, err := resolvedPathValuesWithContext(command, operation, args, state.Active, options.Verbose)
 	if err != nil {
 		return err
 	}
-	pathValues, err := resolvedPathValues(command, operation, args)
-	if err != nil {
-		return err
-	}
+	requestPath := replacePathValues(operation, pathValues)
 	body, contentType, err := bodyForValues(command, operation, pathValues)
 	if err != nil {
 		return err
@@ -200,14 +208,6 @@ func run(command *cobra.Command, args []string, operations []Operation, options 
 		if !ok {
 			return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("operation cancelled"))
 		}
-	}
-	store, err := esperruntime.NewStateStore()
-	if err != nil {
-		return esperruntime.NewError(esperruntime.CategoryAuth, err)
-	}
-	state, err := store.Load()
-	if err != nil {
-		return esperruntime.NewError(esperruntime.CategoryAuth, err)
 	}
 	credentials, err := esperruntime.ResolveCredentials(state.Config, options.Environment, options.APIKey)
 	if err != nil {
@@ -380,11 +380,124 @@ func sameScopes(names []string, selected map[string]bool) bool {
 	return true
 }
 
+func applyScopeContextFallbacks(command *cobra.Command, operations []Operation, active esperruntime.ActiveContext, verbose bool) error {
+	selectedScopes := selectedScopeNames(command, operations)
+	for _, operation := range operations {
+		if sameScopes(operationScopeNames(operation), selectedScopes) {
+			return nil
+		}
+	}
+
+	type candidate struct {
+		values map[string]contextValue
+	}
+	var candidates []candidate
+	for _, operation := range operations {
+		values := map[string]contextValue{}
+		possible := true
+		for _, selected := range mapKeys(selectedScopes) {
+			if !contains(operationScopeNames(operation), selected) {
+				possible = false
+				break
+			}
+		}
+		if !possible {
+			continue
+		}
+		for _, scope := range operationScopeNames(operation) {
+			if selectedScopes[scope] {
+				continue
+			}
+			parameter, ok := scopeParameter(operation, scope)
+			if !ok {
+				possible = false
+				break
+			}
+			resource, ok := esperruntime.ContextResourceForParameter(parameter.Name)
+			if !ok || active.Resource(resource) == nil || active.Resource(resource).ID == "" {
+				possible = false
+				break
+			}
+			values[scope] = contextValue{parameter: parameter.Name, resource: resource, value: active.Resource(resource).ID}
+		}
+		if possible && len(values) > 0 {
+			candidates = append(candidates, candidate{values: values})
+		}
+	}
+	if len(candidates) != 1 {
+		return nil
+	}
+	for _, scope := range sortedContextValueKeys(candidates[0].values) {
+		value := candidates[0].values[scope]
+		if err := command.Flags().Set(kebab(scope), value.value); err != nil {
+			return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("set context fallback --%s: %w", kebab(scope), err))
+		}
+		writeContextDiagnostic(command, verbose, value)
+	}
+	return nil
+}
+
+type contextValue struct {
+	parameter string
+	resource  string
+	value     string
+}
+
+func selectedScopeNames(command *cobra.Command, operations []Operation) map[string]bool {
+	selected := map[string]bool{}
+	for _, operation := range operations {
+		for _, scope := range operationScopeNames(operation) {
+			if command.Flags().Changed(kebab(scope)) {
+				selected[scope] = true
+			}
+		}
+	}
+	return selected
+}
+
+func scopeParameter(operation Operation, scope string) (Parameter, bool) {
+	for _, parameter := range operation.Parameters {
+		if parameter.In == "path" && parameter.Scope && parameterFlagName(parameter) == kebab(scope) {
+			return parameter, true
+		}
+	}
+	return Parameter{}, false
+}
+
+func addScopeContextHint(command *cobra.Command, operations []Operation, active esperruntime.ActiveContext, selectionError error) error {
+	resources := map[string]bool{}
+	for _, operation := range operations {
+		for _, parameter := range operation.Parameters {
+			if parameter.In != "path" || !parameter.Scope || command.Flags().Changed(parameterFlagName(parameter)) {
+				continue
+			}
+			resource, ok := esperruntime.ContextResourceForParameter(parameter.Name)
+			if ok && (active.Resource(resource) == nil || active.Resource(resource).ID == "") {
+				resources[resource] = true
+			}
+		}
+	}
+	if len(resources) == 0 {
+		return selectionError
+	}
+	names := mapKeys(resources)
+	sort.Strings(names)
+	hints := make([]string, 0, len(names))
+	for _, resource := range names {
+		hints = append(hints, fmt.Sprintf("espercli context set %s <id>", resource))
+	}
+	return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("%s; alternatively run %s", selectionError, strings.Join(hints, " or ")))
+}
+
 func replacePath(command *cobra.Command, operation Operation, args []string) (string, error) {
 	values, err := resolvedPathValues(command, operation, args)
 	if err != nil {
 		return "", err
 	}
+	return replacePathValues(operation, values), nil
+}
+
+func replacePathValues(operation Operation, values map[string]string) string {
 	result := operation.Path
 	for _, parameter := range operation.Parameters {
 		if parameter.In != "path" {
@@ -393,10 +506,14 @@ func replacePath(command *cobra.Command, operation Operation, args []string) (st
 		name := "{" + parameter.Name + "}"
 		result = strings.ReplaceAll(result, name, values[parameter.Name])
 	}
-	return result, nil
+	return result
 }
 
 func resolvedPathValues(command *cobra.Command, operation Operation, args []string) (map[string]string, error) {
+	return resolvedPathValuesWithContext(command, operation, args, esperruntime.ActiveContext{}, false)
+}
+
+func resolvedPathValuesWithContext(command *cobra.Command, operation Operation, args []string, active esperruntime.ActiveContext, verbose bool) (map[string]string, error) {
 	values := map[string]string{}
 	index := 0
 	for _, parameter := range operation.Parameters {
@@ -406,13 +523,20 @@ func resolvedPathValues(command *cobra.Command, operation Operation, args []stri
 		if parameter.Scope {
 			value := flagString(command, parameterFlagName(parameter))
 			if value == "" {
-				return nil, esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("missing path parameter %s", parameter.Name))
+				return nil, missingPathParameterError(parameter.Name)
 			}
 			values[parameter.Name] = value
 			continue
 		}
 		if index >= len(args) {
-			return nil, esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("missing path parameter %s", parameter.Name))
+			resource, ok := esperruntime.ContextResourceForParameter(parameter.Name)
+			if !ok || active.Resource(resource) == nil || active.Resource(resource).ID == "" {
+				return nil, missingPathParameterError(parameter.Name)
+			}
+			value := contextValue{parameter: parameter.Name, resource: resource, value: active.Resource(resource).ID}
+			values[parameter.Name] = value.value
+			writeContextDiagnostic(command, verbose, value)
+			continue
 		}
 		values[parameter.Name] = args[index]
 		index++
@@ -421,6 +545,46 @@ func resolvedPathValues(command *cobra.Command, operation Operation, args []stri
 		return nil, esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("unexpected positional arguments"))
 	}
 	return values, nil
+}
+
+func missingPathParameterError(parameter string) error {
+	resource, ok := esperruntime.ContextResourceForParameter(parameter)
+	if !ok {
+		return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("missing path parameter %s", parameter))
+	}
+	return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("missing path parameter %s (or run espercli context set %s <id>)", parameter, resource))
+}
+
+func writeContextDiagnostic(command *cobra.Command, verbose bool, value contextValue) {
+	if verbose {
+		_, _ = fmt.Fprintf(command.ErrOrStderr(), "context: using active %s %s for %s\n", value.resource, value.value, value.parameter)
+	}
+}
+
+func sortedContextValueKeys(values map[string]contextValue) []string {
+	keys := make([]string, 0, len(values))
+	for key := range values {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func mapKeys(values map[string]bool) []string {
+	keys := make([]string, 0, len(values))
+	for key := range values {
+		keys = append(keys, key)
+	}
+	return keys
+}
+
+func contains(values []string, wanted string) bool {
+	for _, value := range values {
+		if value == wanted {
+			return true
+		}
+	}
+	return false
 }
 
 func bodyFor(command *cobra.Command, operation Operation) ([]byte, string, error) {

@@ -105,16 +105,26 @@ func runConnect(command *cobra.Command, options *esperruntime.GlobalOptions, dev
 	}
 	if deviceID == "" && state.Active.Device != nil {
 		deviceID = state.Active.Device.ID
+		if options.Verbose {
+			_, _ = fmt.Fprintf(command.ErrOrStderr(), "context: using active device %s for device_id\n", deviceID)
+		}
 	}
 	if deviceID == "" {
-		return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("--device is required when no active device is set"))
+		return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("--device is required (or run espercli context set device <id>)"))
 	}
 	credentials, err := esperruntime.ResolveCredentials(state.Config, options.Environment, options.APIKey)
 	if err != nil {
 		return err
 	}
-	if credentials.EnterpriseID == "" {
-		return esperruntime.NewError(esperruntime.CategoryAuth, fmt.Errorf("enterprise ID is not configured"))
+	enterpriseID := credentials.EnterpriseID
+	if state.Active.Enterprise != nil && state.Active.Enterprise.ID != "" {
+		enterpriseID = state.Active.Enterprise.ID
+		if options.Verbose {
+			_, _ = fmt.Fprintf(command.ErrOrStderr(), "context: using active enterprise %s for enterprise_id\n", enterpriseID)
+		}
+	}
+	if enterpriseID == "" {
+		return esperruntime.NewError(esperruntime.CategoryAuth, fmt.Errorf("enterprise ID is not configured (run espercli context set enterprise <id>)"))
 	}
 
 	certificatesDirectory, err := defaultCertificatesDirectory()
@@ -127,7 +137,7 @@ func runConnect(command *cobra.Command, options *esperruntime.GlobalOptions, dev
 	}
 
 	client := esperruntime.NewHTTPClient(credentials)
-	requestPath := remoteADBCollectionPath(credentials.EnterpriseID, deviceID)
+	requestPath := remoteADBCollectionPath(enterpriseID, deviceID)
 	session, err := createRemoteADBSession(command.Context(), client, requestPath, clientCertificatePEM)
 	if err != nil {
 		return err

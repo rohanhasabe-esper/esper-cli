@@ -26,6 +26,10 @@ resource IDs are reported as `SKIPPED`. Collection routes without a `--limit`
 parameter are also skipped because the harness will not issue an unbounded list
 request.
 
+To run those lists using each API's default page size, set
+`HARNESS_ALLOW_DEFAULT_PAGE_LISTS=1`. This remains read-only and never adds
+`--all`.
+
 ```bash
 export HARNESS_ENTERPRISE=<dev-enterprise-id>
 export HARNESS_DEVICE=<owned-dev-device-id>

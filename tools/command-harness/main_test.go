@@ -68,8 +68,16 @@ func TestCollectKnownPreservesExplicitInputs(t *testing.T) {
 	if known["device_id"] != "selected-device" || known["enterprise_id"] != "selected-enterprise" {
 		t.Fatalf("explicit inputs were replaced: %#v", known)
 	}
-	if known["group_id"] != "group-1" {
+	if known["group"] != "group-1" {
 		t.Fatalf("unknown dependent ID was not collected: %#v", known)
+	}
+}
+
+func TestCollectKnownDoesNotStoreAmbiguousRawIDs(t *testing.T) {
+	known := map[string]string{}
+	collectKnown([]byte(`{"latest_published_version_id":"blueprint-version-1"}`), "blueprint", known)
+	if known["version_id"] != "" || known["blueprint-version"] != "blueprint-version-1" {
+		t.Fatalf("ambiguous ID collection = %#v", known)
 	}
 }
 
@@ -104,5 +112,42 @@ func TestFailedCommandDetailTrimsAndBoundsStderr(t *testing.T) {
 	}
 	if got := failedCommandDetail(strings.Repeat("x", 513)); len(got) != 515 || !strings.HasSuffix(got, "...") {
 		t.Fatalf("failedCommandDetail() length = %d", len(got))
+	}
+}
+
+func TestUnboundedListsRequireExplicitApproval(t *testing.T) {
+	operation := generated.Operation{Verb: "list"}
+	if !(&harness{}).skipsUnboundedList(operation) {
+		t.Fatal("unbounded list ran without approval")
+	}
+	if (&harness{allowDefaultPageLists: true}).skipsUnboundedList(operation) {
+		t.Fatal("approved default-page list was skipped")
+	}
+}
+
+func TestReadonlyArgsKeepBlueprintFamiliesSeparate(t *testing.T) {
+	known := map[string]string{"blueprint": "blueprint-v2", "blueprint-version": "blueprint-version-v2", "version": "application-version"}
+	versionArgs, missing := readonlyArgs(generated.Operation{Noun: "blueprint-version", Parameters: []generated.Parameter{{Name: "blueprint_id", In: "path"}, {Name: "version_id", In: "path"}}}, known)
+	if len(missing) != 0 || !contains(versionArgs, "blueprint-v2") || !contains(versionArgs, "blueprint-version-v2") {
+		t.Fatalf("blueprint version args = %v, missing = %v", versionArgs, missing)
+	}
+	_, missing = readonlyArgs(generated.Operation{Generation: "legacy", Noun: "revision", Parameters: []generated.Parameter{{Name: "blueprint_id", In: "path"}}}, known)
+	if len(missing) != 1 || missing[0] != "blueprint_id" {
+		t.Fatalf("legacy blueprint missing = %v", missing)
+	}
+}
+
+func TestReadonlyArgsUseUserResourceID(t *testing.T) {
+	args, missing := readonlyArgs(generated.Operation{Noun: "user", Parameters: []generated.Parameter{{Name: "user_id", In: "path"}}}, map[string]string{"user": "user-1", "authn-user": "unrelated-authn-user"})
+	if len(missing) != 0 || !contains(args, "user-1") || contains(args, "unrelated-authn-user") {
+		t.Fatalf("user args = %v, missing = %v", args, missing)
+	}
+}
+
+func TestCollectKnownIgnoresUserIDsOutsideUserResource(t *testing.T) {
+	known := map[string]string{}
+	collectKnown([]byte(`{"user_id":"unrelated-user"}`), "group", known)
+	if known["user"] != "" {
+		t.Fatalf("group response populated user ID: %#v", known)
 	}
 }

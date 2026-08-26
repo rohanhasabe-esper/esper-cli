@@ -64,13 +64,14 @@ type step struct {
 }
 
 type harness struct {
-	binary     string
-	enterprise string
-	device     string
-	group      string
-	app        string
-	timeout    time.Duration
-	known      map[string]string
+	binary                string
+	enterprise            string
+	device                string
+	group                 string
+	app                   string
+	timeout               time.Duration
+	known                 map[string]string
+	allowDefaultPageLists bool
 }
 
 func main() {
@@ -83,6 +84,7 @@ func main() {
 	scenarioPath := flag.String("scenario", "", "mutation scenario JSON path")
 	reportPath := flag.String("report", "dist/command-harness-report.json", "JSON report path")
 	allowMutations := flag.Bool("allow-mutations", false, "allow mutation scenario execution")
+	allowDefaultPageLists := flag.Bool("allow-default-page-lists", false, "allow GET list operations without a limit parameter")
 	confirmation := flag.String("confirmation", "", "must equal the disposable-tenant confirmation phrase")
 	disposableDevice := flag.Bool("disposable-device", false, "allow only device-scoped mutations for the disposable --device")
 	flag.Parse()
@@ -96,7 +98,7 @@ func main() {
 		if *binary == "" || *enterprise == "" || *device == "" {
 			fatal("live-readonly requires --binary, --enterprise, and --device")
 		}
-		results = (&harness{binary: *binary, enterprise: *enterprise, device: *device, group: *group, app: *app, timeout: 45 * time.Second}).runReadonly()
+		results = (&harness{binary: *binary, enterprise: *enterprise, device: *device, group: *group, app: *app, timeout: 45 * time.Second, allowDefaultPageLists: *allowDefaultPageLists}).runReadonly()
 	case "live-mutations":
 		if *binary == "" || *enterprise == "" || *device == "" || *scenarioPath == "" {
 			fatal("live-mutations requires --binary, --enterprise, --device, and --scenario")
@@ -224,7 +226,7 @@ func (runner *harness) runReadonly() []result {
 		var deferred []generated.Operation
 		progress := false
 		for _, operation := range pending {
-			if operation.Verb == "list" && !hasParameter(operation, "limit") {
+			if runner.skipsUnboundedList(operation) {
 				results = append(results, result{Name: operation.OperationID, Command: strings.Join(operation.Command, " "), Method: operation.Method, Path: operation.Path, Status: "SKIPPED", Detail: "list has no bounded limit parameter"})
 				progress = true
 				continue
@@ -251,6 +253,10 @@ func (runner *harness) runReadonly() []result {
 		results = append(results, result{Name: operation.OperationID, Command: strings.Join(operation.Command, " "), Method: operation.Method, Path: operation.Path, Status: "SKIPPED", Detail: "missing safe input: " + strings.Join(missing, ", ")})
 	}
 	return results
+}
+
+func (runner *harness) skipsUnboundedList(operation generated.Operation) bool {
+	return operation.Verb == "list" && !hasParameter(operation, "limit") && !runner.allowDefaultPageLists
 }
 
 func runMutations(binary, enterprise, device, path, confirmation string, disposableDevice bool) []result {
@@ -554,9 +560,16 @@ func requiredResource(operation generated.Operation, parameter string) string {
 		if parameter == "versionId" || parameter == "version_id" {
 			return "tenant-app-version"
 		}
-	case "blueprint":
+	case "blueprint", "blueprint-revision", "revision":
 		if operation.Generation == "legacy" && parameter == "blueprint_id" {
 			return "legacy-blueprint"
+		}
+	case "blueprint-version":
+		if parameter == "blueprint_id" {
+			return "blueprint"
+		}
+		if parameter == "version_id" {
+			return "blueprint-version"
 		}
 	}
 	return ""
@@ -584,9 +597,15 @@ func collectValue(value any, noun string, known map[string]string) {
 			known[noun] = id
 		}
 		for key, child := range typed {
-			if id, ok := child.(string); ok && known[key] == "" && (strings.HasSuffix(key, "_id") || strings.HasSuffix(key, "Id")) {
-				known[key] = id
+			if id, ok := child.(string); ok && (strings.HasSuffix(key, "_id") || strings.HasSuffix(key, "Id")) {
 				resource := inferResource(key, noun)
+				if resource == "user" && noun != "user" {
+					collectValue(child, noun, known)
+					continue
+				}
+				if noun == "blueprint" && key == "latest_published_version_id" {
+					resource = "blueprint-version"
+				}
 				if known[resource] == "" {
 					known[resource] = id
 				}

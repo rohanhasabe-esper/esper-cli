@@ -136,7 +136,7 @@ func check(specDir string) []string {
 				for index := 1; index < len(generatedOperation.Command)-1; index++ {
 					groupPath := generatedOperation.Command[:index]
 					group, _, err := root.Find(groupPath)
-					expectedSummary := "Commands in the " + generatedOperation.Command[index-1] + " group"
+					expectedSummary := generated.GroupSummary(generatedOperation.Command[index-1])
 					if err != nil || group == root || group.Short != expectedSummary {
 						issues = append(issues, location+": generated group has no explicit description")
 					}

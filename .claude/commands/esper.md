@@ -24,13 +24,14 @@ You are an Esper fleet management assistant. Translate the user's request into t
 - `espercli context set <device|app|group|enterprise> <id>` - Set active context.
 - `espercli context get [device|app|group|enterprise]` - Show active context.
 - `espercli context clear <device|app|group|enterprise>|--all` - Clear active context.
+- `espercli discover <query-or-docs-url>` - Find commands by name, request fields, OpenAPI metadata, or an api.esper.io documentation URL.
 - `espercli secureadb connect --device <id>` - Open a pinned mutual-TLS ADB relay.
 - `espercli completion <bash|fish|powershell|zsh>` - Write a shell completion script to stdout.
 - `espercli version` - Show build version, commit, and date.
 
-## Spec-Generated Command Tree
+## Spec-Generated Operations
 
-Commands marked **destructive** require confirmation or `--yes`. Use each command's `--help` for positional arguments, request-body flags, scope flags, and pagination options.
+Commands marked **destructive** require confirmation or `--yes`. Use each command's `--help` for positional arguments, request-body flags, nested body fields, scope flags, and pagination options. `espercli api <generation> ...` accesses older colliding API generations; it is not a general API escape hatch.
 
 ### alarm-history
 
@@ -77,6 +78,8 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 - `espercli api legacy version list` - List App versions
 - `espercli api v0 command list` - List command requests
 - `espercli api v0 device list` - Get all DeviceOperations for a specific Operation
+- `espercli api v0 geofence create` - Create a geofence
+- `espercli api v0 geofence list` - List Geofences in Enterprise
 - `espercli api v1 status-metric list` - Get status metrics report for enterprise
 - `espercli api v1 version list` - List App versions
 
@@ -131,9 +134,19 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 
 - `espercli application-minimal get` - Gets minimum information regarding application
 
+### artifact
+
+- `espercli artifact create` - Add an artifact to a UWP app version
+
 ### authn-user
 
 - `espercli authn-user list` - Get Users details
+
+### background-script
+
+- `espercli background-script create` - Create background-script
+- `espercli background-script get` - Get background-script
+- `espercli background-script list` - List background-script
 
 ### blueprint
 
@@ -211,6 +224,18 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 ### custom-connection
 
 - `espercli custom-connection update` - Edit SSO connections
+
+### dep-anchor-cert
+
+- `espercli dep-anchor-cert list` - Get DEP anchor certificates
+
+### dep-profile
+
+- `espercli dep-profile create` - Create a DEP profile
+
+### dep-profile-list
+
+- `espercli dep-profile-list list` - Get all DEP profiles for the tenant
 
 ### dep-sync-request
 
@@ -291,6 +316,7 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 ### devicestate
 
 - `espercli devicestate get` - Get details of Current Device State
+- `espercli devicestate update` - Receive device state report and publish to Kafka for drift detection
 
 ### different-user
 
@@ -380,12 +406,24 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 
 ### geofence
 
-- `espercli geofence create` - Create a geofence
+- `espercli geofence create` - Create a new geofence
 - `espercli geofence delete` - Delete a geofence **destructive**
 - `espercli geofence get` - Get geofence information
-- `espercli geofence list` - List Geofences in Enterprise
+- `espercli geofence list` - List all geofences
 - `espercli geofence partial-update` - Partially updates geofence information
 - `espercli geofence update` - Update geofence information
+
+### geofence-blueprint
+
+- `espercli geofence-blueprint list` - Get blueprint usage statistics for a geofence
+
+### geofence-device
+
+- `espercli geofence-device list` - Get devices for a geofence
+
+### geofence-device-summary
+
+- `espercli geofence-device-summary get` - Get device summary for a geofence
 
 ### google-account
 
@@ -433,6 +471,14 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 ### legacy-device-group-command
 
 - `espercli legacy-device-group-command get` - Get a device group command
+
+### mdm-service-config
+
+- `espercli mdm-service-config get` - Get MDM service configuration
+
+### oem-config-schema
+
+- `espercli oem-config-schema get` - Get OEM Config Schema
 
 ### operation
 
@@ -518,6 +564,10 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 
 - `espercli provisioning-profile-version delete` - Delete provisioning profile version by ID **destructive**
 - `espercli provisioning-profile-version get` - Get provisioning profile version by ID
+
+### refresh-version
+
+- `espercli refresh-version create` - Force refresh of VPP app version metadata
 
 ### remote-adb-connection
 
@@ -668,6 +718,10 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 - `espercli tenant-app-version delete` - Delete tenant app version by ID **destructive**
 - `espercli tenant-app-version get` - Get tenant app version by ID
 - `espercli tenant-app-version update` - Update tenant app version by ID
+
+### tenant-app-version-artifact
+
+- `espercli tenant-app-version-artifact delete` - Delete an artifact from a UWP app version **destructive**
 
 ### tenant-esper-app
 

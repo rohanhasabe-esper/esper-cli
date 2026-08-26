@@ -1,20 +1,35 @@
 {
-  "sourcePathCount": 205,
+  "sourcePathCount": 224,
+  "bundledSourcePathCount": 205,
+  "overlayPathCount": 206,
+  "publicSource": {
+    "fsPath": "openapi.yaml",
+    "hash": "K7KWfKS54CXpy9w+/kA6d6pnjbU=",
+    "pathCount": 219
+  },
   "addedPathCount": 5,
   "excludedPaths": [
-    "/device/v0/devices/",
+    "/device/v0/devices",
+    "/enterprise/report/device-report",
+    "/enterprise/report/group-report",
     "/sys/health"
   ],
-  "emittedPathCount": 208,
-  "operationCount": 338,
+  "excludedPathReasons": {
+    "/sys/health": "operational health endpoint, not a customer API",
+    "/device/v0/devices": "deprecated device API path",
+    "/enterprise/report/device-report": "returned 404 during direct supported-environment verification",
+    "/enterprise/report/group-report": "returned 404 during direct supported-environment verification"
+  },
+  "emittedPathCount": 220,
+  "operationCount": 353,
   "generations": {
     "authn2": 9,
     "authz2": 5,
     "foundry": 5,
-    "legacy": 38,
+    "legacy": 36,
     "pipelines-v0": 29,
-    "v0": 48,
-    "v1": 27,
-    "v2": 47
+    "v0": 49,
+    "v1": 31,
+    "v2": 56
   }
 }

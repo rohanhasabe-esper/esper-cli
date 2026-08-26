@@ -362,10 +362,22 @@ func (runner *harness) executeArgs(name string, args []string) (result, []byte) 
 			item.ExitCode = -1
 			item.Detail = "process start failed"
 		} else {
-			item.Detail = "command failed; inspect terminal output"
+			item.Detail = failedCommandDetail(stderr.String())
 		}
 	}
 	return item, stdout.Bytes()
+}
+
+func failedCommandDetail(stderr string) string {
+	value := strings.TrimSpace(stderr)
+	if value == "" {
+		return "command failed"
+	}
+	const maxLength = 512
+	if len(value) > maxLength {
+		value = value[:maxLength] + "..."
+	}
+	return value
 }
 
 func matchingOperations(args []string) []generated.Operation {
@@ -481,6 +493,9 @@ func pathParameters(operation generated.Operation) []generated.Parameter {
 }
 
 func valueFor(parameter generated.Parameter, operation generated.Operation, known map[string]string) string {
+	if resource := requiredResource(operation, parameter.Name); resource != "" {
+		return known[resource]
+	}
 	if known[parameter.Name] != "" {
 		return known[parameter.Name]
 	}
@@ -497,9 +512,13 @@ func valueFor(parameter generated.Parameter, operation generated.Operation, know
 	switch parameter.Name {
 	case "parent_group_ids":
 		return known["group"]
-	case "from_time", "start_date", "last_seen_gt":
+	case "start_date":
+		return reportDate(-2)
+	case "end_date":
+		return reportDate(-1)
+	case "from_time", "last_seen_gt":
 		return time.Now().UTC().Add(-24 * time.Hour).Format(time.RFC3339)
-	case "to_time", "end_date", "last_seen_lt":
+	case "to_time", "last_seen_lt":
 		return time.Now().UTC().Format(time.RFC3339)
 	case "period":
 		return "day"
@@ -507,10 +526,44 @@ func valueFor(parameter generated.Parameter, operation generated.Operation, know
 		return "avg"
 	case "category":
 		return "device"
-	case "metric":
-		return "battery"
 	}
 	return ""
+}
+
+func requiredResource(operation generated.Operation, parameter string) string {
+	switch operation.Noun {
+	case "app-vpp":
+		if parameter == "appId" || parameter == "app_id" {
+			return "app-vpp"
+		}
+	case "device-app":
+		if parameter == "app_id" {
+			return "device-app"
+		}
+	case "esper-app-version":
+		if parameter == "appId" || parameter == "app_id" {
+			return "esper-app"
+		}
+		if parameter == "versionId" || parameter == "version_id" {
+			return "esper-app-version"
+		}
+	case "tenant-app", "tenant-app-version":
+		if parameter == "appId" || parameter == "app_id" {
+			return "tenant-app"
+		}
+		if parameter == "versionId" || parameter == "version_id" {
+			return "tenant-app-version"
+		}
+	case "blueprint":
+		if operation.Generation == "legacy" && parameter == "blueprint_id" {
+			return "legacy-blueprint"
+		}
+	}
+	return ""
+}
+
+func reportDate(daysAgo int) string {
+	return time.Now().UTC().AddDate(0, 0, daysAgo).Truncate(24 * time.Hour).Format("2006-01-02T15:04:05")
 }
 
 func collectKnown(data []byte, noun string, known map[string]string) {

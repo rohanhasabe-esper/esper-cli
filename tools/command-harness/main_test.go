@@ -72,3 +72,37 @@ func TestCollectKnownPreservesExplicitInputs(t *testing.T) {
 		t.Fatalf("unknown dependent ID was not collected: %#v", known)
 	}
 }
+
+func TestReadonlyArgsDoNotReuseUnrelatedResourceIDs(t *testing.T) {
+	known := map[string]string{"app_id": "application-1", "version_id": "version-1", "blueprint_id": "blueprint-1"}
+	tests := []generated.Operation{
+		{Noun: "app-vpp", Parameters: []generated.Parameter{{Name: "appId", In: "path"}}},
+		{Noun: "device-app", Parameters: []generated.Parameter{{Name: "app_id", In: "path"}}},
+		{Noun: "tenant-app-version", Parameters: []generated.Parameter{{Name: "appId", In: "path"}, {Name: "versionId", In: "path"}}},
+		{Generation: "legacy", Noun: "blueprint", Parameters: []generated.Parameter{{Name: "blueprint_id", In: "path"}}},
+	}
+	for _, operation := range tests {
+		for _, parameter := range operation.Parameters {
+			if value := valueFor(parameter, operation, known); value != "" {
+				t.Fatalf("%s reused unrelated %s=%q", operation.Noun, parameter.Name, value)
+			}
+		}
+	}
+}
+
+func TestReportDatesUseCompletedTimezoneNaiveWindow(t *testing.T) {
+	start := valueFor(generated.Parameter{Name: "start_date"}, generated.Operation{}, nil)
+	end := valueFor(generated.Parameter{Name: "end_date"}, generated.Operation{}, nil)
+	if strings.Contains(start, "Z") || strings.Contains(end, "Z") || start >= end {
+		t.Fatalf("report window = %q through %q", start, end)
+	}
+}
+
+func TestFailedCommandDetailTrimsAndBoundsStderr(t *testing.T) {
+	if got := failedCommandDetail("\nerror: HTTP 403\n"); got != "error: HTTP 403" {
+		t.Fatalf("failedCommandDetail() = %q", got)
+	}
+	if got := failedCommandDetail(strings.Repeat("x", 513)); len(got) != 515 || !strings.HasSuffix(got, "...") {
+		t.Fatalf("failedCommandDetail() length = %d", len(got))
+	}
+}

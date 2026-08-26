@@ -68,8 +68,6 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 - `espercli api legacy blueprint delete` - Delete a Blueprint **destructive**
 - `espercli api legacy blueprint get` - Get Blueprint detail
 - `espercli api legacy blueprint list` - Get list of Blueprints for the group
-- `espercli api legacy command create` - Send a command to a device group
-- `espercli api legacy command list` - List commands for a device group
 - `espercli api legacy device get` - Fetch device details by ID
 - `espercli api legacy device list` - Fetch all devices in an enterprise
 - `espercli api legacy install list` - List installed apps
@@ -468,10 +466,6 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 
 - `espercli itunesapp list` - Get iOS App Info (v2)
 
-### legacy-device-group-command
-
-- `espercli legacy-device-group-command get` - Get a device group command
-
 ### mdm-service-config
 
 - `espercli mdm-service-config get` - Get MDM service configuration
@@ -569,19 +563,9 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 
 - `espercli refresh-version create` - Force refresh of VPP app version metadata
 
-### remote-adb-connection
-
-- `espercli remote-adb-connection delete` - Delete a remote ADB connection **destructive**
-- `espercli remote-adb-connection get` - Get remote ADB connection status
-
 ### remote-file
 
 - `espercli remote-file upload` - Upload file to Remote File Manager
-
-### remoteadb
-
-- `espercli remoteadb create` - Start a remote ADB connection
-- `espercli remoteadb list` - List remote ADB connections for a device
 
 ### renew-token
 
@@ -702,10 +686,6 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 - `espercli target-run get` - Get Target Run by Target Run ID
 - `espercli target-run list` - Get all Target Runs for the Stage Run
 - `espercli target-run update` - Update a Target Run
-
-### telemetry-graph-data
-
-- `espercli telemetry-graph-data get` - Get telemetry graph data
 
 ### tenant-app
 

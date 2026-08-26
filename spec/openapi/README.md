@@ -18,7 +18,7 @@ Two source paths are intentionally excluded:
 - `/device/v0/devices/` is deprecated in the device API public specification.
 - `/sys/health` is an operational health endpoint, not a customer API.
 
-Run the following from an authenticated local checkout. The optional second
+Run the following from an authenticated local checkout. The required public OAS
 argument is fetched only during this build step; released commands never fetch
 or interpret OpenAPI documents at runtime.
 
@@ -33,17 +33,17 @@ reasons, emitted, and per-generation path counts. Generated specifications are
 JSON-formatted YAML so downstream Go tools can parse them with the standard
 library.
 
-## Platform reconciliation
+## Public operation boundary
 
-The bundler adds customer routes present in `esper-platform` but absent from the
-docs source. Each generated operation carries an `x-esper-platform-source`
-citation with the exact router and view files:
+The bundler emits only operations present in the supplied public Redocly OAS.
+It normalizes `/api` prefixes and trailing slashes before comparison, removes
+any platform-only operation present in an older overlay, and records the public
+operation keys in `manifest.json`. `tools/contractcheck` rejects a generated
+operation missing from that manifest.
 
-- Remote ADB nested routes from `api/remoteadb/urls.py`.
-- Telemetry graph data from `shoonyapoc/urls.py` and
-  `api/device/views/telemetry_graph.py`.
-- Legacy device-group commands from `api/enterprise/urls.py` and
-  `api/device/views/group_command.py`.
+`secureadb` is a hand-written Python-parity command and the sole exception to
+the generated API-operation boundary. Its Remote ADB calls are internal to the
+command; they do not produce generated `remoteadb` API commands.
 
 Unversioned core routes are emitted as the `legacy` generation. Versioned core
 and service routes are grouped by `v0`, `v1`, or `v2`; independent API families

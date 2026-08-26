@@ -4,32 +4,28 @@ import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const [input, outputDir, publicInput, overlayDir] = process.argv.slice(2);
-if (!input || !outputDir) {
-  console.error("usage: main.mjs <bundled-openapi.json> <output-directory> [public-oas.json] [overlay-spec-dir]");
-  process.exit(2);
+if (!input || !outputDir || !publicInput) {
+	console.error("usage: main.mjs <bundled-openapi.json> <output-directory> <public-oas.json> [overlay-spec-dir]");
+	process.exit(2);
 }
 
 const bundledSource = JSON.parse(await readFile(input, "utf8"));
-let publicSource;
-let publicMetadata;
-if (publicInput) {
-  const envelope = JSON.parse(await readFile(publicInput, "utf8"));
-  publicSource = envelope.definition ?? envelope;
-  if (!publicSource.paths || !publicSource.components) {
-    throw new Error("public OAS does not contain paths and components");
-  }
-  stripRedoclyArtifacts(publicSource);
-  publicMetadata = {
-    fsPath: envelope.fsPath ?? null,
-    hash: envelope.hash ?? null,
-    pathCount: Object.keys(publicSource.paths).length,
-  };
+const envelope = JSON.parse(await readFile(publicInput, "utf8"));
+const publicSource = envelope.definition ?? envelope;
+if (!publicSource.paths || !publicSource.components) {
+	throw new Error("public OAS does not contain paths and components");
 }
+stripRedoclyArtifacts(publicSource);
+const publicMetadata = {
+	fsPath: envelope.fsPath ?? null,
+	hash: envelope.hash ?? null,
+	pathCount: Object.keys(publicSource.paths).length,
+};
 const overlaySource = overlayDir ? await readOverlaySource(overlayDir) : undefined;
-const source = mergeSources(mergeSources(bundledSource, overlaySource), publicSource, true);
-const sourcePathCount = Object.keys(source.paths).length;
+let source = mergeSources(mergeSources(bundledSource, overlaySource), publicSource, true);
 const bundledSourcePathCount = Object.keys(bundledSource.paths).length;
 const overlayPathCount = Object.keys(overlaySource?.paths ?? {}).length;
+const methods = new Set(["get", "post", "put", "patch", "delete"]);
 const excludedPathReasons = new Map([
   ["/sys/health", "operational health endpoint, not a customer API"],
   ["/device/v0/devices", "deprecated device API path"],
@@ -138,6 +134,41 @@ function stripRedoclyArtifacts(value) {
 
 function excludedReason(apiPath) {
   return excludedPathReasons.get(apiPath.replace(/\/$/, ""));
+}
+
+function operationKey(method, apiPath) {
+  return `${method.toUpperCase()} ${pathKey(apiPath)}`;
+}
+
+function publicOperationKeys(document) {
+  const result = new Set();
+  for (const [apiPath, pathItem] of Object.entries(document.paths)) {
+    for (const method of Object.keys(pathItem)) {
+      if (methods.has(method)) result.add(operationKey(method, apiPath));
+    }
+  }
+  return result;
+}
+
+function filterToPublicOperations(document, publicOperations) {
+  const paths = {};
+  const removed = [];
+  for (const [apiPath, pathItem] of Object.entries(document.paths)) {
+    const filtered = {};
+    for (const [method, value] of Object.entries(pathItem)) {
+      if (!methods.has(method)) {
+        filtered[method] = value;
+        continue;
+      }
+      if (publicOperations.has(operationKey(method, apiPath))) {
+        filtered[method] = value;
+      } else {
+        removed.push(operationKey(method, apiPath));
+      }
+    }
+    if (Object.keys(filtered).some((method) => methods.has(method))) paths[apiPath] = filtered;
+  }
+  return { document: { ...document, paths }, removed };
 }
 
 const uuidParameter = (name) => ({
@@ -347,6 +378,11 @@ source.paths["/enterprise/{enterprise_id}/devicegroup/{group_id}/command/{comman
   },
 };
 
+const publicOperations = publicOperationKeys(publicSource);
+const publicOnly = filterToPublicOperations(source, publicOperations);
+source = publicOnly.document;
+const sourcePathCount = Object.keys(source.paths).length;
+
 function generationFor(apiPath) {
   if (apiPath.startsWith("/authn2/")) return "authn2";
   if (apiPath.startsWith("/authz2/")) return "authz2";
@@ -362,7 +398,6 @@ function generationFor(apiPath) {
   throw new Error(`no generation mapping for ${apiPath}`);
 }
 
-const methods = new Set(["get", "post", "put", "patch", "delete"]);
 const resourceNames = new Map([
   ["devicegroup", "device-group"],
   ["devicegroups", "device-group"],
@@ -780,21 +815,23 @@ function convertSchemasTo31(value) {
 }
 
 const byGeneration = new Map();
+const emittedNonPublicOperations = [];
 for (const [sourcePath, pathItem] of Object.entries(source.paths)) {
   const apiPath = normalizePath(sourcePath);
   if (excludedReason(apiPath)) continue;
+	for (const method of Object.keys(pathItem)) {
+		if (methods.has(method) && !publicOperations.has(operationKey(method, apiPath))) {
+			emittedNonPublicOperations.push(operationKey(method, apiPath));
+		}
+	}
   const generation = generationFor(apiPath);
   if (!byGeneration.has(generation)) byGeneration.set(generation, {});
   byGeneration.get(generation)[apiPath] = pathItem;
 }
 
-const platformAddedPathCount = [
-  "/v0/enterprise/{enterprise_id}/device/{device_id}/remoteadb/",
-  "/v0/enterprise/{enterprise_id}/device/{device_id}/remoteadb/{remoteadb_id}/",
-  "/graph/{category}/{metric}/",
-  "/enterprise/{enterprise_id}/devicegroup/{group_id}/command/",
-  "/enterprise/{enterprise_id}/devicegroup/{group_id}/command/{command_id}/",
-].filter((apiPath) => source.paths[apiPath] && !Object.keys(bundledSource.paths).some((sourcePath) => pathKey(sourcePath) === pathKey(apiPath))).length;
+if (emittedNonPublicOperations.length > 0) {
+	throw new Error(`non-public operations would be emitted:\n${emittedNonPublicOperations.sort().join("\n")}`);
+}
 
 await mkdir(outputDir, { recursive: true });
 const manifest = {
@@ -802,7 +839,9 @@ const manifest = {
   bundledSourcePathCount,
   overlayPathCount,
   publicSource: publicMetadata,
-  addedPathCount: platformAddedPathCount,
+	publicOperationCount: publicOperations.size,
+	nonPublicOperationsRemoved: publicOnly.removed.sort(),
+	publicOperationKeys: [...publicOperations].sort(),
   excludedPaths: [...excludedPathReasons.keys()].sort(),
   excludedPathReasons: Object.fromEntries(excludedPathReasons),
   emittedPathCount: 0,

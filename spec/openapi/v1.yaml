@@ -8578,29 +8578,6 @@
         },
         "description": "Number of items to skip before starting to collect the result set"
       },
-      "geofence_XCallerIdHeader": {
-        "name": "X-Caller-Id",
-        "in": "header",
-        "required": true,
-        "x-internal": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 255
-        },
-        "description": "Unique identifier for the caller"
-      },
-      "geofence_XEsperTenantIdHeader": {
-        "name": "X-Esper-Tenant-Id",
-        "in": "header",
-        "required": true,
-        "x-internal": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "description": "Esper tenant ID associated with the request"
-      },
       "DirectoryRecordID": {
         "name": "directory_record_id",
         "description": "Directory record ID",

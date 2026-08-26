@@ -42,7 +42,6 @@ type operation struct {
 	Envelope     string              `json:"x-esper-response-envelope"`
 	RequireOneOf []string            `json:"x-esper-require-one-of"`
 	Destructive  bool                `json:"x-esper-destructive"`
-	Exclude      bool                `json:"x-esper-exclude"`
 	ScopeParent  string              `json:"x-esper-scope-parent"`
 	Summary      string              `json:"summary"`
 }
@@ -171,7 +170,7 @@ func load(directory string) ([]generatedOperation, error) {
 		}
 		for apiPath, item := range spec.Paths {
 			for method, operation := range item {
-				if !methods[method] || operation.Exclude {
+				if !methods[method] {
 					continue
 				}
 				generated := generatedOperation{Generation: spec.Info.Generation, Method: strings.ToUpper(method), Path: apiPath, Noun: operation.Noun, Verb: operation.Verb, Pagination: operation.Pagination, ResponseEnvelope: operation.Envelope, RequireOneOf: operation.RequireOneOf, Destructive: operation.Destructive, ScopeParent: operation.ScopeParent, Summary: operation.Summary, OperationID: operation.OperationID, AliasOf: operation.AliasOf, SuccessMedia: successMedia(operation.Responses)}

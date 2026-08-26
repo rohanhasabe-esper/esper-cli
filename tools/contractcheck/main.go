@@ -30,7 +30,6 @@ type spec struct {
 type operation struct {
 	Parameters   []parameter `json:"parameters"`
 	Destructive  *bool       `json:"x-esper-destructive"`
-	Exclude      bool        `json:"x-esper-exclude"`
 	Pagination   string      `json:"x-esper-pagination"`
 	Verb         string      `json:"x-esper-verb"`
 	Noun         string      `json:"x-esper-noun"`
@@ -95,7 +94,7 @@ func check(specDir string) []string {
 		}
 		for apiPath, item := range document.Paths {
 			for method, operation := range item {
-				if !methods[method] || operation.Exclude {
+				if !methods[method] {
 					continue
 				}
 				location := fmt.Sprintf("%s %s %s", strings.ToUpper(method), apiPath, document.Info.Generation)

@@ -100,12 +100,6 @@ func TestPipelineCommandAndOperationAlwaysUseSideFamilyPrefix(t *testing.T) {
 	}
 }
 
-func TestExcludedOperationIsNotGenerated(t *testing.T) {
-	if !(operation{Exclude: true}).Exclude {
-		t.Fatal("excluded operation metadata was not retained")
-	}
-}
-
 func TestDeriveResponseEnvelopesByServiceFamily(t *testing.T) {
 	operations := []generatedOperation{
 		{Path: "/v2/devices/", Pagination: "apps-envelope"},

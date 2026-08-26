@@ -30,8 +30,13 @@ live-readonly)
 live-mutations)
   : "${HARNESS_ENTERPRISE:?set HARNESS_ENTERPRISE to the disposable enterprise ID}"
   : "${HARNESS_DEVICE:?set HARNESS_DEVICE to the disposable device ID}"
-  : "${HARNESS_MUTATION_CONFIRM:?set HARNESS_MUTATION_CONFIRM=I_UNDERSTAND_THIS_TENANT_IS_DISPOSABLE}"
+  : "${HARNESS_MUTATION_CONFIRM:?set HARNESS_MUTATION_CONFIRM=I_UNDERSTAND_THIS_DEVICE_IS_DISPOSABLE}"
   scenario="${HARNESS_SCENARIO:-testdata/command-harness/device-disposable.example.json}"
+  mutation_scope="${HARNESS_MUTATION_SCOPE:-device}"
+  mutation_scope_flag=()
+  if [[ "$mutation_scope" == "device" ]]; then
+    mutation_scope_flag=(--disposable-device)
+  fi
   go run ./tools/command-harness \
     --mode live-mutations \
     --binary "$ROOT/dist/espercli-harness-target" \
@@ -40,6 +45,7 @@ live-mutations)
     --scenario "$scenario" \
     --allow-mutations \
     --confirmation "$HARNESS_MUTATION_CONFIRM" \
+    "${mutation_scope_flag[@]}" \
     --report "$ROOT/dist/command-harness-live-mutations.json"
   ;;
 *)

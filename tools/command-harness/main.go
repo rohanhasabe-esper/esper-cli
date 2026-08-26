@@ -19,6 +19,7 @@ import (
 )
 
 const mutationConfirmation = "I_UNDERSTAND_THIS_TENANT_IS_DISPOSABLE"
+const deviceMutationConfirmation = "I_UNDERSTAND_THIS_DEVICE_IS_DISPOSABLE"
 
 type result struct {
 	Name       string `json:"name"`
@@ -49,6 +50,8 @@ type counts struct {
 type scenario struct {
 	Name                 string `json:"name"`
 	DisposableEnterprise string `json:"disposable_enterprise"`
+	DisposableScope      string `json:"disposable_scope"`
+	DisposableDevice     string `json:"disposable_device"`
 	Steps                []step `json:"steps"`
 	Cleanup              []step `json:"cleanup"`
 }
@@ -81,6 +84,7 @@ func main() {
 	reportPath := flag.String("report", "dist/command-harness-report.json", "JSON report path")
 	allowMutations := flag.Bool("allow-mutations", false, "allow mutation scenario execution")
 	confirmation := flag.String("confirmation", "", "must equal the disposable-tenant confirmation phrase")
+	disposableDevice := flag.Bool("disposable-device", false, "allow only device-scoped mutations for the disposable --device")
 	flag.Parse()
 
 	started := time.Now().UTC()
@@ -97,10 +101,14 @@ func main() {
 		if *binary == "" || *enterprise == "" || *device == "" || *scenarioPath == "" {
 			fatal("live-mutations requires --binary, --enterprise, --device, and --scenario")
 		}
-		if !*allowMutations || *confirmation != mutationConfirmation {
-			fatal("live-mutations requires --allow-mutations and the exact disposable-tenant confirmation")
+		expectedConfirmation := mutationConfirmation
+		if *disposableDevice {
+			expectedConfirmation = deviceMutationConfirmation
 		}
-		results = runMutations(*binary, *enterprise, *device, *scenarioPath, *confirmation)
+		if !*allowMutations || *confirmation != expectedConfirmation {
+			fatal("live-mutations requires --allow-mutations and the exact disposable confirmation")
+		}
+		results = runMutations(*binary, *enterprise, *device, *scenarioPath, *confirmation, *disposableDevice)
 	default:
 		fatal(fmt.Sprintf("unknown mode %q", *mode))
 	}
@@ -245,7 +253,7 @@ func (runner *harness) runReadonly() []result {
 	return results
 }
 
-func runMutations(binary, enterprise, device, path, confirmation string) []result {
+func runMutations(binary, enterprise, device, path, confirmation string, disposableDevice bool) []result {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		fatal(fmt.Sprintf("read mutation scenario: %v", err))
@@ -255,17 +263,25 @@ func runMutations(binary, enterprise, device, path, confirmation string) []resul
 		fatal(fmt.Sprintf("decode mutation scenario: %v", err))
 	}
 	variables := map[string]string{"ENTERPRISE": enterprise, "DEVICE": device}
-	if plan.DisposableEnterprise != "${ENTERPRISE}" && expand(plan.DisposableEnterprise, variables) != enterprise {
+	if disposableDevice {
+		if plan.DisposableScope != "device" || expand(plan.DisposableDevice, variables) != device {
+			fatal("device-scoped scenario must identify the exact --device as disposable")
+		}
+	} else if plan.DisposableEnterprise != "${ENTERPRISE}" && expand(plan.DisposableEnterprise, variables) != enterprise {
 		fatal("scenario disposable_enterprise does not match --enterprise")
 	}
-	if confirmation != mutationConfirmation || len(plan.Cleanup) == 0 {
+	expectedConfirmation := mutationConfirmation
+	if disposableDevice {
+		expectedConfirmation = deviceMutationConfirmation
+	}
+	if confirmation != expectedConfirmation || len(plan.Cleanup) == 0 {
 		fatal("mutation scenario requires cleanup and disposable confirmation")
 	}
 	runner := &harness{binary: binary, timeout: 60 * time.Second}
 	results := make([]result, 0, len(plan.Steps)+len(plan.Cleanup))
 	failed := false
 	for _, item := range plan.Steps {
-		result := runner.executeStep(item, variables)
+		result := runner.executeStep(item, variables, disposableDevice)
 		results = append(results, result)
 		if result.Status == "FAIL" {
 			failed = true
@@ -273,7 +289,7 @@ func runMutations(binary, enterprise, device, path, confirmation string) []resul
 		}
 	}
 	for index := len(plan.Cleanup) - 1; index >= 0; index-- {
-		results = append(results, runner.executeStep(plan.Cleanup[index], variables))
+		results = append(results, runner.executeStep(plan.Cleanup[index], variables, disposableDevice))
 	}
 	if failed {
 		for index := range results {
@@ -285,7 +301,7 @@ func runMutations(binary, enterprise, device, path, confirmation string) []resul
 	return results
 }
 
-func (runner *harness) executeStep(item step, variables map[string]string) result {
+func (runner *harness) executeStep(item step, variables map[string]string, disposableDevice bool) result {
 	if item.ExpectedExit == nil {
 		return result{Name: item.Name, Status: "FAIL", Detail: "scenario step must declare expected_exit"}
 	}
@@ -294,6 +310,9 @@ func (runner *harness) executeStep(item step, variables map[string]string) resul
 		args[index] = expand(arg, variables)
 	}
 	operations := matchingOperations(args)
+	if item.Mutation && disposableDevice && !contains(args, variables["DEVICE"]) {
+		return result{Name: item.Name, Command: safeCommand(args), Status: "FAIL", Detail: "device-scoped mutation must target the disposable device"}
+	}
 	for _, operation := range operations {
 		if operation.Method != "GET" && !item.Mutation {
 			return result{Name: item.Name, Command: safeCommand(args), Status: "FAIL", Detail: "non-GET scenario step must set mutation=true"}

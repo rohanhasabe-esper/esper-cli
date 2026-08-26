@@ -1,6 +1,7 @@
 {
   "name": "disposable device removal",
-  "disposable_enterprise": "${ENTERPRISE}",
+  "disposable_scope": "device",
+  "disposable_device": "${DEVICE}",
   "steps": [
     {
       "name": "verify device",

@@ -4297,6 +4297,7 @@
           }
         ],
         "x-esper-destructive": false,
+        "x-esper-exclude": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
         "x-esper-noun": "device-report"
@@ -4499,6 +4500,7 @@
           }
         ],
         "x-esper-destructive": false,
+        "x-esper-exclude": true,
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
         "x-esper-noun": "group-report"

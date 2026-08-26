@@ -279,10 +279,6 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 - `espercli device-operation get` - Get a specific DeviceOperations for a specific Operation (Device Operation Status)
 - `espercli device-operation update` - Update a specific DeviceOperation for a specific Operation **destructive**
 
-### device-report
-
-- `espercli device-report get` - Get device status reports within specified date-time range
-
 ### device-request
 
 - `espercli device-request get` - Get details of a Device
@@ -409,10 +405,6 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 ### group-eventfeed
 
 - `espercli group-eventfeed list` - Download Event Feed for Group
-
-### group-report
-
-- `espercli group-report get` - Get group report
 
 ### group-thumbnail
 

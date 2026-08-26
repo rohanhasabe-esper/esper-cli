@@ -61,3 +61,14 @@ func TestMutationStepCannotHideGeneratedWrite(t *testing.T) {
 		t.Fatalf("unmarked write result = %#v", item)
 	}
 }
+
+func TestCollectKnownPreservesExplicitInputs(t *testing.T) {
+	known := map[string]string{"device_id": "selected-device", "enterprise_id": "selected-enterprise"}
+	collectKnown([]byte(`{"device_id":"listed-device","enterprise_id":"listed-enterprise","group_id":"group-1"}`), "device", known)
+	if known["device_id"] != "selected-device" || known["enterprise_id"] != "selected-enterprise" {
+		t.Fatalf("explicit inputs were replaced: %#v", known)
+	}
+	if known["group_id"] != "group-1" {
+		t.Fatalf("unknown dependent ID was not collected: %#v", known)
+	}
+}

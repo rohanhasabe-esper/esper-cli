@@ -531,7 +531,7 @@ func collectValue(value any, noun string, known map[string]string) {
 			known[noun] = id
 		}
 		for key, child := range typed {
-			if id, ok := child.(string); ok && (strings.HasSuffix(key, "_id") || strings.HasSuffix(key, "Id")) {
+			if id, ok := child.(string); ok && known[key] == "" && (strings.HasSuffix(key, "_id") || strings.HasSuffix(key, "Id")) {
 				known[key] = id
 				resource := inferResource(key, noun)
 				if known[resource] == "" {

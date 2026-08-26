@@ -51,7 +51,9 @@ Mutation runs are disabled by default. They require:
 - `HARNESS_MUTATION_CONFIRM=I_UNDERSTAND_THIS_DEVICE_IS_DISPOSABLE` for device-scoped scenarios, or `I_UNDERSTAND_THIS_TENANT_IS_DISPOSABLE` for tenant-scoped scenarios.
 - A scenario with at least one cleanup step.
 
-The example removes the disposable device and clears context afterward:
+The example removes a disposable iOS, Linux, or Windows device and clears context afterward.
+Do not use it with Android devices.
+The wrapper defaults to `testdata/command-harness/non-android-device-disposable.example.json`.
 
 ```bash
 export HARNESS_ENTERPRISE=<disposable-enterprise-id>
@@ -65,7 +67,8 @@ Mutation scenarios are JSON. Each step must declare `expected_exit`; every
 non-GET generated operation must set `mutation: true`, and destructive generated
 operations must include `--yes`. Cleanup runs in reverse order even when a setup
 or mutation step fails. The example is intentionally not run by CI.
-Device-scoped scenarios must target only the exact disposable device.
+Device-scoped scenarios must target only the exact disposable device. The removal scenario
+supports iOS, Linux, and Windows devices only; Android fixtures must not run it.
 
 ## Luna
 

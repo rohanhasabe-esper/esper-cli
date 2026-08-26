@@ -233,6 +233,7 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 
 ### device
 
+- `espercli device delete-non-android-device` - Delete a non-Android device. Supported by iOS, Linux, and Windows devices only. **destructive**
 - `espercli device get` - Retrieve detailed device information.
 - `espercli device list` - Get all devices in the tenant
 
@@ -284,7 +285,6 @@ Commands marked **destructive** require confirmation or `--yes`. Use each comman
 
 ### device-request
 
-- `espercli device-request delete` - Delete a device. Currently supported by iOS, Linux and Windows devices. **destructive**
 - `espercli device-request get` - Get details of a Device
 
 ### device-tile-report

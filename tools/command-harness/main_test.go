@@ -47,7 +47,7 @@ func TestMutationScenarioRequiresCleanup(t *testing.T) {
 func TestMutationStepRequiresExplicitYes(t *testing.T) {
 	runner := &harness{binary: "/does/not/run", timeout: time.Second}
 	expected := 0
-	item := runner.executeStep(step{Name: "delete", Args: []string{"device-request", "delete", "device-1"}, ExpectedExit: &expected, Mutation: true}, nil, false)
+	item := runner.executeStep(step{Name: "delete", Args: []string{"device", "delete-non-android-device", "device-1"}, ExpectedExit: &expected, Mutation: true}, nil, false)
 	if item.Status != "FAIL" || !strings.Contains(item.Detail, "--yes") {
 		t.Fatalf("mutation safety result = %#v", item)
 	}
@@ -56,7 +56,7 @@ func TestMutationStepRequiresExplicitYes(t *testing.T) {
 func TestMutationStepCannotHideGeneratedWrite(t *testing.T) {
 	expected := 0
 	runner := &harness{binary: "/does/not/run", timeout: time.Second}
-	item := runner.executeStep(step{Name: "delete", Args: []string{"device-request", "delete", "device-1", "--yes"}, ExpectedExit: &expected}, nil, false)
+	item := runner.executeStep(step{Name: "delete", Args: []string{"device", "delete-non-android-device", "device-1", "--yes"}, ExpectedExit: &expected}, nil, false)
 	if item.Status != "FAIL" || !strings.Contains(item.Detail, "mutation=true") {
 		t.Fatalf("unmarked write result = %#v", item)
 	}

@@ -31,7 +31,7 @@ live-mutations)
   : "${HARNESS_ENTERPRISE:?set HARNESS_ENTERPRISE to the disposable enterprise ID}"
   : "${HARNESS_DEVICE:?set HARNESS_DEVICE to the disposable device ID}"
   : "${HARNESS_MUTATION_CONFIRM:?set HARNESS_MUTATION_CONFIRM=I_UNDERSTAND_THIS_DEVICE_IS_DISPOSABLE}"
-  scenario="${HARNESS_SCENARIO:-testdata/command-harness/device-disposable.example.json}"
+  scenario="${HARNESS_SCENARIO:-testdata/command-harness/non-android-device-disposable.example.json}"
   mutation_scope="${HARNESS_MUTATION_SCOPE:-device}"
   mutation_scope_flag=()
   if [[ "$mutation_scope" == "device" ]]; then

@@ -385,15 +385,6 @@ func run(command *cobra.Command, args []string, operations []Operation, options 
 	if err != nil {
 		return err
 	}
-	if operation.Destructive {
-		ok, err := esperruntime.Confirm(command.InOrStdin(), command.ErrOrStderr(), requestPath, 1, options.Yes)
-		if err != nil {
-			return err
-		}
-		if !ok {
-			return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("operation cancelled"))
-		}
-	}
 	credentials, err := esperruntime.ResolveCredentials(state.Config, options.Environment, options.APIKey)
 	if err != nil {
 		return err
@@ -419,6 +410,24 @@ func run(command *cobra.Command, args []string, operations []Operation, options 
 			}
 		}
 	}
+	if isWriteOperation(operation) {
+		request, approved, err := esperruntime.RequireApproval(esperruntime.ApprovalSpec{BaseURL: credentials.BaseURL(), Method: operation.Method, Path: requestPath, ContentType: contentType, Query: query, Headers: headers, Body: body})
+		if err != nil {
+			return esperruntime.NewError(esperruntime.CategoryAuth, err)
+		}
+		if !approved {
+			return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("approval required for %s %s\nreview: espercli approval show %s\nhuman approval: espercli approval approve %s", operation.Method, requestPath, request.ID, request.ID))
+		}
+	}
+	if operation.Destructive {
+		ok, err := esperruntime.Confirm(command.InOrStdin(), command.ErrOrStderr(), requestPath, 1, options.Yes)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("operation cancelled"))
+		}
+	}
 	client := esperruntime.NewHTTPClient(credentials)
 	response, err := client.DoWithContentTypeAndHeaders(command.Context(), operation.Method, requestPath, query, headers, body, contentType, operation.SuccessMedia)
 	if err != nil {
@@ -442,6 +451,10 @@ func run(command *cobra.Command, args []string, operations []Operation, options 
 		return esperruntime.NewError(esperruntime.CategoryAPI, err)
 	}
 	return esperruntime.WriteHuman(command.OutOrStdout(), response)
+}
+
+func isWriteOperation(operation Operation) bool {
+	return operation.Method == "POST" || operation.Method == "PUT" || operation.Method == "PATCH" || operation.Method == "DELETE"
 }
 
 func writeRawResponse(command *cobra.Command, response []byte) error {

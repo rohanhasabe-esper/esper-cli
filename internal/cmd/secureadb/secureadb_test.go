@@ -110,6 +110,13 @@ func TestSendEnableADBCommand(t *testing.T) {
 	}
 }
 
+func TestSecureADBApprovalSpecBindsDeviceAndForceEnable(t *testing.T) {
+	spec, err := secureADBApprovalSpec(esperruntime.Credentials{Environment: "https://example.test"}, "enterprise-1", "device-1", true, "/v0/enterprise/enterprise-1/device/device-1/remoteadb/")
+	if err != nil || spec.Method != "CONNECT" || spec.Path == "" || !strings.Contains(string(spec.Body), `"force_enable":true`) || strings.Contains(string(spec.Body), "certificate") {
+		t.Fatalf("approval spec = %#v, %v", spec, err)
+	}
+}
+
 func TestPrepareCertificatesReplacesFilesWithPrivatePermissions(t *testing.T) {
 	directory := filepath.Join(t.TempDir(), "certs")
 	if err := os.MkdirAll(directory, 0o755); err != nil {

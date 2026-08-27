@@ -144,6 +144,18 @@ func runConnect(command *cobra.Command, options *esperruntime.GlobalOptions, dev
 	if enterpriseID == "" {
 		return esperruntime.NewError(esperruntime.CategoryAuth, fmt.Errorf("enterprise ID is not configured (run espercli context set enterprise <id>)"))
 	}
+	requestPath := remoteADBCollectionPath(enterpriseID, deviceID)
+	approvalSpec, err := secureADBApprovalSpec(credentials, enterpriseID, deviceID, forceEnable, requestPath)
+	if err != nil {
+		return esperruntime.NewError(esperruntime.CategoryUsage, err)
+	}
+	approval, approved, err := esperruntime.RequireApproval(approvalSpec)
+	if err != nil {
+		return esperruntime.NewError(esperruntime.CategoryAuth, err)
+	}
+	if !approved {
+		return esperruntime.NewError(esperruntime.CategoryUsage, fmt.Errorf("approval required for secureadb connect\nreview: espercli approval show %s\nhuman approval: espercli approval approve %s", approval.ID, approval.ID))
+	}
 
 	certificatesDirectory, err := defaultCertificatesDirectory()
 	if err != nil {
@@ -155,7 +167,6 @@ func runConnect(command *cobra.Command, options *esperruntime.GlobalOptions, dev
 	}
 
 	client := esperruntime.NewHTTPClient(credentials)
-	requestPath := remoteADBCollectionPath(enterpriseID, deviceID)
 	session, err := createRemoteADBSession(command.Context(), client, requestPath, clientCertificatePEM)
 	if err != nil {
 		return err
@@ -239,6 +250,14 @@ func runConnect(command *cobra.Command, options *esperruntime.GlobalOptions, dev
 		return esperruntime.NewError(esperruntime.CategoryNetwork, bridgeErr)
 	}
 	return nil
+}
+
+func secureADBApprovalSpec(credentials esperruntime.Credentials, enterpriseID, deviceID string, forceEnable bool, requestPath string) (esperruntime.ApprovalSpec, error) {
+	body, err := esperruntime.EncodeBody(map[string]any{"enterprise_id": enterpriseID, "device_id": deviceID, "force_enable": forceEnable})
+	if err != nil {
+		return esperruntime.ApprovalSpec{}, err
+	}
+	return esperruntime.ApprovalSpec{BaseURL: credentials.BaseURL(), Method: "CONNECT", Path: requestPath, ContentType: "application/json", Body: body}, nil
 }
 
 func sendEnableADBCommand(ctx context.Context, client *esperruntime.HTTPClient, credentials esperruntime.Credentials, enterpriseID, deviceID string, session remoteADBSession, detailPath string) error {

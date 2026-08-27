@@ -2,8 +2,11 @@ package generated
 
 import (
 	"bytes"
+	"errors"
 	"mime"
 	"mime/multipart"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
@@ -303,6 +306,53 @@ func TestAliasesDoNotCreateRoutes(t *testing.T) {
 	group := groups["geofence\x00get"]
 	if len(groups) != 1 || len(group) != 1 || group[0].OperationID != "canonical" {
 		t.Fatalf("executable groups = %#v", groups)
+	}
+}
+
+func TestWriteRequiresApprovalEvenWithYes(t *testing.T) {
+	requests := 0
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		requests++
+		writer.Header().Set("Content-Type", "application/json")
+		_, _ = writer.Write([]byte(`{}`))
+	}))
+	defer server.Close()
+	t.Setenv(esperruntime.CredentialsFileEnvironment, filepath.Join(t.TempDir(), "creds.json"))
+	store, err := esperruntime.NewStateStore()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := store.Save(esperruntime.State{Config: esperruntime.Config{Environment: server.URL, APIKey: "fixture-key"}}); err != nil {
+		t.Fatal(err)
+	}
+	operation := Operation{Command: []string{"thing", "create"}, Method: http.MethodPost, Path: "/things", SuccessMedia: "application/json"}
+	runCommand := func() error {
+		root := &cobra.Command{Use: "espercli", SilenceErrors: true, SilenceUsage: true}
+		options := &esperruntime.GlobalOptions{}
+		root.PersistentFlags().BoolVarP(&options.Yes, "yes", "y", false, "")
+		addCommand(root, operation.Command, []Operation{operation}, options)
+		root.SetArgs([]string{"thing", "create", "--yes"})
+		return root.Execute()
+	}
+	if err := runCommand(); err == nil || esperruntime.ExitCode(err) != 2 || requests != 0 {
+		t.Fatalf("unapproved write error=%v requests=%d", err, requests)
+	}
+	approvalStore, err := esperruntime.NewApprovalStore()
+	if err != nil {
+		t.Fatal(err)
+	}
+	request, _, err := approvalStore.Request(esperruntime.ApprovalSpec{BaseURL: server.URL, Method: http.MethodPost, Path: "/things", ContentType: "application/json", Query: map[string][]string{}, Headers: map[string][]string{}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := approvalStore.Approve(request.ID); err != nil {
+		t.Fatal(err)
+	}
+	if err := runCommand(); err != nil || requests != 1 {
+		t.Fatalf("approved write error=%v requests=%d", err, requests)
+	}
+	if err := runCommand(); err == nil || !errors.Is(err, esperruntime.ErrUsage) && esperruntime.ExitCode(err) != 2 || requests != 1 {
+		t.Fatalf("reused approval error=%v requests=%d", err, requests)
 	}
 }
 

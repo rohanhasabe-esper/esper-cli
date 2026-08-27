@@ -33,6 +33,32 @@ func TestSearchMatchesNestedBodyEnum(t *testing.T) {
 	}
 }
 
+func TestSearchRanksInactiveDevicesAboveBodyFieldCoincidences(t *testing.T) {
+	operations := []generated.Operation{
+		{Command: []string{"device", "list"}, Summary: "Get all devices in the tenant", Parameters: []generated.Parameter{{Name: "state", In: "query", Description: "Filter devices by state"}}},
+		{Command: []string{"custom-action", "create"}, Summary: "Create custom action", Body: &generated.Body{Fields: []generated.BodyField{{Path: "state", Description: "Only active custom actions can be deployed to Linux devices", Enum: []string{"inactive"}}}}},
+	}
+	matches := search(operations, "inactive devices")
+	if len(matches) != 2 || matches[0].Command != "device list" {
+		t.Fatalf("matches = %#v", matches)
+	}
+}
+
+func TestSearchMatchesQueryParameterMetadata(t *testing.T) {
+	operations := []generated.Operation{{Command: []string{"device", "list"}, Parameters: []generated.Parameter{{Name: "state", In: "query", Description: "Filter inactive devices", Enum: []string{"inactive"}}}}}
+	matches := search(operations, "inactive devices")
+	if len(matches) != 1 || matches[0].Command != "device list" {
+		t.Fatalf("matches = %#v", matches)
+	}
+}
+
+func TestSearchInactiveDevicesUsesGeneratedDeviceList(t *testing.T) {
+	matches := search(generated.Operations(), "inactive devices")
+	if len(matches) == 0 || matches[0].Command != "device list" {
+		t.Fatalf("matches = %#v", matches)
+	}
+}
+
 func TestDocsSlugRejectsNonOpenAPIURLs(t *testing.T) {
 	for _, value := range []string{"geofence_geofences", "https://api.esper.io/other/geofence_geofences"} {
 		if got := docsSlug(value); got != "" {

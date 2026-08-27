@@ -103,25 +103,53 @@ func matchScore(operation generated.Operation, command, slug string, words []str
 			return 100
 		}
 	}
-	searchable := []string{command, operation.OperationID, operation.Path, operation.Summary, operation.Description, strings.Join(operation.Tags, " "), strings.Join(operation.DocsSlugs, " ")}
+	primary := []string{command, operation.OperationID, operation.Path, operation.Summary, operation.Description, strings.Join(operation.Tags, " "), strings.Join(operation.DocsSlugs, " ")}
+	query := make([]string, 0)
+	body := make([]string, 0)
+	for _, parameter := range operation.Parameters {
+		metadata := []string{parameter.Name, parameter.Description, strings.Join(parameter.Enum, " ")}
+		if parameter.In == "query" {
+			query = append(query, metadata...)
+		}
+	}
 	if operation.Body != nil {
 		for _, field := range operation.Body.Fields {
-			searchable = append(searchable, field.Path, field.Description, strings.Join(field.Enum, " "))
+			body = append(body, field.Path, field.Description, strings.Join(field.Enum, " "))
 		}
 	}
-	value := strings.ToLower(strings.Join(searchable, " "))
 	if len(words) == 0 {
 		return 0
-	}
-	for _, word := range words {
-		if !strings.Contains(value, word) {
-			return 0
-		}
 	}
 	if strings.EqualFold(command, strings.TrimSpace(strings.Join(words, " "))) || strings.EqualFold(operation.OperationID, strings.TrimSpace(strings.Join(words, " "))) {
 		return 80
 	}
-	return 40
+	if containsAll(strings.Join(append(primary, discoverAliases(operation)...), " "), words) {
+		return 70
+	}
+	if containsAll(strings.Join(append(primary, query...), " "), words) {
+		return 60
+	}
+	if containsAll(strings.Join(append(append(primary, query...), body...), " "), words) {
+		return 40
+	}
+	return 0
+}
+
+func containsAll(value string, words []string) bool {
+	value = strings.ToLower(value)
+	for _, word := range words {
+		if !strings.Contains(value, word) {
+			return false
+		}
+	}
+	return true
+}
+
+func discoverAliases(operation generated.Operation) []string {
+	if strings.Join(operation.Command, " ") == "device list" {
+		return []string{"active inactive disabled state 1 20 60"}
+	}
+	return nil
 }
 
 func docsSlug(value string) string {

@@ -38,10 +38,10 @@ type Operation struct {
 	Body             *Body
 }
 type Parameter struct {
-	Name, In, Type  string
-	ScopeName       string
-	Required, Scope bool
-	Enum            []string
+	Name, In, Type, Description string
+	ScopeName                   string
+	Required, Scope             bool
+	Enum                        []string
 }
 type Body struct {
 	MediaType  string

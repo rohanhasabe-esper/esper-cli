@@ -55,11 +55,12 @@ type response struct {
 }
 
 type parameter struct {
-	Ref      string `json:"$ref"`
-	Name     string `json:"name"`
-	In       string `json:"in"`
-	Required bool   `json:"required"`
-	Schema   schema `json:"schema"`
+	Ref         string `json:"$ref"`
+	Name        string `json:"name"`
+	In          string `json:"in"`
+	Description string `json:"description"`
+	Required    bool   `json:"required"`
+	Schema      schema `json:"schema"`
 }
 
 type requestMedia struct {
@@ -103,10 +104,10 @@ type generatedOperation struct {
 	Body             *generatedBody
 }
 type generatedParameter struct {
-	Name, In, Type  string
-	ScopeName       string
-	Required, Scope bool
-	Enum            []string
+	Name, In, Type, Description string
+	ScopeName                   string
+	Required, Scope             bool
+	Enum                        []string
 }
 type generatedBody struct {
 	MediaType  string
@@ -198,7 +199,7 @@ func load(directory string) ([]generatedOperation, error) {
 					parameter = resolveParameter(parameter, spec.Components.Parameters)
 					resolved := resolve(parameter.Schema, spec.Components.Schemas)
 					scopeName := scopeParameterNames(apiPath, operation.ScopeParent)[parameter.Name]
-					generated.Parameters = append(generated.Parameters, generatedParameter{Name: parameter.Name, In: parameter.In, Type: scalarType(resolved), Required: parameter.Required, Scope: scopeName != "", ScopeName: scopeName, Enum: stringEnum(resolved.Enum)})
+					generated.Parameters = append(generated.Parameters, generatedParameter{Name: parameter.Name, In: parameter.In, Type: scalarType(resolved), Description: parameter.Description, Required: parameter.Required, Scope: scopeName != "", ScopeName: scopeName, Enum: stringEnum(resolved.Enum)})
 				}
 				if len(operation.Body.Content) > 0 {
 					generated.Body = extractBody(operation.Body.Content, operation.Body.Required, generated.Parameters, spec.Components.Schemas)

@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	esperruntime "github.com/esper-io/esper-cli/internal/runtime"
 	"github.com/spf13/cobra"
+	"golang.org/x/term"
 )
 
 type configView struct {
@@ -39,7 +41,8 @@ func NewCommand(options *esperruntime.GlobalOptions) *cobra.Command {
 func runConfigure(command *cobra.Command, options *esperruntime.GlobalOptions) error {
 	environment := strings.TrimSpace(options.Environment)
 	apiKey := strings.TrimSpace(options.APIKey)
-	reader := bufio.NewReader(command.InOrStdin())
+	input := command.InOrStdin()
+	reader := bufio.NewReader(input)
 	var err error
 	if environment == "" {
 		environment, err = prompt(reader, command.ErrOrStderr(), "Environment")
@@ -48,7 +51,7 @@ func runConfigure(command *cobra.Command, options *esperruntime.GlobalOptions) e
 		}
 	}
 	if apiKey == "" {
-		apiKey, err = prompt(reader, command.ErrOrStderr(), "API key")
+		apiKey, err = promptAPIKey(input, reader, command.ErrOrStderr())
 		if err != nil {
 			return esperruntime.NewError(esperruntime.CategoryUsage, err)
 		}
@@ -95,6 +98,24 @@ func loadState() (*esperruntime.StateStore, esperruntime.State, error) {
 	return store, state, nil
 }
 
+func promptAPIKey(input io.Reader, reader *bufio.Reader, output io.Writer) (string, error) {
+	file, ok := input.(*os.File)
+	if !ok || !term.IsTerminal(int(file.Fd())) {
+		return prompt(reader, output, "API key")
+	}
+	if _, err := fmt.Fprint(output, "API key: "); err != nil {
+		return "", err
+	}
+	value, err := term.ReadPassword(int(file.Fd()))
+	if _, writeErr := fmt.Fprintln(output); writeErr != nil {
+		return "", writeErr
+	}
+	if err != nil {
+		return "", fmt.Errorf("read API key: %w", err)
+	}
+	return requiredPromptValue(string(value), "API key")
+}
+
 func prompt(reader *bufio.Reader, output io.Writer, label string) (string, error) {
 	if _, err := fmt.Fprintf(output, "%s: ", label); err != nil {
 		return "", err
@@ -103,6 +124,10 @@ func prompt(reader *bufio.Reader, output io.Writer, label string) (string, error
 	if err != nil && len(value) == 0 {
 		return "", fmt.Errorf("read %s: %w", strings.ToLower(label), err)
 	}
+	return requiredPromptValue(value, label)
+}
+
+func requiredPromptValue(value, label string) (string, error) {
 	value = strings.TrimSpace(value)
 	if value == "" {
 		return "", fmt.Errorf("%s cannot be empty", strings.ToLower(label))

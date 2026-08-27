@@ -2,6 +2,7 @@ package generated
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"mime"
 	"mime/multipart"
@@ -76,6 +77,83 @@ func TestRequiredBodies(t *testing.T) {
 				t.Fatalf("bodyFor() = %s, %v", body, err)
 			}
 		})
+	}
+}
+
+func TestPathValuesAreEscaped(t *testing.T) {
+	operation := Operation{Path: "/devices/{device_id}/events/{event_id}", Parameters: []Parameter{{Name: "device_id", In: "path"}, {Name: "event_id", In: "path"}}}
+	path := replacePathValues(operation, map[string]string{"device_id": "device/other", "event_id": "../event"})
+	if path != "/devices/device%2Fother/events/..%2Fevent" {
+		t.Fatalf("replacePathValues() = %q", path)
+	}
+
+	resourcePath := resourcePathForParameter("/enterprise/{enterprise_id}/policy/", "enterprise_id", map[string]string{"enterprise_id": "enterprise/other"})
+	if resourcePath != "/enterprise/enterprise%2Fother/" {
+		t.Fatalf("resourcePathForParameter() = %q", resourcePath)
+	}
+}
+
+func TestBodyRejectsInvalidScalarValues(t *testing.T) {
+	for _, test := range []struct {
+		name, kind, value string
+	}{
+		{name: "boolean", kind: "boolean", value: "not-a-bool"},
+		{name: "integer", kind: "integer", value: "123oops"},
+		{name: "number", kind: "number", value: "not-a-number"},
+		{name: "non-finite number", kind: "number", value: "NaN"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			operation := Operation{Body: &Body{MediaType: "application/json", Properties: []Property{{Name: "value", Type: test.kind}}}}
+			command := &cobra.Command{Use: "create"}
+			addFlags(command, []Operation{operation})
+			if err := command.Flags().Set("value", test.value); err != nil {
+				t.Fatal(err)
+			}
+			_, _, err := bodyFor(command, operation)
+			if err == nil || esperruntime.ExitCode(err) != 2 {
+				t.Fatalf("bodyFor() error = %v", err)
+			}
+		})
+	}
+}
+
+func TestAllPagesRejectsRepeatedNextURL(t *testing.T) {
+	requests := 0
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
+		requests++
+		_, _ = writer.Write([]byte(`{"results":[],"next":"/devices?offset=1"}`))
+	}))
+	defer server.Close()
+
+	client := &esperruntime.HTTPClient{BaseURL: server.URL, Client: server.Client(), Retry: esperruntime.RetryPolicy{MaxAttempts: 1}}
+	command := &cobra.Command{}
+	command.SetContext(context.Background())
+	_, err := allPages(command, client, Operation{Method: http.MethodGet, Pagination: "limit-offset"}, []byte(`{"results":[],"next":"/devices?offset=1"}`))
+	if err == nil || esperruntime.ErrorCategory(err) != esperruntime.CategoryAPI {
+		t.Fatalf("allPages() error = %v", err)
+	}
+	if requests != 1 {
+		t.Fatalf("requests = %d, want 1", requests)
+	}
+}
+
+func TestAllPagesRejectsPageLimit(t *testing.T) {
+	requests := 0
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
+		requests++
+		_, _ = writer.Write([]byte(`{"results":[],"next":"/devices?offset=2"}`))
+	}))
+	defer server.Close()
+
+	client := &esperruntime.HTTPClient{BaseURL: server.URL, Client: server.Client(), Retry: esperruntime.RetryPolicy{MaxAttempts: 1}}
+	command := &cobra.Command{}
+	command.SetContext(context.Background())
+	_, err := allPagesWithLimit(command, client, Operation{Method: http.MethodGet, Pagination: "limit-offset"}, []byte(`{"results":[],"next":"/devices?offset=1"}`), 1)
+	if err == nil || !strings.Contains(err.Error(), "pagination exceeded 1 pages") {
+		t.Fatalf("allPagesWithLimit() error = %v", err)
+	}
+	if requests != 1 {
+		t.Fatalf("requests = %d, want 1", requests)
 	}
 }
 

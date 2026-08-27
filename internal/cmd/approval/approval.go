@@ -76,7 +76,11 @@ func write(writer io.Writer, asJSON bool, request esperruntime.ApprovalRequest) 
 	if asJSON {
 		return json.NewEncoder(writer).Encode(request)
 	}
-	_, err := fmt.Fprintf(writer, "Approval %s\n  %s %s\n  Query keys: %s\n  Body fields: %s\n  Body SHA-256: %s\n  Expires: %s\n", request.ID, request.Method, request.Path, display(request.QueryKeys), display(request.BodyFields), displayValue(request.BodySHA256), request.ExpiresAt.Format("2006-01-02T15:04:05Z07:00"))
+	additional := make([]string, 0, len(request.AdditionalTargets))
+	for _, target := range request.AdditionalTargets {
+		additional = append(additional, target.Method+" "+target.Path)
+	}
+	_, err := fmt.Fprintf(writer, "Approval %s\n  %s %s\n  Additional writes: %s\n  Query keys: %s\n  Body fields: %s\n  Body SHA-256: %s\n  Expires: %s\n", request.ID, request.Method, request.Path, display(additional), display(request.QueryKeys), display(request.BodyFields), displayValue(request.BodySHA256), request.ExpiresAt.Format("2006-01-02T15:04:05Z07:00"))
 	return err
 }
 

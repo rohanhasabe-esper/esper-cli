@@ -1,6 +1,7 @@
 package runtime
 
 import (
+	"bytes"
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
@@ -19,30 +20,37 @@ import (
 const approvalLifetime = 15 * time.Minute
 
 type ApprovalSpec struct {
-	BaseURL     string
-	Method      string
-	Path        string
-	ContentType string
-	Query       map[string][]string
-	Headers     map[string][]string
-	Body        []byte
+	BaseURL           string
+	Method            string
+	Path              string
+	ContentType       string
+	Query             map[string][]string
+	Headers           map[string][]string
+	Body              []byte
+	AdditionalTargets []ApprovalTarget
+}
+
+type ApprovalTarget struct {
+	Method string `json:"method"`
+	Path   string `json:"path"`
 }
 
 type ApprovalRequest struct {
-	ID          string    `json:"id"`
-	Fingerprint string    `json:"fingerprint"`
-	BaseURL     string    `json:"base_url"`
-	Method      string    `json:"method"`
-	Path        string    `json:"path"`
-	ContentType string    `json:"content_type,omitempty"`
-	QueryKeys   []string  `json:"query_keys,omitempty"`
-	HeaderKeys  []string  `json:"header_keys,omitempty"`
-	BodySHA256  string    `json:"body_sha256,omitempty"`
-	BodyFields  []string  `json:"body_fields,omitempty"`
-	CreatedAt   time.Time `json:"created_at"`
-	ExpiresAt   time.Time `json:"expires_at"`
-	ApprovedAt  time.Time `json:"approved_at,omitempty"`
-	ConsumedAt  time.Time `json:"consumed_at,omitempty"`
+	ID                string           `json:"id"`
+	Fingerprint       string           `json:"fingerprint"`
+	BaseURL           string           `json:"base_url"`
+	Method            string           `json:"method"`
+	Path              string           `json:"path"`
+	ContentType       string           `json:"content_type,omitempty"`
+	QueryKeys         []string         `json:"query_keys,omitempty"`
+	HeaderKeys        []string         `json:"header_keys,omitempty"`
+	BodySHA256        string           `json:"body_sha256,omitempty"`
+	BodyFields        []string         `json:"body_fields,omitempty"`
+	AdditionalTargets []ApprovalTarget `json:"additional_targets,omitempty"`
+	CreatedAt         time.Time        `json:"created_at"`
+	ExpiresAt         time.Time        `json:"expires_at"`
+	ApprovedAt        time.Time        `json:"approved_at,omitempty"`
+	ConsumedAt        time.Time        `json:"consumed_at,omitempty"`
 }
 
 type approvalDocument struct {
@@ -209,12 +217,22 @@ func (store *ApprovalStore) withLock(action func(*approvalDocument) (ApprovalReq
 	if err != nil {
 		return ApprovalRequest{}, false, err
 	}
+	before, err := json.Marshal(document)
+	if err != nil {
+		return ApprovalRequest{}, false, err
+	}
 	request, changed, err := action(&document)
 	if err != nil {
 		return ApprovalRequest{}, false, err
 	}
-	if err := store.save(document); err != nil {
+	after, err := json.Marshal(document)
+	if err != nil {
 		return ApprovalRequest{}, false, err
+	}
+	if !bytes.Equal(before, after) {
+		if err := store.save(document); err != nil {
+			return ApprovalRequest{}, false, err
+		}
 	}
 	return request, changed, nil
 }
@@ -303,16 +321,17 @@ func newApprovalRequest(spec ApprovalSpec, fingerprint string, now time.Time) (A
 		return ApprovalRequest{}, err
 	}
 	request := ApprovalRequest{
-		ID:          hex.EncodeToString(identifier),
-		Fingerprint: fingerprint,
-		BaseURL:     spec.BaseURL,
-		Method:      strings.ToUpper(spec.Method),
-		Path:        spec.Path,
-		ContentType: spec.ContentType,
-		QueryKeys:   sortedKeys(spec.Query),
-		HeaderKeys:  sortedKeys(spec.Headers),
-		CreatedAt:   now,
-		ExpiresAt:   now.Add(approvalLifetime),
+		ID:                hex.EncodeToString(identifier),
+		Fingerprint:       fingerprint,
+		BaseURL:           spec.BaseURL,
+		Method:            strings.ToUpper(spec.Method),
+		Path:              spec.Path,
+		ContentType:       spec.ContentType,
+		QueryKeys:         sortedKeys(spec.Query),
+		HeaderKeys:        sortedKeys(spec.Headers),
+		AdditionalTargets: canonicalTargets(spec.AdditionalTargets),
+		CreatedAt:         now,
+		ExpiresAt:         now.Add(approvalLifetime),
 	}
 	if len(spec.Body) > 0 {
 		hash := sha256.Sum256(spec.Body)
@@ -327,9 +346,10 @@ func approvalFingerprint(spec ApprovalSpec) string {
 		BaseURL, Method, Path, ContentType string
 		Query, Headers                     map[string][]string
 		BodySHA256                         string
+		AdditionalTargets                  []ApprovalTarget
 	}{
 		BaseURL: strings.TrimRight(spec.BaseURL, "/"), Method: strings.ToUpper(spec.Method), Path: spec.Path, ContentType: spec.ContentType,
-		Query: canonicalValues(spec.Query), Headers: canonicalValues(spec.Headers),
+		Query: canonicalValues(spec.Query), Headers: canonicalValues(spec.Headers), AdditionalTargets: canonicalTargets(spec.AdditionalTargets),
 	}
 	if len(spec.Body) > 0 {
 		hash := sha256.Sum256(spec.Body)
@@ -347,6 +367,20 @@ func canonicalValues(values map[string][]string) map[string][]string {
 		sort.Strings(copyValue)
 		result[key] = copyValue
 	}
+	return result
+}
+
+func canonicalTargets(targets []ApprovalTarget) []ApprovalTarget {
+	result := append([]ApprovalTarget(nil), targets...)
+	for index := range result {
+		result[index].Method = strings.ToUpper(result[index].Method)
+	}
+	sort.Slice(result, func(left, right int) bool {
+		if result[left].Method != result[right].Method {
+			return result[left].Method < result[right].Method
+		}
+		return result[left].Path < result[right].Path
+	})
 	return result
 }
 

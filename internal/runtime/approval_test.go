@@ -87,6 +87,27 @@ func TestApprovalStoreExpiresAndConsumesOnceUnderContention(t *testing.T) {
 	}
 }
 
+func TestApprovalStoreShowDoesNotRewriteUnchangedDocument(t *testing.T) {
+	store := &ApprovalStore{Path: filepath.Join(t.TempDir(), "approvals.json")}
+	request, _, err := store.Request(ApprovalSpec{BaseURL: "https://example.test", Method: "POST", Path: "/things"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chmod(store.Path, 0o640); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := store.Show(request.ID); err != nil {
+		t.Fatal(err)
+	}
+	info, err := os.Stat(store.Path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if info.Mode().Perm() != 0o640 {
+		t.Fatalf("Show() rewrote approval file permissions to %o", info.Mode().Perm())
+	}
+}
+
 func TestRequireTerminalRejectsPipes(t *testing.T) {
 	reader, writer, err := os.Pipe()
 	if err != nil {

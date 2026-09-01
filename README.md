@@ -37,8 +37,8 @@ go install github.com/esper-io/esper-cli/cmd/espercli@latest
 
 ## Quick Start
 
-Configure an environment and API key. Without flags, `configure` prompts for
-both values.
+Configure a tenant name, enterprise ID, and API key. Without flags, `configure`
+prompts for all three values.
 
 ```bash
 espercli configure

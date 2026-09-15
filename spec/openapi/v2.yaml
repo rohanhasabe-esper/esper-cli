@@ -2193,6 +2193,129 @@
         "x-esper-noun": "device"
       }
     },
+    "/v2/heartbeat/": {
+      "get": {
+        "summary": "Get list of heartbeat for all devices",
+        "operationId": "getDeviceHeartbeatList",
+        "tags": [
+          "3_Device Heartbeat"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "last_seen_gt",
+            "in": "query",
+            "description": "Specify the starting date and time for device lookup in the format (2023-08-29T00:00:00Z).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2023-08-29T00:00:00Z"
+            }
+          },
+          {
+            "name": "last_seen_lt",
+            "in": "query",
+            "description": "Specify the end date and time for device lookup in the format (2023-08-30T00:00:00Z).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2023-08-30T00:00:00Z"
+            }
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "description": "platform of the device",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "APPLE",
+                "LINUX",
+                "WINDOWS"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Last seen details of the device",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/DeviceLastSeen"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Device create error - Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device-heartbeat-list"
+      }
+    },
     "/v2/devices/{deviceId}/device-apps/": {
       "get": {
         "security": [
@@ -2425,6 +2548,1006 @@
         "x-esper-platform-source": "src/services/device-api/api/deviceapps/handler/read.go:74-124",
         "x-esper-verb": "list",
         "x-esper-noun": "device-app"
+      }
+    },
+    "/v2/devices/{deviceId}/google-accounts/policy/": {
+      "get": {
+        "summary": "Get the Google EMM Policy details for a specific device.",
+        "tags": [
+          "3_Device Enrollment in EMM"
+        ],
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "ID of the device for which to retrieve the Google EMM policy",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoogleEMMDevice"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "device-google-account-policy",
+        "x-esper-response-envelope": "apps-envelope"
+      },
+      "put": {
+        "summary": "Update the Google EMM Policy details for a specific device.",
+        "tags": [
+          "3_Device Enrollment in EMM"
+        ],
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "The unique identifier of the device for which Google account details need to be updated.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "is_provisioning",
+            "in": "query",
+            "description": "Flag indicating if provisioning is enabled (true or false). Default is false.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "false"
+            }
+          },
+          {
+            "name": "is_converging",
+            "in": "query",
+            "description": "Flag indicating if convergence is enabled (true or false). Default is false.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "false"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleEMMDevicePolicyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the Google EMM policy details for the specified device.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/GoogleEMMDevice"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request due to invalid input.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized access.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device not found for the provided deviceId.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "device-google-account-policy",
+        "x-esper-response-envelope": "apps-envelope"
+      }
+    },
+    "/v2/devices/{deviceId}/google-accounts/emm-managed/": {
+      "get": {
+        "summary": "Get the List of Google EMM Managed Devices for a user's devices.",
+        "tags": [
+          "3_Device Enrollment in EMM"
+        ],
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "ID of the device for which to retrieve the Google EMM policy",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DevicesListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "device-google-account-emm-managed",
+        "x-esper-response-envelope": "apps-envelope"
+      }
+    },
+    "/v2/devices/{deviceId}/google-accounts/": {
+      "get": {
+        "summary": "Return the Google account details of the EMM enrollment stored in the database for the specified device.",
+        "tags": [
+          "3_Device Enrollment in EMM"
+        ],
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "ID of the device for which to retrieve the EMM enrollment status",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/GoogleAccount"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "google-account",
+        "x-esper-scope-parent": "device",
+        "x-esper-response-envelope": "apps-envelope"
+      },
+      "put": {
+        "summary": "Update the Google account details of the EMM enrollment stored in the database for a specific device.",
+        "tags": [
+          "3_Device Enrollment in EMM"
+        ],
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "The unique identifier of the device for which Google account details need to be updated.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleAccountUpdateRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the Google account details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/GoogleAccountUpdateResponseBody"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request due to invalid input.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized access.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device not found for the provided deviceId.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "google-account",
+        "x-esper-response-envelope": "apps-envelope"
+      },
+      "post": {
+        "summary": "Create a Google user and, if request body is not provided, generate a Google auth token for a specific device on the Google EMM side.",
+        "tags": [
+          "3_Device Enrollment in EMM"
+        ],
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "The unique identifier of the device for which Google account details need to be updated.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleAccount"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the Google account details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/GoogleAccount"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized access.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device not found for the provided deviceId.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_409_Conflict"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "google-account",
+        "x-esper-scope-parent": "device",
+        "x-esper-response-envelope": "apps-envelope"
+      },
+      "delete": {
+        "summary": "Unenrolls device from Google EMM and deletes the Google account details.",
+        "tags": [
+          "3_Device Enrollment in EMM"
+        ],
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "The unique identifier of the device for which Google account details need to be updated.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully unenrolled and deleted the Google account details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/GoogleAccount"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized access.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device not found for the provided deviceId.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "google-account",
+        "x-esper-response-envelope": "apps-envelope"
+      }
+    },
+    "/v2/foundationversions": {
+      "get": {
+        "summary": "Get all distinct foundation versions",
+        "description": "Returns a list of distinct foundation versions present in the tenant's devices",
+        "operationId": "getFoundationVersionsList",
+        "x-scope": [
+          "read:foundationversions"
+        ],
+        "tags": [
+          "3_Device"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            },
+            "description": "Number of results to return per page"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "description": "The initial index from which to return the results"
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter foundation versions by partial string match (case-insensitive)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "description": "Total number of distinct foundation versions"
+                    },
+                    "prev": {
+                      "type": "string",
+                      "description": "URL to the previous page of results"
+                    },
+                    "next": {
+                      "type": "string",
+                      "description": "URL to the next page of results"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "foundation_version": {
+                            "type": "string",
+                            "description": "The foundation version string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "foundation-version-list"
+      }
+    },
+    "/v2/rv-activity-feed/": {
+      "get": {
+        "summary": "Get RemoteViewer Activity Feed for the tenant",
+        "tags": [
+          "3_MultiOS Remote Viewer"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "states",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "INITIATED",
+                "ACKNOWLEDGED",
+                "ACTIVE",
+                "TERMINATED",
+                "FAILED"
+              ],
+              "description": "List API supports comma separated states."
+            }
+          },
+          {
+            "in": "query",
+            "name": "video_qualities",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "STANDARD",
+                "DATA_SAVER"
+              ],
+              "description": "To allow filtering sessions list by comma separated video qualities"
+            }
+          },
+          {
+            "in": "query",
+            "name": "reason",
+            "schema": {
+              "type": "string",
+              "description": "To allow searching sessions list by reason"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_by",
+            "schema": {
+              "type": "string",
+              "description": "To allow filtering sessions list by created by"
+            }
+          },
+          {
+            "in": "query",
+            "name": "device_name",
+            "schema": {
+              "type": "string",
+              "description": "To allow searching sessions list by device name"
+            }
+          },
+          {
+            "in": "query",
+            "name": "ordering",
+            "schema": {
+              "type": "string",
+              "default": "-created_at",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "device_name",
+                "duration",
+                "state",
+                "reason",
+                "video_quality",
+                "created_by"
+              ],
+              "description": "To allow ordering sessions list by created_at, updated_at, device_name, duration, state, reason, video_quality and created_by."
+            }
+          },
+          {
+            "in": "query",
+            "name": "duration_lt",
+            "schema": {
+              "type": "string",
+              "format": "duration",
+              "description": "Duration less than filter. The time duration (in ISO 8601 duration format) of only a valid elapsed session, i.e., sessions that have moved from ACTIVE state (where session start-time can be captured) to TERMINATED or FAILED state (where the session end-time can be captured).",
+              "example": "duration_lt=PT10M30S"
+            }
+          },
+          {
+            "in": "query",
+            "name": "duration_lte",
+            "schema": {
+              "type": "string",
+              "format": "duration",
+              "description": "Duration less than or equal to filter. The time duration (in ISO 8601 duration format) of only a valid elapsed session, i.e., sessions that have moved from ACTIVE state (where session start-time can be captured) to TERMINATED or FAILED state (where the session end-time can be captured).",
+              "example": "duration_lte=PT10M30S"
+            }
+          },
+          {
+            "in": "query",
+            "name": "duration_gt",
+            "schema": {
+              "type": "string",
+              "format": "duration",
+              "description": "Duration greater than filter. The time duration (in ISO 8601 duration format) of only a valid elapsed session, i.e., sessions that have moved from ACTIVE state (where session start-time can be captured) to TERMINATED or FAILED state (where the session end-time can be captured).",
+              "example": "duration_gt=PT10M30S"
+            }
+          },
+          {
+            "in": "query",
+            "name": "duration_gte",
+            "schema": {
+              "type": "string",
+              "format": "duration",
+              "description": "Duration greater than or equal to filter. The time duration (in ISO 8601 duration format) of only a valid elapsed session, i.e., sessions that have moved from ACTIVE state (where session start-time can be captured) to TERMINATED or FAILED state (where the session end-time can be captured).",
+              "example": "duration_gte=PT10M30S"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_at_lt",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Created at less than filter. Datetime format must be in \"YY-MM-DDTHH:mm:ss.fffffffffZ\".",
+              "example": "created_at_lt=2023-10-01T12:00:00Z"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_at_gt",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Created at greater than filter. Datetime format must be in \"YY-MM-DDTHH:mm:ss.fffffffffZ\".",
+              "example": "created_at_gt=2023-10-01T12:00:00Z"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_at_lte",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Created at less than or equal to filter. Datetime format must be in \"YY-MM-DDTHH:mm:ss.fffffffffZ\".",
+              "example": "created_at_lte=2023-10-01T12:00:00Z"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_at_gte",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Created at greater than or equal to filter. Datetime format must be in \"YY-MM-DDTHH:mm:ss.fffffffffZ\".",
+              "example": "created_at_gte=2023-10-01T12:00:00Z"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updated_at_lt",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Updated at less than filter. Datetime format must be in \"YY-MM-DDTHH:mm:ss.fffffffffZ\".",
+              "example": "updated_at_lt=2023-10-01T12:00:00Z"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updated_at_gt",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Updated at greater than filter. Datetime format must be in \"YY-MM-DDTHH:mm:ss.fffffffffZ\".",
+              "example": "updated_at_gt=2023-10-01T12:00:00Z"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updated_at_lte",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Updated at less than or equal to filter. Datetime format must be in \"YY-MM-DDTHH:mm:ss.fffffffffZ\".",
+              "example": "updated_at_lte=2023-10-01T12:00:00Z"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updated_at_gte",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Updated at greater than or equal to filter. Datetime format must be in \"YY-MM-DDTHH:mm:ss.fffffffffZ\".",
+              "example": "updated_at_gte=2023-10-01T12:00:00Z"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/RemoteViewerSessionsListForTenantResponse"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "rv-activity-feed"
       }
     },
     "/v2/itunesapps": {
@@ -4972,10 +6095,180 @@
         "x-esper-noun": "command",
         "x-esper-scope-parent": "converge"
       }
+    },
+    "/v2/devices/{id}/devicestate": {
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Receive device state report and publish to Kafka for drift detection",
+        "description": "Accepts a device state report and forwards it (as-is) to Kafka topic `esper.device.device.state` after enriching with `tenant_id` and `device_id`.",
+        "operationId": "updateDeviceState",
+        "tags": [
+          "device_Device"
+        ],
+        "security": [
+          {
+            "device_apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the device",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "device_settings"
+                ],
+                "properties": {
+                  "event_ts": {
+                    "type": "number",
+                    "description": "Event timestamp in milliseconds since epoch"
+                  },
+                  "device_settings": {
+                    "type": "object",
+                    "description": "Partial settings payload containing only changed keys (sparse object)",
+                    "additionalProperties": true
+                  }
+                },
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/device_Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/device_Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/device_Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-response-envelope": "apps-envelope",
+        "x-esper-verb": "update",
+        "x-esper-noun": "devicestate"
+      }
     }
   },
   "components": {
     "schemas": {
+      "device_Error_500_Internal_Server_Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 500
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "device_Error_401_Unauthorized": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 401
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "device_Error_400_Bad_Data": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 400
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
       "ConvergeCommand": {
         "type": "object",
         "properties": {
@@ -6024,6 +7317,70 @@
           }
         }
       },
+      "RemoteViewerSessionsListForTenantResponse": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "INITIATED",
+              "ACKNOWLEDGED",
+              "ACTIVE",
+              "TERMINATED",
+              "FAILED"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "video_quality": {
+            "type": "string",
+            "enum": [
+              "STANDARD",
+              "DATA_SAVER"
+            ]
+          },
+          "duration": {
+            "type": "string",
+            "format": "duration",
+            "description": "Depicts the time duration (in ISO 8601 duration format) of only a valid elapsed session, i.e., sessions that have moved from ACTIVE state (where session start-time can be captured) to TERMINATED or FAILED state (where the session end-time can be captured).",
+            "example": "PT10M30S"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "device_name": {
+            "type": "string",
+            "description": "Name of the device."
+          },
+          "device_alias": {
+            "type": "string",
+            "description": "Alias of the device (if any)."
+          },
+          "device_state": {
+            "$ref": "#/components/schemas/DeviceStateEnumAndroid"
+          }
+        }
+      },
       "DeviceStateEnumAndroid": {
         "type": "integer",
         "format": "int32",
@@ -6072,6 +7429,288 @@
           "message"
         ]
       },
+      "GoogleAccountUpdateResponseBody": {
+        "type": "object",
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "description": "Unique identifier for the device."
+          },
+          "tenant_id": {
+            "type": "string",
+            "description": "Unique identifier for the tenant."
+          }
+        },
+        "required": [
+          "device_id",
+          "tenant_id"
+        ]
+      },
+      "GoogleAccountUpdateRequestBody": {
+        "type": "object",
+        "properties": {
+          "google_device_id": {
+            "type": "string",
+            "description": "Unique identifier for the Google device."
+          },
+          "google_user_id": {
+            "type": "string",
+            "description": "Unique identifier for the Google user."
+          }
+        },
+        "required": [
+          "google_device_id",
+          "google_user_id"
+        ]
+      },
+      "GoogleAccount": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the tenant associated with the Google account."
+          },
+          "google_user_id": {
+            "type": "string",
+            "description": "The unique identifier for the Google user."
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the device associated with the Google account."
+          },
+          "google_device_id": {
+            "type": "string",
+            "description": "The unique identifier for the Google device."
+          },
+          "account_identifier": {
+            "type": "string",
+            "description": "An identifier for the account."
+          },
+          "account_type": {
+            "type": "integer",
+            "description": "The type of the Google account."
+          },
+          "google_authentication_token": {
+            "type": "string",
+            "description": "The authentication token for the Google account."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp when the Google account was created."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp when the Google account was last updated."
+          }
+        },
+        "required": [
+          "tenant_id",
+          "google_user_id",
+          "device_id",
+          "account_type"
+        ]
+      },
+      "DevicesListResponse": {
+        "type": "object",
+        "properties": {
+          "device": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoogleDevice"
+            }
+          }
+        }
+      },
+      "GoogleDevice": {
+        "type": "object",
+        "properties": {
+          "androidId": {
+            "type": "string",
+            "description": "The Google Play Services Android ID for the device encoded as a lowercase hex string. For example, '123456789abcdef0'."
+          },
+          "managementType": {
+            "type": "string",
+            "description": "The type of management applied to the device, such as 'enterprise' or 'work'."
+          }
+        }
+      },
+      "GoogleEMMDevicePolicyRequest": {
+        "type": "object",
+        "properties": {
+          "applications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoogleApplication"
+            }
+          }
+        }
+      },
+      "GoogleApplication": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "description": "The unique product ID in the format of app:<package_name>.",
+            "example": "app:com.android.chrome"
+          },
+          "mcm_id": {
+            "type": "string",
+            "description": "The MCM ID if required for configuration management.",
+            "example": "mcm_12345"
+          },
+          "app_action": {
+            "type": "string",
+            "description": "Action to be performed on the app, either 'install' or 'uninstall'.",
+            "enum": [
+              "install",
+              "uninstall"
+            ],
+            "example": "install"
+          }
+        }
+      },
+      "GoogleEMMDevice": {
+        "type": "object",
+        "properties": {
+          "android_id": {
+            "type": "string",
+            "description": "Unique identifier for the Android device."
+          },
+          "management_type": {
+            "type": "string",
+            "description": "The management type of the device (e.g., managedDevice)."
+          },
+          "policy": {
+            "$ref": "#/components/schemas/Policy"
+          }
+        }
+      },
+      "Policy": {
+        "type": "object",
+        "properties": {
+          "auto_update_policy": {
+            "type": "string",
+            "description": "Defines the auto-update policy for the device."
+          },
+          "device_report_policy": {
+            "type": "string",
+            "description": "Policy for device report generation."
+          },
+          "product_availability_policy": {
+            "type": "string",
+            "description": "Defines the product availability policy."
+          },
+          "product_policy": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductPolicy"
+            }
+          }
+        }
+      },
+      "ProductPolicy": {
+        "type": "object",
+        "properties": {
+          "auto_update_mode": {
+            "type": "string",
+            "description": "Mode of auto-updating the product."
+          },
+          "product_id": {
+            "type": "string",
+            "description": "Unique identifier for the product."
+          },
+          "auto_install_policy": {
+            "$ref": "#/components/schemas/AutoInstallPolicy"
+          },
+          "managed_configuration": {
+            "$ref": "#/components/schemas/ManagedConfiguration"
+          }
+        }
+      },
+      "ManagedConfiguration": {
+        "type": "object",
+        "properties": {
+          "configuration_variables": {
+            "type": "object",
+            "description": "Variables used for managed configurations.",
+            "properties": {
+              "mcm_id": {
+                "type": "string",
+                "description": "MCM ID required for configuration management.",
+                "example": "00982462290877382272"
+              },
+              "variable_set": {
+                "type": "array",
+                "description": "Set of configuration variables and their values.",
+                "items": {
+                  "$ref": "#/components/schemas/VariableSet"
+                }
+              }
+            }
+          },
+          "kind": {
+            "type": "string",
+            "description": "Type of managed configuration.",
+            "example": "androidenterprise#managedConfiguration"
+          }
+        }
+      },
+      "VariableSet": {
+        "type": "object",
+        "properties": {
+          "placeholder": {
+            "type": "string",
+            "description": "Placeholder key for configuration variable.",
+            "example": "$emailaddress$"
+          },
+          "user_value": {
+            "type": "string",
+            "description": "User-provided value for the placeholder.",
+            "example": "user@example.com"
+          }
+        }
+      },
+      "AutoInstallPolicy": {
+        "type": "object",
+        "properties": {
+          "auto_install_constraint": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AutoInstallConstraint"
+            },
+            "description": "Constraints for auto-installing the product."
+          },
+          "auto_install_mode": {
+            "type": "string",
+            "description": "Mode for auto-installation."
+          },
+          "auto_install_priority": {
+            "type": "integer",
+            "description": "Priority of the auto-installation."
+          }
+        }
+      },
+      "AutoInstallConstraint": {
+        "type": "object",
+        "properties": {
+          "charging_state_constraint": {
+            "type": "string",
+            "description": "Constraint on the device's charging state for installation."
+          },
+          "device_idle_state_constraint": {
+            "type": "string",
+            "description": "Constraint on the device's idle state for installation."
+          },
+          "network_type_constraint": {
+            "type": "string",
+            "description": "Network type required for installation."
+          }
+        }
+      },
       "DeviceAppsResponse": {
         "type": "object",
         "properties": {
@@ -6114,6 +7753,49 @@
           "tenant_id": {
             "type": "string",
             "format": "uuid"
+          }
+        }
+      },
+      "DeviceLastSeen": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EsperDeviceHeartbeat"
+            }
+          }
+        }
+      },
+      "EsperDeviceHeartbeat": {
+        "type": "object",
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "description": "UUID of the device",
+            "format": "uuid"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Last seen time stamp of the device",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "integer",
+            "description": "Legacy field representing whether the device was last seen in the last 30 minutes (returns 1) or not (returns 0). ",
+            "enum": [
+              0,
+              1
+            ]
           }
         }
       },

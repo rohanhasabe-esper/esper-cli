@@ -1834,10 +1834,1608 @@
         "x-esper-noun": "install",
         "x-esper-scope-parent": "device"
       }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/GroupID"
+          },
+          {
+            "in": "query",
+            "name": "without_details",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "tags": [
+          "0_Blueprint (Deprecated)"
+        ],
+        "summary": "Get list of Blueprints for the group",
+        "description": "Return list of Blueprint instances for the group.\n\n⚠️ **Deprecation Notice:** This endpoint will soon be deprecated. Use [Blueprints API](https://api.esper.io/tag/Blueprints-API) instead.\n",
+        "operationId": "listBlueprint",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blueprint detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": "string"
+                    },
+                    "previous": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Blueprint"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "blueprint",
+        "x-esper-scope-parent": "devicegroup"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/GroupID"
+          },
+          {
+            "in": "query",
+            "name": "without_details",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "tags": [
+          "0_Blueprint (Deprecated)"
+        ],
+        "summary": "Create a Blueprint",
+        "description": "Returns the created Blueprint instance.\n\n⚠️ **Deprecation Notice:** This endpoint will soon be deprecated. Use [Blueprints API](https://api.esper.io/tag/Blueprints-API) instead.\n",
+        "operationId": "createBlueprint",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Blueprint"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blueprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Blueprint create error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Blueprint create error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "blueprint",
+        "x-esper-scope-parent": "devicegroup"
+      }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/{blueprint_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/GroupID"
+          },
+          {
+            "$ref": "#/components/parameters/BlueprintID"
+          },
+          {
+            "in": "query",
+            "name": "without_details",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "tags": [
+          "0_Blueprint (Deprecated)"
+        ],
+        "summary": "Get Blueprint detail",
+        "description": "Returns the details of a Blueprint instance.\n\n⚠️ **Deprecation Notice:** This endpoint will soon be deprecated. Use [Blueprints API](https://api.esper.io/tag/Blueprints-API) instead.\n",
+        "operationId": "getBlueprint",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blueprint detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blueprint"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "blueprint",
+        "x-esper-scope-parent": "devicegroup"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/GroupID"
+          },
+          {
+            "$ref": "#/components/parameters/BlueprintID"
+          },
+          {
+            "in": "query",
+            "name": "without_details",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "tags": [
+          "0_Blueprint (Deprecated)"
+        ],
+        "summary": "Partial update a Blueprint",
+        "description": "Returns the details of the updated Blueprint instance.\n\n⚠️ **Deprecation Notice:** This endpoint will soon be deprecated. Use [Blueprints API](https://api.esper.io/tag/Blueprints-API) instead.\n",
+        "operationId": "partialUpdateBlueprint",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Blueprint"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Partially updated Blueprint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blueprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Blueprint update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Blueprint update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "partial-update",
+        "x-esper-noun": "blueprint",
+        "x-esper-scope-parent": "devicegroup"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/GroupID"
+          },
+          {
+            "$ref": "#/components/parameters/BlueprintID"
+          },
+          {
+            "in": "query",
+            "name": "without_details",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "tags": [
+          "0_Blueprint (Deprecated)"
+        ],
+        "summary": "Delete a Blueprint",
+        "description": "Deletes the requested Blueprint instance.\n\n⚠️ **Deprecation Notice:** This endpoint will soon be deprecated. Use [Blueprints API](https://api.esper.io/tag/Blueprints-API) instead.\n",
+        "operationId": "deleteBlueprint",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted Blueprint"
+          },
+          "401": {
+            "description": "Blueprint delete error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "blueprint",
+        "x-esper-scope-parent": "devicegroup"
+      }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/{blueprint_id}/revisions/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/GroupID"
+          },
+          {
+            "$ref": "#/components/parameters/BlueprintID"
+          },
+          {
+            "in": "query",
+            "name": "without_details",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "tags": [
+          "0_Blueprint (Deprecated)"
+        ],
+        "summary": "Get list of Blueprint Revisions",
+        "description": "Returns a list of Blueprint Revisions instances for the given Blueprint.\n\n⚠️ **Deprecation Notice:** This endpoint will soon be deprecated. Use [Blueprints API](https://api.esper.io/tag/Blueprints-API) instead.\n",
+        "operationId": "listBlueprintRevisions",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blueprint revision list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": "string"
+                    },
+                    "previous": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BlueprintRevision"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "revision",
+        "x-esper-scope-parent": "blueprint"
+      }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/{blueprint_id}/revisions/{revision_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/GroupID"
+          },
+          {
+            "$ref": "#/components/parameters/BlueprintID"
+          },
+          {
+            "$ref": "#/components/parameters/BlueprintRevisionID"
+          },
+          {
+            "in": "query",
+            "name": "without_details",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "tags": [
+          "0_Blueprint (Deprecated)"
+        ],
+        "summary": "Get Blueprint Revision detail",
+        "description": "Returns the detail of Blueprint Revision instance.\n\n⚠️ **Deprecation Notice:** This endpoint will soon be deprecated. Use [Blueprints API](https://api.esper.io/tag/Blueprints-API) instead.\n",
+        "operationId": "getBlueprintRevision",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blueprint revision detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlueprintRevision"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "blueprint-revision",
+        "x-esper-scope-parent": "blueprint"
+      }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/restore/": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/GroupID"
+          }
+        ],
+        "tags": [
+          "0_Blueprint (Deprecated)"
+        ],
+        "summary": "Restore a Blueprint",
+        "description": "Returns the Blueprint instance restored to the requested Blueprint Revision.\n\n⚠️ **Deprecation Notice:** This endpoint will soon be deprecated. Use [Blueprints API](https://api.esper.io/tag/Blueprints-API) instead.\n",
+        "operationId": "restoreBlueprintRevision",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "revision_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Restored",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blueprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Blueprint restore error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Blueprint restore error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "restore",
+        "x-esper-noun": "blueprint-revision",
+        "x-esper-scope-parent": "devicegroup"
+      }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/upload/": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/GroupID"
+          }
+        ],
+        "tags": [
+          "0_Blueprint (Deprecated)"
+        ],
+        "summary": "Upload a Blueprint",
+        "description": "Create a Blueprint by uploading a json file.\n\n⚠️ **Deprecation Notice:** This endpoint will soon be deprecated. Use [Blueprints API](https://api.esper.io/tag/Blueprints-API) instead.\n",
+        "operationId": "uploadBlueprint",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Uploaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blueprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Blueprint upload error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Blueprint upload error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "upload",
+        "x-esper-noun": "blueprint",
+        "x-esper-scope-parent": "devicegroup"
+      }
     }
   },
   "components": {
     "schemas": {
+      "BlueprintRevision": {
+        "title": "Blueprint",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "revision": {
+            "type": "string",
+            "readOnly": true
+          },
+          "created_by": {
+            "type": "string",
+            "readOnly": true
+          },
+          "current": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Independent",
+              "Inherited"
+            ]
+          },
+          "comments": {
+            "type": "string"
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "connectivity": {
+            "$ref": "#/components/schemas/ConnectivitySection"
+          },
+          "sound": {
+            "$ref": "#/components/schemas/SoundSection"
+          },
+          "display_branding": {
+            "$ref": "#/components/schemas/DisplayBrandingSection"
+          },
+          "hardware_settings": {
+            "$ref": "#/components/schemas/HardwareSettingsSection"
+          },
+          "date_time": {
+            "$ref": "#/components/schemas/DateTimeSection"
+          },
+          "settings_app": {
+            "$ref": "#/components/schemas/SettingsAppSection"
+          },
+          "system_updates": {
+            "$ref": "#/components/schemas/SystemUpdatesSection"
+          },
+          "google_services": {
+            "$ref": "#/components/schemas/GoogleServicesSection"
+          },
+          "security": {
+            "$ref": "#/components/schemas/SecuritySection"
+          },
+          "application": {
+            "$ref": "#/components/schemas/ApplicationSection"
+          },
+          "content": {
+            "$ref": "#/components/schemas/ContentSection"
+          },
+          "created_on": {
+            "title": "Created on",
+            "description": "Date and time of when the group was created",
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "ContentSection": {
+        "title": "Content",
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "integer"
+                },
+                "file_url": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "hash": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "url": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "destination_path": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "section_type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "Inherited",
+              "Independent"
+            ]
+          },
+          "locked": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApplicationSection": {
+        "title": "Application",
+        "type": "object",
+        "properties": {
+          "app_mode": {
+            "type": "string",
+            "enum": [
+              "KIOSK",
+              "MULTI_APP"
+            ]
+          },
+          "launch_on_start": {
+            "type": "string"
+          },
+          "start_on_boot": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "launcher_less_dpc": {
+            "type": "boolean"
+          },
+          "disable_local_app_install": {
+            "type": "boolean"
+          },
+          "app_uninstall_disabled": {
+            "type": "boolean"
+          },
+          "permission_policy": {
+            "type": "string",
+            "enum": [
+              "PERMISSION_POLICY_AUTO_GRANT",
+              "PERMISSION_POLICY_PROMPT",
+              "PERMISSION_POLICY_AUTO_DENY"
+            ]
+          },
+          "locked": {
+            "title": "Locked",
+            "description": "Locked",
+            "type": "boolean"
+          },
+          "preload_apps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "package_name": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "SHOW",
+                    "HIDE",
+                    "DISABLED",
+                    "LAUNCHABLE_BUT_HIDDEN"
+                  ]
+                }
+              }
+            }
+          },
+          "apps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "version_codes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "readOnly": true
+                },
+                "is_g_play": {
+                  "type": "boolean",
+                  "readOnly": true
+                },
+                "app_version": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "app_version_url": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "hash_string": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "package_name": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "download_url": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "installation_rule": {
+                  "type": "string",
+                  "enum": [
+                    "DURING",
+                    "POST"
+                  ]
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "SHOW",
+                    "HIDE",
+                    "DISABLED",
+                    "LAUNCHABLE_BUT_HIDDEN"
+                  ]
+                },
+                "managed_config": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "section_type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "Inherited",
+              "Independent"
+            ]
+          }
+        }
+      },
+      "SecuritySection": {
+        "title": "Security",
+        "type": "object",
+        "properties": {
+          "password_quality": {
+            "type": "string",
+            "enum": [
+              "PASSWORD_QUALITY_ALPHABETIC",
+              "PASSWORD_QUALITY_ALPHANUMERIC",
+              "PASSWORD_QUALITY_UNSPECIFIED",
+              "PASSWORD_QUALITY_COMPLEX",
+              "PASSWORD_QUALITY_BIOMETRIC_WEAK",
+              "PASSWORD_QUALITY_NUMERIC"
+            ]
+          },
+          "minimum_password_length": {
+            "type": "integer"
+          },
+          "adb_disabled": {
+            "type": "boolean"
+          },
+          "safe_boot_disabled": {
+            "type": "boolean"
+          },
+          "screen_off_timeout": {
+            "type": "integer"
+          },
+          "factory_reset_disabled": {
+            "type": "boolean"
+          },
+          "keyguard_disabled": {
+            "type": "boolean"
+          },
+          "section_type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "Inherited",
+              "Independent"
+            ]
+          },
+          "locked": {
+            "title": "Locked",
+            "description": "Locked",
+            "type": "boolean"
+          }
+        }
+      },
+      "GoogleServicesSection": {
+        "title": "Google Services",
+        "type": "object",
+        "properties": {
+          "disable_play_store": {
+            "type": "boolean"
+          },
+          "google_assistant_disabled": {
+            "type": "boolean"
+          },
+          "managed_google_play_disabled": {
+            "type": "boolean"
+          },
+          "max_account": {
+            "type": "integer"
+          },
+          "emails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "frp_googles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "google_id": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "USER",
+                    "ADMIN"
+                  ]
+                }
+              }
+            }
+          },
+          "section_type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "Inherited",
+              "Independent"
+            ]
+          },
+          "locked": {
+            "title": "Locked",
+            "description": "Locked",
+            "type": "boolean"
+          }
+        }
+      },
+      "SystemUpdatesSection": {
+        "title": "System Updates",
+        "type": "object",
+        "properties": {
+          "locked": {
+            "title": "Locked",
+            "description": "Locked",
+            "type": "boolean"
+          },
+          "section_type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "Inherited",
+              "Independent"
+            ]
+          },
+          "type": {
+            "title": "Type",
+            "description": "Type",
+            "type": "string",
+            "enum": [
+              "TYPE_POSTPONE",
+              "TYPE_INSTALL_AUTOMATIC",
+              "TYPE_INSTALL_WINDOWED",
+              "TYPE_INSTALL_DISABLED"
+            ]
+          },
+          "maintenance_start": {
+            "type": "integer"
+          },
+          "maintenance_end": {
+            "type": "integer"
+          }
+        }
+      },
+      "SettingsAppSection": {
+        "title": "Settings App",
+        "type": "object",
+        "properties": {
+          "enable_android_settings_app": {
+            "type": "boolean"
+          },
+          "settings_access_level": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "SHOONYA",
+              "SYSTEM"
+            ]
+          },
+          "esper_settings_app": {
+            "type": "object",
+            "properties": {
+              "only_dock_accessible": {
+                "type": "boolean"
+              },
+              "admin_mode_password": {
+                "type": "string"
+              },
+              "esper_settings_app_policy": {
+                "type": "object",
+                "properties": {
+                  "flashlight": {
+                    "type": "string"
+                  },
+                  "wifi": {
+                    "type": "string"
+                  },
+                  "auto_rotation": {
+                    "type": "string"
+                  },
+                  "reboot": {
+                    "type": "string"
+                  },
+                  "kiosk_app_selection": {
+                    "type": "string"
+                  },
+                  "esper_branding": {
+                    "type": "string"
+                  },
+                  "factory_reset": {
+                    "type": "string"
+                  },
+                  "about": {
+                    "type": "string"
+                  },
+                  "display": {
+                    "type": "string"
+                  },
+                  "sound": {
+                    "type": "string"
+                  },
+                  "keyboard": {
+                    "type": "string"
+                  },
+                  "input_selection": {
+                    "type": "string"
+                  },
+                  "accessibility": {
+                    "type": "string"
+                  },
+                  "mobile_data": {
+                    "type": "string"
+                  },
+                  "bluetooth": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string"
+                  },
+                  "time_and_date": {
+                    "type": "string"
+                  },
+                  "clear_app_data": {
+                    "type": "string"
+                  },
+                  "storage": {
+                    "type": "string"
+                  },
+                  "data_roaming": {
+                    "type": "string"
+                  },
+                  "wifi_tethering": {
+                    "type": "string"
+                  },
+                  "airplane_mode": {
+                    "type": "string"
+                  },
+                  "accessibility_reset_to_default": {
+                    "type": "string"
+                  },
+                  "accessibility_high_contrast_text": {
+                    "type": "string"
+                  },
+                  "accessibility_cc_deuteranomaly": {
+                    "type": "string"
+                  },
+                  "accessibility_cc_protanomaly": {
+                    "type": "string"
+                  },
+                  "accessibility_cc_tritanomaly": {
+                    "type": "string"
+                  },
+                  "accessibility_mono_audio": {
+                    "type": "string"
+                  },
+                  "accessibility_display_size": {
+                    "type": "string"
+                  },
+                  "accessibility_talkback": {
+                    "type": "string"
+                  },
+                  "accessibility_text_to_speech": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "config_json": {
+            "type": "object"
+          },
+          "section_type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "Inherited",
+              "Independent"
+            ]
+          },
+          "locked": {
+            "title": "Locked",
+            "description": "Locked",
+            "type": "boolean"
+          }
+        }
+      },
+      "DateTimeSection": {
+        "title": "Date Time",
+        "type": "object",
+        "properties": {
+          "timezone_string": {
+            "type": "string"
+          },
+          "device_locale": {
+            "type": "string"
+          },
+          "date_time_config_disabled": {
+            "type": "boolean"
+          },
+          "section_type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "Inherited",
+              "Independent"
+            ]
+          },
+          "locked": {
+            "title": "Locked",
+            "description": "Locked",
+            "type": "boolean"
+          }
+        }
+      },
+      "HardwareSettingsSection": {
+        "title": "Hardware",
+        "type": "object",
+        "properties": {
+          "gps_state": {
+            "type": "string",
+            "enum": [
+              "LOCATION_MODE_HIGH_ACCURACY",
+              "LOCATION_MODE_SENSORS_ONLY",
+              "LOCATION_MODE_BATTERY_SAVING",
+              "LOCATION_MODE_OFF",
+              "LOCATION_MODE_ON"
+            ]
+          },
+          "usb_file_transfer_disabled": {
+            "type": "boolean"
+          },
+          "tethering_disabled": {
+            "type": "boolean"
+          },
+          "camera_disabled": {
+            "type": "boolean"
+          },
+          "usb_connectivity_disabled": {
+            "type": "boolean"
+          },
+          "section_type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "Inherited",
+              "Independent"
+            ]
+          },
+          "locked": {
+            "title": "Locked",
+            "description": "Locked",
+            "type": "boolean"
+          }
+        }
+      },
+      "DisplayBrandingSection": {
+        "title": "Display",
+        "type": "object",
+        "properties": {
+          "screenshot_disabled": {
+            "type": "boolean"
+          },
+          "status_bar_disabled": {
+            "type": "boolean"
+          },
+          "rotation_state": {
+            "type": "string",
+            "enum": [
+              "AUTO",
+              "LANDSCAPE_ONLY",
+              "POTRAIT_ONLY",
+              "INVERTED_PORTRAIT_ONLY",
+              "INVERTED_LANDSCAPE_ONLY"
+            ]
+          },
+          "brightness_scale": {
+            "type": "integer"
+          },
+          "wallpapers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "wallpaper": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "wallpaper_url": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "thumbnail_url": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "orientation": {
+                  "type": "string"
+                },
+                "screen_types": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "LOCKSCREEN",
+                      "HOMESCREEN"
+                    ]
+                  }
+                },
+                "orientations": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "PORTRAIT",
+                      "LANDSCAPE"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "section_type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "Inherited",
+              "Independent"
+            ]
+          },
+          "locked": {
+            "title": "Locked",
+            "description": "Locked",
+            "type": "boolean"
+          }
+        }
+      },
+      "SoundSection": {
+        "title": "Sound",
+        "type": "object",
+        "properties": {
+          "alarm_volume": {
+            "type": "integer"
+          },
+          "notification_volume": {
+            "type": "integer"
+          },
+          "music_volume": {
+            "type": "integer"
+          },
+          "ring_volume": {
+            "type": "integer"
+          },
+          "section_type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "Inherited",
+              "Independent"
+            ]
+          },
+          "locked": {
+            "title": "Locked",
+            "description": "Locked",
+            "type": "boolean"
+          }
+        }
+      },
+      "ConnectivitySection": {
+        "title": "Connectivity",
+        "type": "object",
+        "properties": {
+          "sms_disabled": {
+            "type": "boolean"
+          },
+          "enable_bluetooth": {
+            "type": "boolean"
+          },
+          "wifi_state": {
+            "type": "boolean"
+          },
+          "nfc_beam_disabled": {
+            "type": "boolean"
+          },
+          "ethernet_settings": {
+            "type": "object",
+            "description": "Ethernet settings to configure ethernet certificate",
+            "required": [
+              "ethernet_auth_mode"
+            ],
+            "properties": {
+              "ethernet_auth_mode": {
+                "type": "string",
+                "description": "Auth Mode options\n```\n* EAP_TLS: Ethernet auth mode is EAP_TLS\n* NONE: Default Value, if NONE then other fields are option\n```\n",
+                "enum": [
+                  "EAP_TLS",
+                  "NONE"
+                ]
+              },
+              "ethernet_ca_cert_alias": {
+                "type": "string",
+                "description": "It is mandatory field if Auth Mode is “EAP_TLS”."
+              },
+              "ethernet_client_cert_alias": {
+                "type": "string",
+                "description": "It is mandatory field if Auth Mode is “EAP_TLS”."
+              },
+              "ethernet_eap_identity": {
+                "type": "string",
+                "description": "It is mandatory field if Auth Mode is “EAP_TLS”."
+              }
+            }
+          },
+          "wifi_settings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "wifi_ssid": {
+                  "type": "string"
+                },
+                "wifi_password": {
+                  "type": "string"
+                },
+                "wifi_security_type": {
+                  "type": "string",
+                  "enum": [
+                    "NONE",
+                    "WAP",
+                    "WEP",
+                    "EAP",
+                    "WPA2",
+                    "SAE"
+                  ]
+                },
+                "wifi_phase2_auth": {
+                  "type": "string",
+                  "enum": [
+                    "NONE",
+                    "PAP",
+                    "MSCHAP",
+                    "MSCHAPV2",
+                    "GTC",
+                    "SIM",
+                    "AKA",
+                    "AKA_PRIME"
+                  ]
+                },
+                "wifi_eap_method": {
+                  "type": "string",
+                  "enum": [
+                    "PEAP",
+                    "TLS",
+                    "TTLS",
+                    "PWD",
+                    "NONE",
+                    "SIM",
+                    "AKA",
+                    "AKA_PRIME"
+                  ]
+                },
+                "identity": {
+                  "type": "string"
+                },
+                "anonymous_identity": {
+                  "type": "string"
+                },
+                "domain": {
+                  "type": "string"
+                },
+                "hidden": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "incoming_numbers_with_tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "outgoing_numbers_with_tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "section_type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "Inherited",
+              "Independent"
+            ]
+          },
+          "locked": {
+            "title": "Locked",
+            "description": "Locked",
+            "type": "boolean"
+          }
+        }
+      },
+      "Blueprint": {
+        "title": "Blueprint",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "group": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "latest_revision": {
+            "$ref": "#/components/schemas/BlueprintRevision"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
       "AppInstall": {
         "required": [
           "application",
@@ -2498,6 +4096,47 @@
         }
       }
     },
-    "parameters": {}
+    "parameters": {
+      "BlueprintRevisionID": {
+        "name": "revision_id",
+        "description": "Blueprint Revision ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "BlueprintID": {
+        "name": "blueprint_id",
+        "description": "Blueprint ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "GroupID": {
+        "name": "group_id",
+        "description": "Device Group ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "EnterpriseID": {
+        "name": "enterprise_id",
+        "description": "Enterprise ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
   }
 }

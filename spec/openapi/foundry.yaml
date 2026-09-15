@@ -1295,6 +1295,12 @@
         ]
       }
     },
-    "parameters": {}
+    "securitySchemes": {
+      "AuthToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    }
   }
 }

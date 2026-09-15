@@ -12096,6 +12096,79 @@
           "format": "uuid"
         }
       }
+    },
+    "examples": {
+      "example_filters": {
+        "summary": "An example with devices filters.",
+        "value": {
+          "operation_type": "CONVERGE",
+          "schedule_type": "IMMEDIATE",
+          "schedule_args": {
+            "start_datetime": "2024-08-08T19:13:36.969Z",
+            "end_datetime": "2024-08-08T19:13:36.969Z",
+            "time_type": "console",
+            "window_start_time": "2024-08-08T19:00:00Z",
+            "window_end_time": "2024-08-08T20:00:00Z",
+            "days": [
+              0
+            ]
+          },
+          "operation_device_query": {
+            "device_request": {
+              "group_multi": "460a4c28-b974-4c20-99b5-29aa6f10054f,760a4c28-b974-4c20-99b5-29aa6f10054e",
+              "state": "1",
+              "filter1": "val1",
+              "filter2": "val2"
+            }
+          },
+          "arguments": {
+            "converge_with_provision": true,
+            "sample_key": "value"
+          }
+        },
+        "description": "An example with dynamic filters, where 'filter1' and 'filter2' are used to apply specific criteria (Same as existing device api filters).\n- active_connection                     (string)\n- android_version                       (string)\n- assigned_blueprint_id                 (string)\n- battery_level_gte                     (string)\n- battery_level_lte                     (string)\n- current_blueprint_id                  (string)\n- current_blueprint_version_id          (string)\n- current_blueprint_version_id_net      (string)\n- device_source                         (string)\n- group_multi                           (string)\n- group_multi_immediate                 (string)\n- ios_version                           (string)\n- ipados_version                        (string)\n- tvos_version                          (string)\n- windows_version                       (string)\n- is_gms                                (string)\n- last_seen_gt                          (time.Time)\n- last_seen_lt                          (time.Time)\n- managed_by                            (string)\n- ordering                              (string)\n- os                                    (string)\n- platform                              (string)\n- policy_multi                          (string)\n- provisioned_on_gt                     (time.Time)\n- provisioned_on_lt                     (time.Time)\n- search                                (string)\n- security_status                       (string)\n- serial                                (string)\n- state                                 (string)\n- tags                                  (string)\n- template_multi                        (string)\n- udid                                  (string)\n- is_seamless                           (string)\n- is_locked_down                        (string)\n"
+      },
+      "example_devices": {
+        "summary": "An example where the query specifies a list of devices.",
+        "value": {
+          "operation_type": "CONVERGE",
+          "schedule_type": "IMMEDIATE",
+          "schedule_args": {
+            "start_datetime": "2024-08-08T19:13:36.969Z",
+            "end_datetime": "2024-08-08T19:13:36.969Z",
+            "time_type": "console",
+            "window_start_time": "2024-08-08T19:00:00Z",
+            "window_end_time": "2024-08-08T20:00:00Z",
+            "days": [
+              0
+            ]
+          },
+          "operation_device_query": {
+            "device_ids": "460a4c28-b974-4c20-99b5-29aa6f10054f,560a4c28-b974-4c20-99b5-29aa6f10054e"
+          },
+          "arguments": {
+            "converge_with_provision": true,
+            "sample_key": "value"
+          }
+        },
+        "description": "An example where the query specifies a list of devices with specific values."
+      }
+    },
+    "securitySchemes": {
+      "apiKey": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "#### API KEY - Access Token\nAccess token for API is passed as authorization header in calls. You need to generate this from your Esper Console at `<domain>-api.esper.cloud` where foo is the sub-domain name you gave for your Esper Dev environment when you signed up for your Esper account. Please follow the instructions [in this Help article](https://help.esper.io/hc/en-us/articles/12656959508497) to generate an access token.\nOnce you have the access token, you need to send an authorization header as below\n\n```bash\n\n    curl -X GET \\\n      https://<domain>-api.esper.cloud/api/enterprise/<enterprise_id>/device/ \\\n      -H 'Authorization: Bearer <ACCESS_TOKEN>' \\\n      -H 'Content-Type: application/json' \\\n```\n\n> Please note the use of keyword **Bearer** before the token value.\n\n\nYou can read more about api key authentication [here](https://help.esper.io/hc/en-us/articles/12656959508497).\n"
+      },
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "tenant_apiKey": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "#### API KEY - Access Token\nAccess token for API is passed as authorization header in calls. You need to generate this from your Esper Console at `<domain>-api.esper.cloud` where foo is the sub-domain name you gave for your Esper Dev environment when you signed up for your Esper account. Please follow the instructions [in this Help article](https://help.esper.io/hc/en-us/articles/12656959508497) to generate an access token.\nOnce you have the access token, you need to send an authorization header as below\n\n```bash\n\n    curl -X GET \\\n      https://<domain>-api.esper.cloud/api/enterprise/<enterprise_id>/device/ \\\n      -H 'Authorization: Bearer <ACCESS_TOKEN>' \\\n      -H 'Content-Type: application/json' \\\n```\n\n> Please note the use of keyword **Bearer** before the token value.\n\n\nYou can read more about api key authentication [here](https://help.esper.io/hc/en-us/articles/12656959508497).\n"
+      }
     }
   }
 }

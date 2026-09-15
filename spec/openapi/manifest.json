@@ -1,10 +1,23 @@
 {
-  "sourceCommit": "1034be90082126d4daeaf98b6f89b1af27559244",
-  "sourceOperationCount": 345,
-  "publicOperationCount": 345,
-  "sourcePathCount": 215,
-  "bundledSourcePathCount": 215,
-  "overlayPathCount": 215,
+  "sourcePathCount": 219,
+  "bundledSourcePathCount": 205,
+  "overlayPathCount": 220,
+  "publicSource": {
+    "fsPath": "openapi.yaml",
+    "hash": "K7KWfKS54CXpy9w+/kA6d6pnjbU=",
+    "pathCount": 219
+  },
+  "publicOperationCount": 349,
+  "nonPublicOperationsRemoved": [
+    "DELETE /v0/enterprise/{enterprise_id}/device/{device_id}/remoteadb/{remoteadb_id}",
+    "GET /enterprise/{enterprise_id}/devicegroup/{group_id}/command",
+    "GET /enterprise/{enterprise_id}/devicegroup/{group_id}/command/{command_id}",
+    "GET /graph/{category}/{metric}",
+    "GET /v0/enterprise/{enterprise_id}/device/{device_id}/remoteadb",
+    "GET /v0/enterprise/{enterprise_id}/device/{device_id}/remoteadb/{remoteadb_id}",
+    "POST /enterprise/{enterprise_id}/devicegroup/{group_id}/command",
+    "POST /v0/enterprise/{enterprise_id}/device/{device_id}/remoteadb"
+  ],
   "publicOperationKeys": [
     "DELETE /authn2/v0/personal-access-token/{personal_access_token_id}",
     "DELETE /authn2/v0/tenant/{enterprise_id}/invite/{invite_id}",
@@ -64,10 +77,13 @@
     "GET /commands/v0/commands/{id}/stats",
     "GET /commands/v0/status",
     "GET /commands/v0/status/{id}",
+    "GET /device/v0/devices",
     "GET /device/v0/devices/{id}",
     "GET /device/v0/devices/{id}/devicestate",
     "GET /device/v0/heartbeat/{id}",
+    "GET /enterprise/report/device-report",
     "GET /enterprise/report/enterprise-report",
+    "GET /enterprise/report/group-report",
     "GET /enterprise/report/info",
     "GET /enterprise/report/subscription",
     "GET /enterprise/report/subscription/{subscription_id}",
@@ -126,6 +142,7 @@
     "GET /pipelines/v0/stages/{stage_id}/targetlists",
     "GET /report/v0/report-types",
     "GET /report/v0/reports/{report_id}",
+    "GET /sys/health",
     "GET /tenant/v0/apnscertificates",
     "GET /tenant/v0/apnscertificates/{id}",
     "GET /tenant/v0/depprofiles",
@@ -352,5 +369,28 @@
     "PUT /v2/itunesapps/{appleAppId}/preferred-region",
     "PUT /v2/tenant-apps/{appId}/versions/{versionId}"
   ],
-  "nonPublicOperationsRemoved": []
+  "excludedPaths": [
+    "/device/v0/devices",
+    "/enterprise/report/device-report",
+    "/enterprise/report/group-report",
+    "/sys/health"
+  ],
+  "excludedPathReasons": {
+    "/sys/health": "operational health endpoint, not a customer API",
+    "/device/v0/devices": "deprecated device API path",
+    "/enterprise/report/device-report": "returned 404 during direct supported-environment verification",
+    "/enterprise/report/group-report": "returned 404 during direct supported-environment verification"
+  },
+  "emittedPathCount": 215,
+  "operationCount": 345,
+  "generations": {
+    "authn2": 9,
+    "authz2": 5,
+    "foundry": 5,
+    "legacy": 33,
+    "pipelines-v0": 29,
+    "v0": 47,
+    "v1": 31,
+    "v2": 56
+  }
 }

@@ -900,6 +900,769 @@
         "x-esper-scope-parent": "blueprint"
       }
     },
+    "/v2/custom-actions/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "1_Custom Actions API"
+        ],
+        "description": "Retrieve all custom actions for the tenant",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ordering",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Order the results by a specific field (-field for descending order). Valid fields are 'name', 'created_at', 'updated_at', 'created_by', 'updated_by'.\n"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter the results by name (partial match, case insensitive).\n"
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by action type. Comma-separated list. Valid values: button, toggle, radio, dropdown.\n"
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by action state. Comma-separated list. Valid values: draft, active, inactive.\n"
+          },
+          {
+            "in": "query",
+            "name": "position_in_blueprints",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by blueprint position. Comma-separated list. Valid values: none, blueprints_apps_and_configuration, blueprints_connectivity, blueprints_device_security, blueprints_display_and_branding, blueprints_esper_settings, blueprints_scripts, blueprints_files, blueprints_platform_services, blueprints_hardware_settings, blueprints_sound, blueprints_system_updates, blueprints_time_and_date.\n"
+          },
+          {
+            "in": "query",
+            "name": "position_in_device_settings",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by device settings position. Comma-separated list. Valid values: none, device_quick_settings.\n"
+          },
+          {
+            "in": "query",
+            "name": "created_by",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by user ID who created the action.\n"
+          },
+          {
+            "in": "query",
+            "name": "updated_by",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by user ID who last updated the action.\n"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Number of results to return per page.\n"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "The initial index from which to return the results.\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "The total number of custom actions"
+                        },
+                        "next": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "The link to retrieve the next set of objects in the result set"
+                        },
+                        "previous": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "The link to retrieve the previous set of objects in the result set"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CustomActionRead"
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "custom-action",
+        "summary": "List custom-action"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "1_Custom Actions API"
+        ],
+        "description": "Create a new custom action",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomActionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/CustomActionRead"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        201
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict - Custom Action name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        409
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        500
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "custom-action",
+        "summary": "Create custom-action"
+      }
+    },
+    "/v2/custom-actions/{custom_action_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "1_Custom Actions API"
+        ],
+        "description": "Retrieve a custom action by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "custom_action_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/CustomActionRead"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        200
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Custom Action not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        404
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "custom-action",
+        "summary": "Get custom-action"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "1_Custom Actions API"
+        ],
+        "description": "Update a custom action by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "custom_action_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomActionUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/CustomActionRead"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        200
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request (validation error or invalid state transition)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Custom Action not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        404
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict - Custom Action name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        409
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        500
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "custom-action",
+        "summary": "Update custom-action"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "1_Custom Actions API"
+        ],
+        "description": "Delete a custom action by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "custom_action_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        200
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Cannot delete active custom action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Custom Action not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        404
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        500
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "custom-action",
+        "summary": "Delete custom-action"
+      }
+    },
+    "/v2/scripts/{script_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "1_Custom Actions API"
+        ],
+        "description": "Retrieve script content by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "script_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/platformScript"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        200
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Permission denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        403
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Script not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        404
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        500
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "script",
+        "summary": "Get script"
+      }
+    },
     "/v2/devices/": {
       "get": {
         "security": [
@@ -7090,6 +7853,329 @@
             }
           }
         }
+      },
+      "platformScript": {
+        "type": "object",
+        "properties": {
+          "script": {
+            "type": "string",
+            "description": "The script content"
+          },
+          "interpreter": {
+            "type": "string",
+            "description": "Interpreter used to run the script"
+          }
+        },
+        "required": [
+          "script",
+          "interpreter"
+        ]
+      },
+      "CustomActionUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Custom action name"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "button",
+              "toggle",
+              "radio",
+              "dropdown"
+            ],
+            "description": "The UI component type for this custom action"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "active",
+              "inactive"
+            ],
+            "description": "The current operational state of the custom action"
+          },
+          "position_in_blueprints": {
+            "type": "string",
+            "enum": [
+              "none",
+              "blueprints_apps_and_configuration",
+              "blueprints_connectivity",
+              "blueprints_device_security",
+              "blueprints_display_and_branding",
+              "blueprints_esper_settings",
+              "blueprints_scripts",
+              "blueprints_files",
+              "blueprints_platform_services",
+              "blueprints_hardware_settings",
+              "blueprints_sound",
+              "blueprints_system_updates",
+              "blueprints_time_and_date"
+            ],
+            "description": "The location in the blueprint where the custom action will be added"
+          },
+          "position_in_device_settings": {
+            "type": "string",
+            "enum": [
+              "none",
+              "device_quick_settings"
+            ],
+            "description": "The location in the device's Quick Actions where the custom action will be added"
+          },
+          "properties": {
+            "type": "object",
+            "description": "Object for the description, info_message, and tooltip_message. Replaces the existing properties."
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/optionsRequest"
+            },
+            "description": "A new list of options to replace the existing ones"
+          }
+        },
+        "description": "Update a custom action. All fields are optional."
+      },
+      "optionsRequest": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Label shown on the UI"
+          },
+          "key": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique key identifier for the option"
+          },
+          "scripts": {
+            "type": "object",
+            "description": "Platform-specific scripts. Currently only Linux platform is supported. Platform key must be lowercase \"linux\".",
+            "properties": {
+              "linux": {
+                "$ref": "#/components/schemas/platformScriptRequest"
+              }
+            },
+            "required": [
+              "linux"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "label",
+          "key",
+          "scripts"
+        ]
+      },
+      "platformScriptRequest": {
+        "type": "object",
+        "properties": {
+          "script": {
+            "type": "string",
+            "description": "The script content to be executed on Linux devices"
+          },
+          "interpreter": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Interpreter used to run the script. Default is \"bash\" if not specified. Common values include \"bash\", \"sh\", \"python\", \"python3\"",
+            "default": "bash"
+          }
+        },
+        "required": [
+          "script",
+          "interpreter"
+        ]
+      },
+      "CustomActionCreate": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/customActionBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "options": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/optionsRequest"
+                },
+                "description": "List of options for the custom action"
+              }
+            },
+            "required": [
+              "options"
+            ]
+          }
+        ]
+      },
+      "customActionBase": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Custom Action name"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "button",
+              "toggle",
+              "radio",
+              "dropdown"
+            ],
+            "description": "The UI component type for this custom action"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "active",
+              "inactive"
+            ],
+            "description": "The current operational state of the custom action. Only active custom actions can be deployed to Linux devices."
+          },
+          "position_in_blueprints": {
+            "type": "string",
+            "enum": [
+              "none",
+              "blueprints_apps_and_configuration",
+              "blueprints_connectivity",
+              "blueprints_device_security",
+              "blueprints_display_and_branding",
+              "blueprints_esper_settings",
+              "blueprints_scripts",
+              "blueprints_files",
+              "blueprints_platform_services",
+              "blueprints_hardware_settings",
+              "blueprints_sound",
+              "blueprints_system_updates",
+              "blueprints_time_and_date"
+            ],
+            "description": "The location in the blueprint where the custom action will be added"
+          },
+          "position_in_device_settings": {
+            "type": "string",
+            "enum": [
+              "none",
+              "device_quick_settings"
+            ],
+            "description": "The location in the device's Quick Actions where the custom action will be added"
+          },
+          "properties": {
+            "type": "object",
+            "description": "Object for the description, info_message, and tooltip_message."
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "state",
+          "position_in_blueprints",
+          "position_in_device_settings",
+          "properties"
+        ]
+      },
+      "CustomActionRead": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/customActionBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Unique identifier for the custom action"
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/options_response"
+                },
+                "description": "List of options for the custom action"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When the custom action was created"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When the custom action was last updated"
+              },
+              "created_by": {
+                "type": "integer",
+                "description": "User ID who created the custom action"
+              },
+              "updated_by": {
+                "type": "integer",
+                "description": "User ID who last updated the custom action"
+              }
+            },
+            "required": [
+              "id",
+              "options",
+              "created_at",
+              "updated_at",
+              "created_by",
+              "updated_by"
+            ]
+          }
+        ]
+      },
+      "options_response": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Label shown on the UI"
+          },
+          "key": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique key identifier for the option"
+          },
+          "scripts": {
+            "type": "object",
+            "description": "Platform-specific script references. Currently only Linux platform is supported. Platform key must be lowercase \"linux\".",
+            "properties": {
+              "linux": {
+                "$ref": "#/components/schemas/platformScriptResponse"
+              }
+            },
+            "required": [
+              "linux"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "label",
+          "key",
+          "scripts"
+        ]
+      },
+      "platformScriptResponse": {
+        "type": "object",
+        "properties": {
+          "script_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Script identifier stored in external storage"
+          }
+        },
+        "required": [
+          "script_id"
+        ]
       },
       "BlueprintV2Put": {
         "allOf": [

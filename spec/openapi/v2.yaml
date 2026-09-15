@@ -3853,6 +3853,254 @@
         "x-esper-noun": "command-inbox"
       }
     },
+    "/v2/converge": {
+      "get": {
+        "summary": "List converge action",
+        "description": "API to get and filter converge action",
+        "operationId": "listConverges",
+        "tags": [
+          "6_Converge"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "device_ids",
+            "description": "Filter by device IDs. Accepts comma separated values.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Converge action list for the Tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Converge"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "converge"
+      },
+      "post": {
+        "summary": "Create a converge action",
+        "description": "API to create a converge action for a device.",
+        "operationId": "createConverge",
+        "tags": [
+          "6_Converge"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Converge_POST"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Converge action successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/Converge"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "converge"
+      }
+    },
+    "/v2/converge/{id}": {
+      "get": {
+        "summary": "Get converge action",
+        "description": "API to get a converge action",
+        "operationId": "getConverge",
+        "tags": [
+          "6_Converge"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the converge object",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Converge information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/Converge"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "converge"
+      }
+    },
     "/v2/converge/{id}/commands": {
       "get": {
         "summary": "List commands fires for converge action",
@@ -4003,6 +4251,113 @@
             "description": "Updation timestamp of converge command",
             "format": "date-time",
             "readOnly": true
+          }
+        }
+      },
+      "Converge_POST": {
+        "type": "object",
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "description": "ID of the device",
+            "format": "uuid"
+          },
+          "converge_with_provision_option": {
+            "type": "boolean"
+          },
+          "schedule_type": {
+            "$ref": "#/components/schemas/ScheduleEnum"
+          },
+          "schedule_args": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "device_id",
+          "converge_with_provision_option"
+        ]
+      },
+      "ScheduleEnum": {
+        "type": "string",
+        "description": "Following Schedule types are supported\n``` * IMMEDIATE: Schedule the command to execcute Immediately\n* WINDOW: Schedule the command to execute within the given window ```\n",
+        "enum": [
+          "IMMEDIATE",
+          "WINDOW"
+        ]
+      },
+      "Converge": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique converge identifier",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "device_id": {
+            "type": "string",
+            "description": "ID of the device",
+            "format": "uuid"
+          },
+          "converge_with_provision_option": {
+            "type": "boolean"
+          },
+          "blueprint_info": {
+            "type": "object",
+            "$ref": "#/components/schemas/BlueprintsInfo"
+          },
+          "schedule_type": {
+            "$ref": "#/components/schemas/ScheduleEnum"
+          },
+          "schedule_args": {
+            "type": "object"
+          },
+          "status": {
+            "type": "string",
+            "description": "Current aggregrated status of the converge action",
+            "enum": [
+              "QUEUED",
+              "PROCESSING",
+              "IN_PROGRESS",
+              "SUCCESS",
+              "FAILURE"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "description": "details briefing the reason for current converge status"
+          },
+          "created_by": {
+            "type": "string",
+            "description": "user id of the user",
+            "readOnly": true
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Creation timestamp of converge",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Updation timestamp of converge",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "BlueprintsInfo": {
+        "type": "object",
+        "properties": {
+          "blueprint_id": {
+            "type": "string",
+            "description": "Unique blueprint ID",
+            "format": "uuid"
+          },
+          "blueprint_version_id": {
+            "type": "string",
+            "description": "Version ID of blueprint",
+            "format": "uuid"
           }
         }
       },

@@ -3763,6 +3763,89 @@
         "x-esper-noun": "policy"
       }
     },
+    "/enterprise/report/info/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Daily and Custom Reports"
+        ],
+        "summary": "Get report information",
+        "description": "Returns report information",
+        "operationId": "getReportInfo",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "reportAvailabilityFrom",
+                    "enableReportsWorkflow"
+                  ],
+                  "properties": {
+                    "reportAvailabilityFrom": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "enableReportsWorkflow": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "report-info"
+      }
+    },
     "/enterprise/report/enterprise-report/": {
       "get": {
         "x-badges": [
@@ -3861,6 +3944,606 @@
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
         "x-esper-noun": "enterprise-report"
+      }
+    },
+    "/enterprise/report/subscription/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Daily and Custom Reports"
+        ],
+        "summary": "Get list of subscription reports",
+        "description": "Returns list of subscription reports",
+        "operationId": "getSubscriptionReports",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Subscription"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "subscription-report"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Daily and Custom Reports"
+        ],
+        "summary": "Post subscription to enterprise",
+        "description": "Returns instance of created subscription",
+        "operationId": "addSubscription",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "email_ids"
+                ],
+                "properties": {
+                  "email_ids": {
+                    "type": "array",
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  },
+                  "is_subscribed": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "subscription"
+      }
+    },
+    "/enterprise/report/subscription/{subscription_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Daily and Custom Reports"
+        ],
+        "summary": "Get instance of subscription",
+        "description": "Returns instance of subscription",
+        "operationId": "getSubscriptionReport",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "description": "A integer value identifying the subscription",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "subscription-report"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Daily and Custom Reports"
+        ],
+        "summary": "Update subscription",
+        "description": "Returns instance of updated subscription",
+        "operationId": "updateSubscriptionReport",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "description": "A integer value identifying the subscription.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "email_ids"
+                ],
+                "properties": {
+                  "email_ids": {
+                    "type": "array",
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  },
+                  "is_subscribed": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "subscription-report"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Daily and Custom Reports"
+        ],
+        "summary": "Partially update subscription",
+        "description": "Returns instance of updated subscription",
+        "operationId": "patchSubscriptionReport",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "description": "A integer value identifying the subscription.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  },
+                  "is_subscribed": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "patch",
+        "x-esper-noun": "subscription-report"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Daily and Custom Reports"
+        ],
+        "summary": "Deletes instance of subscription",
+        "description": "Empty response",
+        "operationId": "deleteSubscriptionReport",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "description": "A integer value identifying the subscription.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "subscription-report"
       }
     },
     "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/": {
@@ -5451,6 +6134,42 @@
           },
           "latest_revision": {
             "$ref": "#/components/schemas/BlueprintRevision"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "Subscription": {
+        "type": "object",
+        "required": [
+          "id",
+          "email_ids",
+          "is_subscribed",
+          "created_on",
+          "updated_on"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "email_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "is_subscribed": {
+            "type": "boolean"
           },
           "created_on": {
             "type": "string",

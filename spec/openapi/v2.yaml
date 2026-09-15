@@ -266,6 +266,76 @@
         "x-esper-noun": "sub-group"
       }
     },
+    "/v2/enterprise/{enterprise_id}/report/status-metrics": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Telemetry"
+        ],
+        "summary": "Get status metrics report for enterprise v2",
+        "description": "Returns status metrics report for enterprise",
+        "operationId": "getStatusMetricsV2",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusMetricsV2"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "status-metric",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
     "/v2/blueprints/": {
       "get": {
         "x-badges": [
@@ -13824,6 +13894,73 @@
           },
           "settings": {
             "$ref": "#/components/schemas/settingsV2"
+          }
+        }
+      },
+      "StatusMetricsV2": {
+        "type": "object",
+        "required": [
+          "last_seen",
+          "low_risk",
+          "high_risk",
+          "medium_risk",
+          "secure",
+          "low_battery",
+          "under_provisioning",
+          "unprovisioned_devices",
+          "recently_added",
+          "unspecified",
+          "total_devices_under_risk"
+        ],
+        "properties": {
+          "last_seen": {
+            "type": "object",
+            "required": [
+              "first_period",
+              "second_period",
+              "third_period"
+            ],
+            "properties": {
+              "first_period": {
+                "type": "integer"
+              },
+              "second_period": {
+                "type": "integer"
+              },
+              "third_period": {
+                "type": "integer"
+              }
+            }
+          },
+          "low_risk": {
+            "type": "integer"
+          },
+          "high_risk": {
+            "type": "integer"
+          },
+          "medium_risk": {
+            "type": "integer"
+          },
+          "secure": {
+            "type": "integer"
+          },
+          "low_battery": {
+            "type": "integer"
+          },
+          "under_provisioning": {
+            "type": "integer"
+          },
+          "unprovisioned_devices": {
+            "type": "integer"
+          },
+          "recently_added": {
+            "type": "integer"
+          },
+          "unspecified": {
+            "type": "integer"
+          },
+          "total_devices_under_risk": {
+            "type": "integer"
           }
         }
       },

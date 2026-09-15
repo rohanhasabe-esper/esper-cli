@@ -209,6 +209,135 @@
         "x-esper-noun": "application-minimal"
       }
     },
+    "/v1/enterprise/{enterprise_id}/device/{device_id}/report/eventfeed/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_AndroidDevice"
+        ],
+        "summary": "Lists event feed for device",
+        "description": "Returns event feed for device, ordered by date the event was created on",
+        "operationId": "getEventFeed",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "device_id",
+            "in": "path",
+            "description": "A UUID string identifying the device",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EventFeed"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "event-feed",
+        "x-esper-scope-parent": "device"
+      }
+    },
     "/v1/enterprise/{enterprise_id}/alertchannels/": {
       "get": {
         "x-badges": [
@@ -1622,6 +1751,870 @@
         "x-esper-pagination": "limit-offset",
         "x-esper-verb": "get",
         "x-esper-noun": "alarm-history",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/report/location/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Telemetry"
+        ],
+        "summary": "Get list of device locations",
+        "description": "Returns list of device locations",
+        "operationId": "getDeviceLocations",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DeviceLocations"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device-location",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/report/location/{location_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Telemetry"
+        ],
+        "summary": "Get location of specific device",
+        "description": "Returns location information of device",
+        "operationId": "getSpecificLocations",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "location_id",
+            "in": "path",
+            "description": "An integer identifying the location.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceLocations"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "specific-location"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/report/device-tiles/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Telemetry"
+        ],
+        "summary": "Get list of device tiles reports",
+        "description": "Returns list of device tiles reports",
+        "operationId": "getDeviceTileReports",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Filter device-tile reports by state.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "created_on_gt",
+            "in": "query",
+            "description": "Filter device-tile reports created after a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created_on_lt",
+            "in": "query",
+            "description": "Flter device-tile reports created before a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "provisioned_on_gt",
+            "in": "query",
+            "description": "Filter device-tile reports provisioned after a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "provisioned_on_lt",
+            "in": "query",
+            "description": "Filter device-tile reports provisioned before a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "updated_on_gt",
+            "in": "query",
+            "description": "Filter device-tile reports updated after a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "updated_on_lt",
+            "in": "query",
+            "description": "Filter device-tile reports updated before a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "last_seen_gt",
+            "in": "query",
+            "description": "Filter device-tile reports last seen after a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "last_seen_lt",
+            "in": "query",
+            "description": "Filter device-tile reports last seen before a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "battery_level_gte",
+            "in": "query",
+            "description": "Filter device-tile reports by battery level greater than given battery level.",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "battery_level_lte",
+            "in": "query",
+            "description": "Filter device-tile reports by battery level lower than given battery level.",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "at_risk",
+            "in": "query",
+            "description": "Filter device-tile reports by whether they are at risk.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "security_status",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SecurityStatesEnum"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter device-tile reports by status.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "description": "Filter device-tile reports by group.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "group_name",
+            "in": "query",
+            "description": "Filter device-tile reports by group name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "group_name_multi",
+            "in": "query",
+            "description": "Filter device-tile reports using multiple group names.",
+            "schema": {
+              "type": "string",
+              "description": "Add group names to filter by comma separating"
+            }
+          },
+          {
+            "name": "group_multi",
+            "in": "query",
+            "description": "Filter device-tile reports by using multiple group ID's",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Add group UUID to filter by comma separating"
+            }
+          },
+          {
+            "name": "group_multi_immediate",
+            "in": "query",
+            "description": "Filter device-tile reports by immediate groups",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "group_null",
+            "in": "query",
+            "description": "Filter device-tile reports by availability of group. True returns device-tiles with no group. False returns device-tiles with group.",
+            "schema": {
+              "type": "string",
+              "description": "Allowed values are True, False, true, false, 1, 0."
+            }
+          },
+          {
+            "name": "imei",
+            "in": "query",
+            "description": "Filter device-tile reports by imei.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter device-tile reports by device name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recently_added",
+            "in": "query",
+            "description": "Filter device-tile reports by recently added.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "is_gms",
+            "in": "query",
+            "description": "Filter device-tile reports for gms devices.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "Filter device-tile reports by tag.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "is_geofence_applied",
+            "in": "query",
+            "description": "Filter device-tile reports by geofence application.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "serial",
+            "in": "query",
+            "description": "Filter device-tile reports by device serial id.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "android_version",
+            "in": "query",
+            "description": "Filter device-tile reports by android version.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "android_version_multi",
+            "in": "query",
+            "description": "Filter device-tile reports by multiple android versions.",
+            "schema": {
+              "type": "string",
+              "description": "List of android versions- comma separated."
+            }
+          },
+          {
+            "name": "wifi_ssid",
+            "in": "query",
+            "description": "Filter device-tile reports by wifi-ssid.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "network_type",
+            "in": "query",
+            "description": "Filter device-tile reports by network type.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "network_type_multi",
+            "in": "query",
+            "description": "Filter device-tile reports by multiple network types.",
+            "schema": {
+              "type": "string",
+              "description": "List of network types, comma separated."
+            }
+          },
+          {
+            "name": "model",
+            "in": "query",
+            "description": "Filter device-tile reports by device model.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "template",
+            "in": "query",
+            "description": "Filter device-tile reports by template.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "template_multi",
+            "in": "query",
+            "description": "Filter device-tile reports by multiple templates.",
+            "schema": {
+              "type": "string",
+              "description": "List of templates, comma separated."
+            }
+          },
+          {
+            "name": "policy",
+            "in": "query",
+            "description": "Filter device-tile reports by policy name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_multi",
+            "in": "query",
+            "description": "Filter device-tile reports by multiple policies.",
+            "schema": {
+              "type": "string",
+              "description": "List of policy names, comma separated."
+            }
+          },
+          {
+            "name": "policy_null",
+            "in": "query",
+            "description": "Filter device-tile reports by null-value policy.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "dpc_version",
+            "in": "query",
+            "description": "Filter device-tile reports by DPC version.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "active_connection",
+            "in": "query",
+            "description": "Filter device-tile reports by active connection status.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "device_type",
+            "in": "query",
+            "description": "Filter device-tile reports by device type.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "seamless_info",
+            "in": "query",
+            "description": "Filter device-tile reports by seamless information.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DeviceTiles"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device-tile-report",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/report/device-tiles/{device_tiles_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Telemetry"
+        ],
+        "summary": "Get instance of device tiles report",
+        "description": "Returns instance of device tiles report",
+        "operationId": "getDeviceTileReport",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "device_tiles_id",
+            "in": "path",
+            "description": "An integer representing the device tile report.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceTiles"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "device-tile-report"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/report/status-metrics/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Telemetry"
+        ],
+        "summary": "Get status metrics report for enterprise",
+        "description": "Returns status metrics report for enterprise",
+        "operationId": "getStatusMetrics",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusMetrics"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "status-metric",
         "x-esper-scope-parent": "enterprise"
       }
     },
@@ -5116,6 +6109,362 @@
           }
         }
       },
+      "StatusMetrics": {
+        "type": "object",
+        "required": [
+          "active",
+          "in_active",
+          "low_risk",
+          "high_risk",
+          "medium_risk",
+          "secure",
+          "low_battery",
+          "under_provisioning",
+          "recently_added",
+          "unspecified",
+          "total_devices_under_risk"
+        ],
+        "properties": {
+          "active": {
+            "type": "integer"
+          },
+          "in_active": {
+            "type": "integer"
+          },
+          "low_risk": {
+            "type": "integer"
+          },
+          "high_risk": {
+            "type": "integer"
+          },
+          "medium_risk": {
+            "type": "integer"
+          },
+          "secure": {
+            "type": "integer"
+          },
+          "low_battery": {
+            "type": "integer"
+          },
+          "under_provisioning": {
+            "type": "integer"
+          },
+          "recently_added": {
+            "type": "integer"
+          },
+          "unspecified": {
+            "type": "integer"
+          },
+          "total_devices_under_risk": {
+            "type": "integer"
+          }
+        }
+      },
+      "DeviceTiles": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "device": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "groups": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "url"
+                    }
+                  }
+                }
+              },
+              "device_name": {
+                "type": "string"
+              },
+              "state": {
+                "type": "integer"
+              },
+              "tags": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "device_type": {
+                "type": "string"
+              },
+              "serial": {
+                "type": "string"
+              },
+              "imeis": {
+                "type": "object"
+              },
+              "android_version": {
+                "type": "integer"
+              },
+              "eea_version": {
+                "type": "string"
+              },
+              "manufacturer": {
+                "type": "string"
+              },
+              "api_level": {
+                "type": "integer"
+              },
+              "template_name": {
+                "type": "string"
+              },
+              "dpc_version": {
+                "type": "string"
+              },
+              "alias_name": {
+                "type": "string"
+              },
+              "provisioned_on": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "geofence_id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          },
+          "network_info": {
+            "type": "object",
+            "properties": {
+              "__faust": {
+                "type": "object",
+                "properties": {
+                  "ns": {
+                    "type": "string"
+                  }
+                }
+              },
+              "mobileIPv4": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "mobileIPv6": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "networkType": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "numberOfSim": {
+                "type": "integer"
+              },
+              "simOperator": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "signalStrength": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "networkOperator": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "mobileNetworkStatus": {
+                "type": "string"
+              },
+              "currentActiveConnection": {
+                "type": "string"
+              }
+            }
+          },
+          "model": {
+            "type": "string"
+          },
+          "location": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "battery_level": {
+            "type": "number",
+            "format": "double"
+          },
+          "security_state": {
+            "type": "string"
+          },
+          "security_reason": {
+            "type": "string"
+          },
+          "security_advise": {
+            "type": "string"
+          },
+          "wifi_ssid": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "is_gms": {
+            "type": "boolean"
+          },
+          "status_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "serial_no": {
+            "type": "string"
+          },
+          "android_version": {
+            "type": "integer"
+          },
+          "eea_version": {
+            "type": "string"
+          },
+          "dpc_version": {
+            "type": "string"
+          },
+          "location_city": {
+            "type": "string"
+          },
+          "network_type": {
+            "type": "string"
+          },
+          "enterprise": {
+            "type": "string",
+            "format": "url"
+          },
+          "icon": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "SecurityStatesEnum": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Following are the Security States and their description\n\n```\n  * 1 = SECURE\n  * 10 = LOW_RISK\n  * 20 = MEDIUM_RISK\n  * 30 = HIGH_RISK\n  * 100 = DEVICE_STATE_UNSPECIFIED\n```\n",
+        "enum": [
+          1,
+          10,
+          20,
+          30,
+          100
+        ]
+      },
+      "DeviceLocations": {
+        "type": "object",
+        "required": [
+          "id",
+          "device",
+          "enterprise",
+          "latitude",
+          "longitude",
+          "altitude",
+          "city",
+          "state",
+          "country",
+          "zipcode",
+          "last_updated_on",
+          "status_id"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "latitude": {
+            "type": "string"
+          },
+          "longitude": {
+            "type": "string"
+          },
+          "altitude": {
+            "type": "string"
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "state": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "country": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "zipcode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_updated_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "device": {
+            "type": "string",
+            "format": "url"
+          },
+          "enterprise": {
+            "type": "string",
+            "format": "url"
+          },
+          "status_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        }
+      },
       "AlarmHistory": {
         "type": "object",
         "properties": {
@@ -5582,6 +6931,45 @@
                 }
               }
             }
+          }
+        }
+      },
+      "EventFeed": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Integer representing the event ID"
+          },
+          "message_id": {
+            "type": "string",
+            "format": "UUID",
+            "description": "UUID string representing message ID"
+          },
+          "device_status_id": {
+            "type": "string",
+            "format": "UUID",
+            "description": "UUID string representing device status ID"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message describing the command, who issued it, and from which state it was issued."
+          },
+          "device": {
+            "type": "string",
+            "format": "url",
+            "description": "URL to device instance",
+            "example": "https://{example}-api.esper.cloud/api/enterprise/{enterprise_id}/device/{device_id}/"
+          },
+          "enterprise": {
+            "type": "string",
+            "format": "url",
+            "description": "URL to enterprise instance",
+            "example": "https://{example}-api.esper.cloud/api/enterprise/{enterprise_id}/"
           }
         }
       },

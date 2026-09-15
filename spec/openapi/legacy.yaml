@@ -3090,7 +3090,463 @@
         "x-esper-noun": "group-thumbnail"
       }
     },
+    "/enterprise/{enterprise_id}/policy/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Enterprise Policy"
+        ],
+        "summary": "List all policies in enterprise",
+        "description": "Returns Policies list",
+        "operationId": "listPolicies",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "ID of the enterprise",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "filter by policy name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "is_active",
+            "in": "query",
+            "description": "filter by Active policies",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "created_on_gt",
+            "in": "query",
+            "description": "filter by policies created at or after this timestamp",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created_on_lt",
+            "in": "query",
+            "description": "filter by policies created at or before this timestamp",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EnterprisePolicy"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "policy",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Enterprise Policy"
+        ],
+        "summary": "Create a new Enterprise Policy",
+        "description": "API to create a new Enterprise Policy",
+        "operationId": "createPolicy",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "ID of the enterprise",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The request body to create an Enteprise Policy",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterprisePolicyWrite"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "command request successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterprisePolicy"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "request",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "policy",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
     "/enterprise/{enterprise_id}/policy/{policy_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Enterprise Policy"
+        ],
+        "summary": "Get Enterprise Policy",
+        "description": "Returns EnterprisePolicy instance",
+        "operationId": "getPolicyById",
+        "parameters": [
+          {
+            "name": "policy_id",
+            "in": "path",
+            "description": "An integer identifying this enterprise policy.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterprisePolicy"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "policy"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Enterprise Policy"
+        ],
+        "summary": "Update Enterprise Policy",
+        "description": "Returns Enterprise Policy instance",
+        "operationId": "updatePolicy",
+        "parameters": [
+          {
+            "name": "policy_id",
+            "in": "path",
+            "description": "An integer identifying this enterprise policy.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterprisePolicyWrite"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterprisePolicy"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "policy"
+      },
       "delete": {
         "x-badges": [
           {
@@ -3188,6 +3644,123 @@
         "x-esper-pagination": "none",
         "x-esper-verb": "delete",
         "x-esper-noun": "enterprise-policy"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Enterprise Policy"
+        ],
+        "summary": "Partial update EnterprisePolicy",
+        "description": "Returns EnterprisePolicy instance",
+        "operationId": "partialupdatePolicy",
+        "parameters": [
+          {
+            "name": "policy_id",
+            "in": "path",
+            "description": "An integer identifying this enterprise policy.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterprisePolicyPartialUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterprisePolicy"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "partial-update",
+        "x-esper-noun": "policy"
       }
     },
     "/enterprise/report/enterprise-report/": {
@@ -4888,6 +5461,461 @@
             "type": "string",
             "format": "date-time",
             "readOnly": true
+          }
+        }
+      },
+      "EnterprisePolicyPartialUpdate": {
+        "type": "object",
+        "properties": {
+          "enterprise": {
+            "title": "Enterprise url",
+            "type": "string",
+            "description": "Url of the enterprise resource",
+            "format": "url"
+          },
+          "name": {
+            "title": "Policy Name",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the Policy"
+          },
+          "description": {
+            "title": "Policy Description",
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Details regarding the Policy"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/EnterprisePolicyData"
+          },
+          "is_active": {
+            "title": "Policy Active status",
+            "type": "boolean",
+            "description": "Is this policy currently active"
+          },
+          "google_policy_id": {
+            "title": "Google policy id",
+            "maxLength": 255,
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Id of the Google policy"
+          },
+          "is_template": {
+            "title": "Template status",
+            "type": "boolean",
+            "default": false,
+            "writeOnly": true
+          }
+        }
+      },
+      "EnterprisePolicyData": {
+        "title": "Policy Data",
+        "type": "object",
+        "properties": {
+          "applications": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "kioskMode": {
+            "type": "boolean"
+          },
+          "keyguardDisabled": {
+            "type": "boolean",
+            "description": "Should KeyGuard be disabled?"
+          },
+          "safeBootDisabled": {
+            "type": "boolean",
+            "description": "Should SafeBoot be disabled?"
+          },
+          "statusBarDisabled": {
+            "type": "boolean",
+            "description": "Should Status Bar be disabled?"
+          },
+          "factoryResetDisabled": {
+            "type": "boolean",
+            "description": "Should Factory Reset be disabled?"
+          },
+          "screenshotDisabled": {
+            "type": "boolean",
+            "description": "Should Screenshot capability be disabled?"
+          },
+          "usbConnectivityDisabled": {
+            "type": "boolean",
+            "description": "Should USB connectivity be disabled?"
+          },
+          "smsDisabled": {
+            "type": "boolean",
+            "description": "Should SMS functionality be disabled?"
+          },
+          "outgoingCallsDisabled": {
+            "type": "boolean",
+            "description": "Should Outgoing Calls be disabled?"
+          },
+          "cameraDisabled": {
+            "type": "boolean",
+            "description": "Should Camera be disabled?"
+          },
+          "nfcBeamDisabled": {
+            "type": "boolean",
+            "description": "Should NFC capability be disabled?"
+          },
+          "disablePlayStore": {
+            "type": "boolean",
+            "description": "Should Google Play Store be disabled on the device?"
+          },
+          "usbFileTransferDisabled": {
+            "type": "boolean",
+            "description": "Should USB File transfer capability be disabled?"
+          },
+          "tetheringDisabled": {
+            "type": "boolean",
+            "description": "Should USB Tethering capability be enabled?"
+          },
+          "dateTimeConfigDisabled": {
+            "type": "boolean",
+            "description": "Should Date/Time configuration capability be disabled?"
+          },
+          "appUninstallDisabled": {
+            "type": "boolean",
+            "description": "Should App uninstall capability be disabled?"
+          },
+          "googleAssistantDisabled": {
+            "type": "boolean",
+            "description": "Should Google Assistant feature be disabled?"
+          },
+          "disableLocalAppInstall": {
+            "type": "boolean",
+            "description": "Should Side-loading of Applications be disabled?"
+          },
+          "adbDisabled": {
+            "type": "boolean",
+            "description": "Should Android Debugger be disabled?"
+          },
+          "phonePolicy": {
+            "type": "object",
+            "properties": {
+              "incomingNumbers": {
+                "type": "array",
+                "description": "List of permitted incoming phone numbers to recieve calls from",
+                "items": {
+                  "maxLength": 15,
+                  "type": "string"
+                }
+              },
+              "outgoingNumbers": {
+                "type": "array",
+                "description": "List of permitted outgoing phone numbers to make calls to",
+                "items": {
+                  "maxLength": 15,
+                  "type": "string"
+                }
+              },
+              "dialer": {
+                "type": "string",
+                "description": "Pick a dialer - System default or Esper Dialer",
+                "enum": [
+                  "DEFAULT",
+                  "SHOONYA"
+                ]
+              },
+              "allowUssdCodes": {
+                "type": "boolean",
+                "default": false,
+                "description": "Allow USSD codes to be dialed. Default is false"
+              }
+            },
+            "description": "Rules regarding restricting calls from/to phone-numbers"
+          },
+          "frpGoogles": {
+            "type": "array",
+            "description": "Details regarding Factory Reset Protection capability. List of permitted Google People IDs, emails and such",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "Type of User account provided - USER or ADMIN",
+                  "enum": [
+                    "USER",
+                    "ADMIN"
+                  ]
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Email id to be used for Factory protection. This will be asked on the Device's UI",
+                  "format": "email"
+                },
+                "googleId": {
+                  "type": "string",
+                  "description": "Google People ID associated with the above email (https://developers.google.com/people/api/rest/v1/people/get)"
+                }
+              }
+            }
+          },
+          "googleAccountPermission": {
+            "type": "object",
+            "properties": {
+              "maxAccount": {
+                "type": "integer",
+                "description": "Maximum number of Google accounts to be associated with this device. (Max = 10)"
+              },
+              "emails": {
+                "type": "array",
+                "description": "List of emails to be associated",
+                "items": {
+                  "type": "string",
+                  "format": "email"
+                }
+              },
+              "domains": {
+                "type": "array",
+                "description": "List of domains that can be associated",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Details regarding Google accounts to be associated with the device"
+          },
+          "devicePasswordPolicy": {
+            "type": "object",
+            "properties": {
+              "passwordQuality": {
+                "type": "string",
+                "description": "What is the type of password quality to apply to the device?",
+                "enum": [
+                  "PASSWORD_QUALITY_ALPHABETIC",
+                  "PASSWORD_QUALITY_ALPHANUMERIC",
+                  "PASSWORD_QUALITY_BIOMETRIC_WEAK",
+                  "PASSWORD_QUALITY_COMPLEX",
+                  "PASSWORD_QUALITY_NUMERIC",
+                  "PASSWORD_QUALITY_NUMERIC_COMPLEX",
+                  "PASSWORD_QUALITY_SOMETHING",
+                  "PASSWORD_QUALITY_UNSPECIFIED"
+                ]
+              }
+            },
+            "description": "Define the Password Policy for the device"
+          },
+          "minimumPasswordLength": {
+            "minimum": 4,
+            "type": "integer",
+            "description": "What is the minimum length for your device's password"
+          },
+          "permissionPolicy": {
+            "type": "string",
+            "description": "What permission should be applied by default for all apps, henceforth?",
+            "enum": [
+              "PERMISSION_POLICY_PROMPT",
+              "PERMISSION_POLICY_AUTO_GRANT",
+              "PERMISSION_POLICY_AUTO_DENY"
+            ]
+          },
+          "deviceUpdatePolicy": {
+            "type": "object",
+            "properties": {
+              "passwordQuality": {
+                "type": "string",
+                "enum": [
+                  "PASSWORD_QUALITY_ALPHABETIC",
+                  "PASSWORD_QUALITY_ALPHANUMERIC",
+                  "PASSWORD_QUALITY_BIOMETRIC_WEAK",
+                  "PASSWORD_QUALITY_COMPLEX",
+                  "PASSWORD_QUALITY_NUMERIC",
+                  "PASSWORD_QUALITY_NUMERIC_COMPLEX",
+                  "PASSWORD_QUALITY_SOMETHING",
+                  "PASSWORD_QUALITY_UNSPECIFIED"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "description": "What type of installation is preferred?",
+                "enum": [
+                  "TYPE_INSTALL_AUTOMATIC",
+                  "TYPE_POSTPONE",
+                  "TYPE_INSTALL_WINDOWED",
+                  "TYPE_INSTALL_DISABLED"
+                ]
+              },
+              "maintenanceStart": {
+                "type": "integer",
+                "description": "If the `type` is `TYPE_INSTALL_WINDOWED`, when should the maintenance start?"
+              },
+              "maintenanceEnd": {
+                "type": "integer",
+                "description": "If the `type` is `TYPE_INSTALL_WINDOWED`, when should the maintenance end?"
+              }
+            },
+            "description": "Configuration regarding Device OS Updates"
+          },
+          "settingsAccessLevel": {
+            "type": "string",
+            "description": "Type of Android settings app to be applied? Default System Settings or ESPER Settings App?",
+            "enum": [
+              "SYSTEM",
+              "SHOONYA",
+              "NONE"
+            ]
+          },
+          "settingsAppPassword": {
+            "type": "string",
+            "description": "Lock Password (optional) for the ESPER Settings app",
+            "format": "password"
+          }
+        }
+      },
+      "EnterprisePolicyWrite": {
+        "required": [
+          "enterprise",
+          "name",
+          "policy"
+        ],
+        "type": "object",
+        "properties": {
+          "enterprise": {
+            "title": "Enterprise url",
+            "type": "string",
+            "description": "Url of the enterprise resource",
+            "format": "url"
+          },
+          "name": {
+            "title": "Policy Name",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the Policy"
+          },
+          "description": {
+            "title": "Policy Description",
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Details regarding the Policy"
+          },
+          "google_policy_id": {
+            "title": "Google policy id",
+            "maxLength": 255,
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Id of the Google policy"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/EnterprisePolicyData"
+          },
+          "is_template": {
+            "title": "Template status",
+            "type": "boolean",
+            "default": false,
+            "writeOnly": true
+          },
+          "is_active": {
+            "title": "Policy Active status",
+            "type": "boolean",
+            "description": "Is this policy currently active"
+          }
+        }
+      },
+      "EnterprisePolicy": {
+        "required": [
+          "id",
+          "uuid",
+          "enterprise",
+          "url",
+          "name",
+          "description",
+          "device_count",
+          "google_policy_id",
+          "policy",
+          "updated_on",
+          "created_on",
+          "is_active"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer",
+            "readOnly": true
+          },
+          "uuid": {
+            "title": "UUID",
+            "type": "string",
+            "description": "Unique Policy identifier",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "enterprise": {
+            "title": "Enterprise url",
+            "type": "string",
+            "description": "Url of the enterprise resource",
+            "format": "url"
+          },
+          "url": {
+            "title": "Policy URL",
+            "type": "string",
+            "description": "URL link to policy",
+            "format": "url",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Policy Name",
+            "type": "string",
+            "description": "Name of the Policy"
+          },
+          "description": {
+            "title": "Policy Description",
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Details regarding the Policy"
+          },
+          "device_count": {
+            "title": "Number of Devices with this policy applied",
+            "type": "integer",
+            "description": "Count of Devices with this policy applied",
+            "readOnly": true
+          },
+          "google_policy_id": {
+            "title": "Google policy id",
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Id of the Google policy",
+            "readOnly": true
+          },
+          "policy": {
+            "$ref": "#/components/schemas/EnterprisePolicyData"
+          },
+          "updated_on": {
+            "title": "Updated On",
+            "type": "string",
+            "description": "Last-Updated Timestamp of Policy",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "description": "Creation Timestamp of Policy",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "is_active": {
+            "title": "Policy Active status",
+            "type": "boolean",
+            "description": "Is this policy currently active"
           }
         }
       },

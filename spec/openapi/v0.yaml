@@ -2574,6 +2574,942 @@
         "x-esper-noun": "command-history"
       }
     },
+    "/v0/enterprise/{enterprise_id}/geofence/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Geofence"
+        ],
+        "summary": "List Geofences in Enterprise",
+        "description": "API to view all the geofences in an enterprise",
+        "operationId": "getAllGeofences",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "A search term.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Geofence"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "geofence",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/geofence/{geofence_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Geofence"
+        ],
+        "summary": "Get geofence information",
+        "description": "Returns geofence instance",
+        "operationId": "getGeofence",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "geofence_id",
+            "in": "path",
+            "description": "A UUID string identifying the geofence.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Geofence"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "geofence"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Geofence"
+        ],
+        "summary": "Update geofence information",
+        "description": "Returns geofence instance",
+        "operationId": "updateGeofence",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "geofence_id",
+            "in": "path",
+            "description": "A UUID string identifying the geofence.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GeofenceReplace"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Geofence"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "geofence"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Geofence"
+        ],
+        "summary": "Delete a geofence",
+        "description": "Empty response",
+        "operationId": "deleteGeofence",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "geofence_id",
+            "in": "path",
+            "description": "A UUID string identifying the geofence.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "geofence"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Geofence"
+        ],
+        "summary": "Partially updates geofence information",
+        "description": "Returns geofence instance",
+        "operationId": "partialUpdateGeofence",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "geofence_id",
+            "in": "path",
+            "description": "A UUID string identifying the geofence.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GeofenceUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Geofence"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "partial-update",
+        "x-esper-noun": "geofence"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/create-apply-geo-fence/": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Geofence"
+        ],
+        "summary": "Create a geofence",
+        "description": "Returns Geofence instance",
+        "operationId": "createGeofence",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GeofenceCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Geofence"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "geofence",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Geofence"
+        ],
+        "summary": "List Geofences in Enterprise",
+        "description": "API to view all the geofences in an enterprise",
+        "operationId": "getGeofenceList",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "A search term.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Geofence"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "geofence",
+        "x-esper-alias-of": "getAllGeofences",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/create-apply-geofence/{geofence_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Geofence"
+        ],
+        "summary": "Get geofence information",
+        "description": "Returns geofence instance",
+        "operationId": "getTheGeofence",
+        "parameters": [
+          {
+            "name": "geofence_id",
+            "in": "path",
+            "description": "A UUID string identifying the geofence.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Geofence"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "geofence",
+        "x-esper-alias-of": "getGeofence"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Geofence"
+        ],
+        "summary": "Delete a geofence",
+        "description": "Empty response",
+        "operationId": "deleteTheGeofence",
+        "parameters": [
+          {
+            "name": "geofence_id",
+            "in": "path",
+            "description": "A UUID string identifying the geofence.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeofenceErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "geofence",
+        "x-esper-alias-of": "deleteGeofence"
+      }
+    },
     "/device/v0/devices/{id}/": {
       "get": {
         "security": [
@@ -7315,6 +8251,334 @@
           100,
           200
         ]
+      },
+      "GeofenceCreate": {
+        "required": [
+          "name",
+          "latitude",
+          "longitude",
+          "devices"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Geofence name",
+            "type": "string",
+            "description": "Name of the geofence"
+          },
+          "description": {
+            "title": "Geofence description",
+            "type": "string",
+            "description": "A description about the geofence"
+          },
+          "latitude": {
+            "title": "Geofence latitude",
+            "type": "string",
+            "description": "Latitude corresponding to the geofence",
+            "format": "decimal"
+          },
+          "longitude": {
+            "title": "Geofence longitude",
+            "type": "string",
+            "description": "Longitude corresponding to the geofence",
+            "format": "decimal"
+          },
+          "radius": {
+            "title": "Geofence radius",
+            "type": "number",
+            "description": "The radius within which the geofence should be applied"
+          },
+          "radius_unit": {
+            "title": "Unit of radius",
+            "type": "string",
+            "description": "The unit in which the radius is taken, eg - kilometers, meters etc",
+            "enum": [
+              "KILOMETERS",
+              "METERS",
+              "MILES"
+            ]
+          },
+          "device_actions": {
+            "title": "Device Actions",
+            "type": "array",
+            "description": "The actions to be performed on the device",
+            "items": {
+              "type": "string",
+              "enum": [
+                "LOCK_DOWN",
+                "BEEP"
+              ]
+            }
+          },
+          "devices": {
+            "title": "List of device ids",
+            "type": "array",
+            "description": "List of ids of devices on which the geofence is to be applied",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "GeofenceUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Geofence name",
+            "type": "string",
+            "description": "Name of the geofence"
+          },
+          "description": {
+            "title": "Geofence description",
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A description about the geofence"
+          },
+          "latitude": {
+            "title": "Geofence latitude",
+            "type": "string",
+            "description": "Latitude corresponding to the geofence",
+            "format": "decimal"
+          },
+          "longitude": {
+            "title": "Geofence longitude",
+            "type": "string",
+            "description": "Longitude corresponding to the geofence",
+            "format": "decimal"
+          },
+          "radius": {
+            "title": "Geofence radius",
+            "type": "number",
+            "description": "The radius within which the geofence should be applied"
+          },
+          "radius_unit": {
+            "title": "Unit of radius",
+            "type": "string",
+            "description": "The unit in which the radius is taken, eg - kilometers, meters etc",
+            "enum": [
+              "KILOMETERS",
+              "METERS",
+              "MILES"
+            ]
+          },
+          "device_actions": {
+            "title": "Device Actions",
+            "type": "array",
+            "description": "The actions to be performed on the device",
+            "items": {
+              "type": "string",
+              "enum": [
+                "LOCK_DOWN",
+                "BEEP"
+              ]
+            }
+          }
+        }
+      },
+      "GeofenceReplace": {
+        "required": [
+          "name",
+          "latitude",
+          "longitude"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Geofence name",
+            "type": "string",
+            "description": "Name of the geofence"
+          },
+          "description": {
+            "title": "Geofence description",
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A description about the geofence"
+          },
+          "latitude": {
+            "title": "Geofence latitude",
+            "type": "string",
+            "description": "Latitude corresponding to the geofence",
+            "format": "decimal"
+          },
+          "longitude": {
+            "title": "Geofence longitude",
+            "type": "string",
+            "description": "Longitude corresponding to the geofence",
+            "format": "decimal"
+          },
+          "radius": {
+            "title": "Geofence radius",
+            "type": "number",
+            "description": "The radius within which the geofence should be applied"
+          },
+          "radius_unit": {
+            "title": "Unit of radius",
+            "type": "string",
+            "description": "The unit in which the radius is taken, eg - kilometers, meters etc",
+            "enum": [
+              "KILOMETERS",
+              "METERS",
+              "MILES"
+            ]
+          },
+          "device_actions": {
+            "title": "Device Actions",
+            "type": "array",
+            "description": "The actions to be performed on the device",
+            "items": {
+              "type": "string",
+              "enum": [
+                "LOCK_DOWN",
+                "BEEP"
+              ]
+            }
+          }
+        }
+      },
+      "GeofenceErrorResponse": {
+        "required": [
+          "errors",
+          "message",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "errors": {
+            "title": "Messages describing the error",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "title": "Message describing the error",
+            "type": "string"
+          },
+          "status": {
+            "title": "alias name",
+            "type": "integer"
+          }
+        }
+      },
+      "Geofence": {
+        "required": [
+          "id",
+          "name",
+          "description",
+          "enterprise",
+          "latitude",
+          "longitude",
+          "radius",
+          "radius_unit",
+          "device_actions",
+          "device_count",
+          "created_by",
+          "created_on",
+          "updated_on"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Geofence id",
+            "type": "string",
+            "description": "id of the geofence",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Geofence name",
+            "type": "string",
+            "description": "Name of the geofence"
+          },
+          "description": {
+            "title": "Geofence description",
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A description about the geofence"
+          },
+          "enterprise": {
+            "title": "Enterprise id",
+            "type": "string",
+            "description": "id of the enterprise resource",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "latitude": {
+            "title": "Geofence latitude",
+            "type": "string",
+            "description": "Latitude corresponding to the geofence",
+            "format": "decimal"
+          },
+          "longitude": {
+            "title": "Geofence longitude",
+            "type": "string",
+            "description": "Longitude corresponding to the geofence",
+            "format": "decimal"
+          },
+          "radius": {
+            "title": "Geofence radius",
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "The radius within which the geofence should be applied"
+          },
+          "radius_unit": {
+            "title": "Unit of radius",
+            "type": "string",
+            "description": "The unit in which the radius is taken, eg - kilometers, meters etc",
+            "enum": [
+              "KILOMETERS",
+              "METERS",
+              "MILES"
+            ]
+          },
+          "device_actions": {
+            "title": "Device Actions",
+            "type": "array",
+            "description": "The actions to be performed on the device",
+            "items": {
+              "type": "string",
+              "enum": [
+                "LOCK_DOWN",
+                "BEEP"
+              ]
+            }
+          },
+          "device_count": {
+            "title": "Device count",
+            "type": "integer",
+            "description": "Number of devices",
+            "readOnly": true
+          },
+          "created_by": {
+            "title": "Created by",
+            "type": "string",
+            "description": "The user who created the geofence",
+            "readOnly": true
+          },
+          "created_on": {
+            "title": "Creation date and time",
+            "type": "string",
+            "description": "Date and time of when the geofence was created",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_on": {
+            "title": "Updation date and time",
+            "type": "string",
+            "description": "Date and time of when the geofence was updated",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
       },
       "V0CommandStatus": {
         "type": "object",

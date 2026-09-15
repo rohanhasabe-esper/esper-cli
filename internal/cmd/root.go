@@ -7,6 +7,7 @@ import (
 	"github.com/esper-io/esper-cli/internal/cmd/approval"
 	"github.com/esper-io/esper-cli/internal/cmd/configure"
 	contextcmd "github.com/esper-io/esper-cli/internal/cmd/context"
+	"github.com/esper-io/esper-cli/internal/cmd/discover"
 	"github.com/esper-io/esper-cli/internal/cmd/generated"
 	"github.com/esper-io/esper-cli/internal/cmd/secureadb"
 	esperruntime "github.com/esper-io/esper-cli/internal/runtime"
@@ -33,9 +34,10 @@ func NewRootCommand() *cobra.Command {
 	flags.StringVar(&options.Environment, "environment", "", "Esper environment (overrides ESPER_ENVIRONMENT)")
 	flags.StringVar(&options.APIKey, "api-key", "", "Esper API key (overrides ESPER_API_KEY)")
 	generated.AddCommands(command, options)
-	command.AddCommand(approval.NewCommand(options))
 	command.AddCommand(configure.NewCommand(options))
 	command.AddCommand(contextcmd.NewCommand(options))
+	command.AddCommand(approval.NewCommand(options))
+	command.AddCommand(discover.NewCommand(options))
 	command.AddCommand(secureadb.NewCommand(options))
 	addVersionCommand(command, options)
 	for _, child := range command.Commands() {

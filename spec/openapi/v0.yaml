@@ -1024,6 +1024,1054 @@
         "x-esper-scope-parent": "product"
       }
     },
+    "/v0/enterprise/{enterprise_id}/command/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Legacy",
+            "color": "orange"
+          }
+        ],
+        "tags": [
+          "0_Commands V2"
+        ],
+        "summary": "List command requests",
+        "description": "API to get and filter command requests",
+        "operationId": "listCommandRequest",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "ID of the enterprise",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "command_type",
+            "in": "query",
+            "description": "Filter by type of command request i.e device, group etc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "devices",
+            "in": "query",
+            "description": "Filter by device IDs. Accepts comma separated values.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "device_type",
+            "in": "query",
+            "description": "Filter by device type i.e active, inactive etc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "command",
+            "in": "query",
+            "description": "Filter by command name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "issued_by",
+            "in": "query",
+            "description": "Filter by user. Accepts user id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "on successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "next": {
+                      "type": "string",
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": "string",
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/V0CommandRequest"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "command",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Legacy",
+            "color": "orange"
+          }
+        ],
+        "tags": [
+          "0_Commands V2"
+        ],
+        "summary": "Create a command request",
+        "description": "API to create a command request for the device.",
+        "operationId": "createCommand",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "ID of the enterprise",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The request body to create a command for set of devices or groups",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/V0CommandRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "command request successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V0CommandRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "request",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "command",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/command/{request_id}/status/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Legacy",
+            "color": "orange"
+          }
+        ],
+        "tags": [
+          "0_Commands V2"
+        ],
+        "summary": "get status list for command request",
+        "description": "API to get and filter command request status",
+        "operationId": "getCommandRequestStatus",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "ID of the enterprise",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "request_id",
+            "in": "path",
+            "description": "ID for the command request",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "device",
+            "in": "query",
+            "description": "Filter status result by device id.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Filter by command state",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "on successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "next": {
+                      "type": "string",
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": "string",
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/V0CommandStatus1"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "get",
+        "x-esper-noun": "status"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/device/{device_id}/command-history/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Commands V2"
+        ],
+        "summary": "get command history for device",
+        "description": "API to get and filter deivce command history",
+        "operationId": "getDeviceCommandHistory",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "Id of the enterprise",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "device_id",
+            "in": "path",
+            "description": "Id for the command request",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Filter by command state",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "on successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "next": {
+                      "type": "string",
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": "string",
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/V0CommandStatus"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "get",
+        "x-esper-noun": "command-history"
+      }
+    },
+    "/v0/operations/": {
+      "get": {
+        "summary": "Get all Operations in the Tenant",
+        "operationId": "getOperationsList",
+        "tags": [
+          "3_Operations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Following are the Operation States and their corresponding integer values\n```\nOPERATION_CREATED      = 10\nOPERATION_RESOLVING    = 20\nOPERATION_RESOLVED     = 30\nOPERATION_DISPATCHING  = 40\nOPERATION_DISPATCHED   = 50\nOPERATION_PROCESSING   = 60\nOPERATION_COMPLETED    = 70\nOPERATION_SUCCESS      = 80\nOPERATION_FAILURE      = 90\nOPERATION_SCHEDULED    = 100\nOPERATION_CANCELLED    = 110\nOPERATION_TIMEOUT      = 120\n```\n"
+          },
+          {
+            "in": "query",
+            "name": "ordering",
+            "description": "Field to order the results by. Prefix with '-' to reverse the order.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "state",
+                "updated_at"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "operation_type",
+            "description": "Filter operations by type (e.g., INSTALL, UNINSTALL, CONVERGE, INSTALL_APP, UNINSTALL_APP, REBOOT)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "group_multi",
+            "description": "Filter by multiple group ID. Fetch the devices from groups matching with the IDs and its subgroup.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-scope": [
+          "read:operation"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operations information for the Tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/OperationWithStats"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "operation-list"
+      },
+      "post": {
+        "summary": "Create a new Operation",
+        "operationId": "createOperation",
+        "tags": [
+          "3_Operations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Operations_POST"
+              },
+              "examples": {
+                "devices": {
+                  "$ref": "#/components/examples/example_devices"
+                },
+                "filters": {
+                  "$ref": "#/components/examples/example_filters"
+                }
+              }
+            }
+          }
+        },
+        "x-scope": [
+          "create:operation:CONVERGE"
+        ],
+        "responses": {
+          "201": {
+            "description": "Operation information for the Tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/OperationWithStats"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "operation"
+      }
+    },
+    "/v0/operations/{operationId}/": {
+      "get": {
+        "summary": "Get specific Operation details (Operation Status)",
+        "operationId": "getOperation",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "tags": [
+          "3_Operations"
+        ],
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "description": "ID of the Operation",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-scope": [
+          "read:operation"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation information for the Tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/OperationWithStats"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "operation"
+      },
+      "put": {
+        "summary": "Update the operation (Support status update as of now)",
+        "description": "This API allows updating the status of a specific operation by providing the operation ID.",
+        "tags": [
+          "3_Operations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the operation to update (Put created operationId here)",
+            "schema": {
+              "type": "string",
+              "example": "5743470f-7dcc-4a92-8a4b-f41b1cea69ed"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "CANCELLED"
+                    ],
+                    "description": "The new status of the operation"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "description": "Reason for cancelling the operation"
+                  }
+                },
+                "required": [
+                  "state",
+                  "reason"
+                ]
+              },
+              "examples": {
+                "example-1": {
+                  "summary": "Update status to CANCELLED",
+                  "value": {
+                    "state": "CANCELLED",
+                    "reason": "User requested"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-scope": [
+          "update:operation"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation status updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "operationId": {
+                      "type": "string",
+                      "description": "The ID of the updated operation"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The updated status of the operation"
+                    }
+                  }
+                },
+                "example": {
+                  "operationId": "12345",
+                  "status": "SUCCEEDED"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "operation"
+      }
+    },
+    "/v0/devices/{deviceId}/operations/": {
+      "get": {
+        "summary": "Get a Operations for a device",
+        "tags": [
+          "3_DeviceOperations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "ID of the Device",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "17d384d3-29bd-4dd4-af64-d02b9d6d54ee"
+          }
+        ],
+        "x-scope": [
+          "read:device:operations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operations information for the Device",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "previous": {
+                      "type": "string"
+                    },
+                    "next": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/OperationWithStats"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "operation",
+        "x-esper-scope-parent": "device"
+      }
+    },
+    "/v0/operations/{operationsId}/devices/{deviceId}/": {
+      "get": {
+        "summary": "Get a specific DeviceOperations for a specific Operation (Device Operation Status)",
+        "operationId": "getDeviceOperation",
+        "tags": [
+          "3_DeviceOperations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operationsId",
+            "in": "path",
+            "description": "ID of the Operation",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "5743470f-7dcc-4a92-8a4b-f41b1cea69ed"
+            }
+          },
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "ID of the Device",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "17d384d3-29bd-4dd4-af64-d02b9d6d54ee"
+            }
+          }
+        ],
+        "x-scope": [
+          "read:operation:devices"
+        ],
+        "responses": {
+          "200": {
+            "description": "Device Operation information for the Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/DeviceOperationWithStats"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "device-operation"
+      },
+      "put": {
+        "summary": "Update a specific DeviceOperation for a specific Operation",
+        "operationId": "updateDeviceOperation",
+        "tags": [
+          "3_DeviceOperations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operationsId",
+            "in": "path",
+            "description": "ID of the Operation",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "0aae03d2-32b4-4cab-b733-6919b84bb2ac"
+            }
+          },
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "ID of the Device",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            }
+          }
+        ],
+        "x-scope": [
+          "update:operation"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "operation_type": {
+                    "type": "string",
+                    "deprecated": true,
+                    "example": "CONVERGE"
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "CANCELLATION_REQUESTED"
+                    ],
+                    "example": "SUCCESS"
+                  },
+                  "service_id": {
+                    "type": "string",
+                    "example": "drift-service"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "example": "test"
+                  }
+                },
+                "required": [
+                  "state"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Device Operation updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/DeviceOperationWithStats"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "device-operation"
+      }
+    },
     "/apps/v0/vpp": {
       "get": {
         "security": [
@@ -1184,6 +2232,714 @@
         "x-esper-pagination": "none",
         "x-esper-verb": "get",
         "x-esper-noun": "app-vpp"
+      }
+    },
+    "/commands/v0/commands/": {
+      "get": {
+        "summary": "List command requests",
+        "description": "API to get and filter command requests",
+        "operationId": "listCommandRequests",
+        "tags": [
+          "5_Command Request"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "devices",
+            "description": "Filter by device IDs. Accepts comma separated values.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "groups",
+            "description": "Filter by group IDs. Accepts comma separated values.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "command",
+            "description": "Filter by command name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "schedule",
+            "description": "Filter by schedule type",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "IMMEDIATE",
+                "WINDOW",
+                "RECURRING"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "exclude_internal_commands",
+            "description": "Filter to exclude internal commands",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Command request list for the Tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CommandRequest"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "command-request"
+      },
+      "post": {
+        "summary": "Create a command request",
+        "description": "API to create a command request for a set of devices or groups. Works for mixed-fleet devices (Android, iOS, etc.) if the command is supported.\n\nYou can send the command immediately or [schedule command](https://help.esper.io/hc/en-us/articles/16693582666769-Scheduling-API-Commands) for supported devices.\n\nScheduled commands are currently compatible with Android devices.",
+        "operationId": "createCommandRequest",
+        "tags": [
+          "5_Command Request"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandRequest_POST"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Command request successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/CommandRequest"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "command-request"
+      }
+    },
+    "/commands/v0/commands/{id}/": {
+      "get": {
+        "summary": "Get a command request",
+        "description": "API to get a command request",
+        "operationId": "getCommandRequest",
+        "tags": [
+          "5_Command Request"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the command request object",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Command request information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/CommandRequest"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "command-request"
+      }
+    },
+    "/commands/v0/commands/{id}/stats/": {
+      "get": {
+        "summary": "Get stats of a command request",
+        "description": "API to get a aggregrated status for a command request",
+        "operationId": "getCommandRequestStats",
+        "tags": [
+          "5_Command Request"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the command request object",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Aggregrated status information for a command request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/CommandRequestStats"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "stat",
+        "x-esper-scope-parent": "command"
+      }
+    },
+    "/commands/v0/status/": {
+      "get": {
+        "summary": "Get status list for command request",
+        "description": "API to get and filter command request status",
+        "operationId": "getCommandRequestStatuses",
+        "tags": [
+          "5_Command Status"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "request",
+            "description": "Filter status result by command request IDs. Accepts comma separated values.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "device",
+            "description": "Filter status result by device IDs. Accepts comma separated values.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "description": "Filter by command state",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Command Queued",
+                "Command Initiated",
+                "Command Acknowledged",
+                "Command In Progress",
+                "Command TimeOut",
+                "Command Success",
+                "Command Failure",
+                "Command Scheduled",
+                "Command Cancelled"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "exclude_internal_commands",
+            "description": "Filter to exclude internal commands",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status list for a command request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CommandStatus"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-require-one-of": [
+          "request",
+          "device"
+        ],
+        "x-esper-verb": "list",
+        "x-esper-noun": "command-request-status"
+      }
+    },
+    "/commands/v0/status/{id}/": {
+      "get": {
+        "summary": "Get a command status",
+        "description": "API to get a command status",
+        "operationId": "getCommandStatus",
+        "tags": [
+          "5_Command Status"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the command status object",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Command status information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/CommandStatus"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "command-status"
+      },
+      "put": {
+        "summary": "Update command status",
+        "description": "API to update a command status state",
+        "operationId": "updateCommandStatus",
+        "tags": [
+          "5_Command Status"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the command status object",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandStatus_PUT"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Command status successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/CommandStatus"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "command-status"
       }
     },
     "/tenant/v0/apnscertificates/": {
@@ -1733,6 +3489,578 @@
           }
         }
       },
+      "CommandStatus_PUT": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "Command state to update",
+            "enum": [
+              "Command Acknowledged",
+              "Command In Progress",
+              "Command TimeOut",
+              "Command Success",
+              "Command Failure",
+              "Command Scheduled",
+              "Command Cancelled"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "description": "State change reason to update"
+          }
+        }
+      },
+      "CommandStatus": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique command identifier",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "request": {
+            "title": "Request Id",
+            "type": "string",
+            "description": "Request Id associated with this command",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "device": {
+            "title": "Device",
+            "type": "string",
+            "description": "Device associated with this command",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "state": {
+            "type": "string",
+            "description": "Current state of the command",
+            "enum": [
+              "Command Queued",
+              "Command Initiated",
+              "Command Acknowledged",
+              "Command In Progress",
+              "Command TimeOut",
+              "Command Success",
+              "Command Failure",
+              "Command Scheduled",
+              "Command Cancelled"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "description": "details briefing the reason for current command state"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Timestamp of command creation",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Last updated timestamp of command",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "CommandRequestStats": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "status": {
+            "type": "array",
+            "description": "List of each command status associated to its count.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "type": "string",
+                  "description": "State of the command",
+                  "enum": [
+                    "Command Queued",
+                    "Command Initiated",
+                    "Command Acknowledged",
+                    "Command In Progress",
+                    "Command TimeOut",
+                    "Command Success",
+                    "Command Failure",
+                    "Command Scheduled",
+                    "Command Cancelled"
+                  ]
+                },
+                "total": {
+                  "type": "number",
+                  "description": "Count of the devices that are in the corresponding command state"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CommandRequest_POST": {
+        "type": "object",
+        "properties": {
+          "command_type": {
+            "type": "string",
+            "description": "Identifies the type of command\n\n```\n* DEVICE: command request is meant for devices\n* GROUP: command request is meant for groups\n* DYNAMIC: command request is meant for dynamic set of devices\n  i.e subset of devices from different groups or otherwise.\n```\n",
+            "enum": [
+              "DEVICE",
+              "GROUP",
+              "DYNAMIC"
+            ]
+          },
+          "alias": {
+            "type": "string",
+            "description": "Another name for the command, provided by the user or Console."
+          },
+          "devices": {
+            "maxItems": 1000,
+            "minItems": 0,
+            "type": "array",
+            "description": "List of devices to run commands. Required if command_type is 'DEVICE' or 'DYNAMIC'",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "groups": {
+            "maxItems": 500,
+            "minItems": 0,
+            "type": "array",
+            "description": "List of groups to run commands. Required if command_type is 'GROUP' or 'DYNAMIC'",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "device_type": {
+            "type": "string",
+            "description": "Filtering by device_type is currently not supported. Please specify 'all'.",
+            "enum": [
+              "all"
+            ]
+          },
+          "command": {
+            "$ref": "#/components/schemas/DeviceCommandEnum"
+          },
+          "command_args": {
+            "$ref": "#/components/schemas/CommandArgs"
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/CommandScheduleEnum"
+          },
+          "schedule_args": {
+            "$ref": "#/components/schemas/CommandScheduleArgs"
+          }
+        }
+      },
+      "CommandScheduleArgs": {
+        "title": "Command Schedule Arguments",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "start_datetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_datetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "time_type": {
+            "$ref": "#/components/schemas/CommandScheduleArgsTimeTypeEnum"
+          },
+          "window_start_time": {
+            "type": "string"
+          },
+          "window_end_time": {
+            "type": "string"
+          },
+          "days": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CommandScheduleArgsTimeTypeEnum": {
+        "type": "string",
+        "description": "The Time-Type argument, in Schedule args, is to indicate which timezone the Command Framework should utilize when scheduling the command.\nFollowing Schedule Args for Time-Type are supported:\n```\n* CONSOLE: Use the local timezone of the user creating the schedule.\n* DEVICE: Use the local timezone of the device, to which the command is issued, wherever it may be.\n```\n",
+        "enum": [
+          "console",
+          "device"
+        ]
+      },
+      "CommandScheduleEnum": {
+        "type": "string",
+        "description": "Following Schedule types are supported\n```\n* IMMEDIATE: Schedule the command to execcute Immediately\n* WINDOW: Schedule the command to execute within the given window\n* RECURRING: Schedule the command to execute during the scheduled time until it succeeds or expires. After executing successfully, it will not fire again.\n```\n",
+        "enum": [
+          "IMMEDIATE",
+          "WINDOW",
+          "RECURRING"
+        ]
+      },
+      "CommandArgs": {
+        "title": "Command args",
+        "type": "object",
+        "properties": {
+          "device_alias_name": {
+            "type": "string",
+            "description": "Alternate human-readable name for your Device"
+          },
+          "custom_settings_config": {
+            "type": "object",
+            "properties": {},
+            "description": "Managed configurations for your device (passed as JSON object)"
+          },
+          "app_version": {
+            "type": "string",
+            "description": "The version id of app uploaded on Esper"
+          },
+          "package_name": {
+            "type": "string",
+            "description": "The app package name uploaded on Esper"
+          },
+          "policy_url": {
+            "type": "string",
+            "description": "The URL to the policy"
+          },
+          "wifi_access_points": {
+            "type": "object",
+            "properties": {},
+            "description": "Wifi access points for the device (passed as JSON object)"
+          },
+          "state": {
+            "type": "string",
+            "description": "LOCKED/UNLOCKED"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message to be added with command to notify device."
+          },
+          "title": {
+            "type": "string",
+            "description": "Message title  to be added with command to notify device."
+          },
+          "url": {
+            "type": "string",
+            "description": "(Optional) Link to notify device."
+          },
+          "app_state": {
+            "type": "string",
+            "description": "The state of app - SHOW/HIDE/DISABLE/LAUNCHABLE_BUT_HIDDEN"
+          },
+          "bluetooth_state": {
+            "type": "boolean",
+            "description": "The state of bluetooth - ON/OFF"
+          },
+          "brightness_value": {
+            "type": "integer",
+            "description": "The brightness value of a device(1-100)"
+          },
+          "gps_state": {
+            "type": "integer",
+            "description": "The GPS state of a device. Should be either 0, 1, 2, 3 or 4 (LOCATION_MODE_HIGH_ACCURACY = 0, LOCATION_MODE_SENSORS_ONLY = 1, LOCATION_MODE_BATTERY_SAVING = 2, LOCATION_MODE_OFF = 3, LOCATION_MODE_ON = 4)"
+          },
+          "rotate_state": {
+            "type": "integer",
+            "description": "The screen orientation of a device. Should be either 0, 1 or 2 (0 = AUTO, 1 = PORTRAIT_ONLY, 2 = LANDSCAPE_ONLY)"
+          },
+          "screen_off_timeout": {
+            "type": "integer",
+            "description": "The value for screen timeout of a device. Should be either -1 or between 5000 and 1800000"
+          },
+          "stream": {
+            "type": "integer",
+            "description": "The value of the volume stream. Should be either 0(Ring), 1(Notification), 2(Alarm) or 3(Music)"
+          },
+          "volume_level": {
+            "type": "integer",
+            "description": "The level of volume. Should be a value from 0 to 100"
+          },
+          "timezone_string": {
+            "type": "integer",
+            "description": "The timezone of a device. Should be a valid timezone string"
+          },
+          "wifi_state": {
+            "type": "boolean",
+            "description": "The state of WIFI - ON/OFF"
+          },
+          "wifi_revert_timeout": {
+            "type": "integer",
+            "description": "The WIFI revert timeout. Should be greater than or equal to 1"
+          },
+          "locale": {
+            "type": "string",
+            "description": "Language and country code in xx[_Zzzz]_yy where xx is language code, Zzzz is script (optional) and yy is country code."
+          },
+          "ethernet_auth_mode": {
+            "type": "string",
+            "description": "Chosen mode of authentication",
+            "enum": [
+              "NONE",
+              "EAP_TLS"
+            ]
+          },
+          "ethernet_ca_cert_alias": {
+            "type": "string",
+            "description": "CA certificate alias. It is mandatory with Auth Mode EAP_TLS"
+          },
+          "ethernet_client_cert_alias": {
+            "type": "string",
+            "description": "Client certificate alias. It is mandatory with Auth Mode EAP_TLS"
+          },
+          "ethernet_eap_identity": {
+            "type": "string",
+            "description": "EAP identity"
+          },
+          "interface": {
+            "type": "string",
+            "description": "The network interface of the device - wlan/eth"
+          },
+          "dhcp_enabled": {
+            "type": "string",
+            "description": "The dhcp state on the device - true/false"
+          },
+          "static_ip": {
+            "type": "string",
+            "description": "The static ip to set on the device. Should be a valid ipv4"
+          },
+          "primary_dns": {
+            "type": "string",
+            "description": "The primary dns to set on the device. Should be a valid ipv4"
+          },
+          "subnet_mask": {
+            "type": "string",
+            "description": "The subnet mask set on the device. Should between 1-32 both inclusive"
+          },
+          "secondary_dns": {
+            "type": "string",
+            "description": "The secondary dns to set on the device. Should be a valid ipv4"
+          },
+          "gateway": {
+            "type": "string",
+            "description": "The gateway to set on the device. Should be a valid ipv4"
+          },
+          "duration": {
+            "type": "string",
+            "description": "The beep duration specified in seconds. Value must be between 10 and 300, both inclusive."
+          },
+          "video_quality": {
+            "type": "string",
+            "default": "HIGH",
+            "description": "The video quality of the respective Remote Viewer session. Options are \"LOW\", \"MEDIUM\" and \"HIGH\"."
+          },
+          "enable_debug_mode": {
+            "type": "boolean",
+            "default": false,
+            "description": "The flag to determine whether device must go into Debug Mode, in order to retreive bug report when the device is already in Kiosk Mode."
+          },
+          "app_id": {
+            "type": "string",
+            "description": "The unique identifier for VPP application in Apple’s ecosystem"
+          },
+          "bundle_identifier": {
+            "type": "string",
+            "description": "The unique identifier for an application in Apple’s ecosystem"
+          },
+          "managed_only": {
+            "type": "boolean",
+            "description": "If true, list outs only the profiles that was installed via MDM."
+          },
+          "profile_identifier": {
+            "type": "string",
+            "description": "The identifier of the profile to remove."
+          },
+          "profile": {
+            "type": "string",
+            "description": "Base 64 encoded profile plist to be installed on the device."
+          },
+          "is_converge": {
+            "type": "boolean",
+            "description": "This value indicates that the command belongs to a converge action."
+          },
+          "script": {
+            "type": "string",
+            "description": "A complete shell script to execute on Linux or Windows devices."
+          },
+          "interpreter": {
+            "type": "string",
+            "description": "Type of interpreter to use for executing the script. e.g. For Linux use bash, zsh, or sh. For Windows use powershell. This field is mandatory."
+          },
+          "execute_as": {
+            "type": "string",
+            "description": "User to execute the script as root or Esper (default user) - Optional, default is Esper if not specified. Supports Linux devices."
+          },
+          "cert_file_type": {
+            "type": "string",
+            "description": "Certificate file type. Currently file type of \"pkcs12\" is supported"
+          },
+          "cert_data_base64": {
+            "type": "string",
+            "description": "Base64 encoded content of the certificate file"
+          },
+          "cert_alias_name": {
+            "type": "string",
+            "description": "Alias name of the certificate to be used during installation or uninstallation"
+          },
+          "cert_storage_type": {
+            "type": "string",
+            "description": "Refers to the keystore type to be used for certificate installation or uninstallation. Currently storage type of \"system\" is supported"
+          },
+          "cert_password": {
+            "type": "string",
+            "description": "Provides the password if the pkcs12 file is password protected - Optional"
+          },
+          "is_factory_reset": {
+            "type": "boolean",
+            "description": "If true, performs factory reset and unenrolls the device. If false, only unenrolls the device without wiping data. Required for WIPE command on Windows devices."
+          }
+        }
+      },
+      "DeviceCommandEnum": {
+        "type": "string",
+        "description": "Following commands are supported\n```\n* ADD_TO_WHITELIST: Whitelist an installed sytem app. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* ADD_WIFI_AP : Add wifi access points for device. Requires `wifi_access_points` in command arguments where `wifi_access_points` is the data with access points\n* APPLY_APP_CONFIG : Apply app configuration for an installed app.\n* CLEAR_APP_DATA : Clear data for an installed app. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* CONVERGE: Converge command for Blueprint\n* INSTALL: Install an app on a device. Requires `app_version` in command arguments where `app_version` is the version id of app uploaded on Esper\n* INSTALL_CERTIFICATE: Install a certificate chain in the system keystore of an android device. Requires `cert_file_type`, `cert_data_base64`, `cert_alias_name` and `cert_storage_type` in command arguments where `cert_file_type` must be set to \"pkcs12\", `cert_data_base64` contains the base64 encoded content of the pkcs12 file, `cert_alias_name` is the alias name with which the certificate chain is supposed to be installed and `cert_storage_type` must be set to \"system\". If the pkcs12 file is password protected, the password should be specified in the optional parameter `cert_password`.\n* LOCK: Lock device screen, Supports Android, iOS and Windows devices.\n* REBOOT: Reboot a device. Supports Android, iOS, and Windows devices.\n* REMOVE_FROM_WHITELIST : Remove an installed system app from whitelist. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* REMOVE_WIFI_AP : Remove Wifi access points for device. Requires `wifi_access_points` in command arguments where `wifi_access_points` is the data with access points\n* SET_APP_PERMISSION : Set permission for an installed app. Requires `package_name`, `grant_state`, `permission` in command arguments where `package_name` is the app package uploaded on Esper, `grant_state` should be \"PERMISSION_GRANT_STATE_DEFAULT\", \"PERMISSION_GRANT_STATE_DENIED\", \"PERMISSION_GRANT_STATE_GRANTED\" and `permission` is a valid permission\n* SET_APP_STATE : Set the state of an app - SHOW/HIDE/DISABLE/LAUNCHABLE_BUT_HIDDEN. Requries `app_state` and `package_name` in command arguments where `app_state` is the state of app and `package_name` is the app package uploaded on Esper For LAUNCHABLE_BUT_HIDDEN: Hide an app on the home screen but allow it to be launched from other apps. Requires Esper agent 8.5+ and `package_name`. \n* SET_BLUETOOTH_STATE : Set bluetooth state (ON/OFF) for device. Requires `bluetooth_state` in command arguments where `bluetooth_state` is a boolean.\n* SET_BRIGHTNESS_SCALE : Set brightness for device. Requires `brightness_value` in command arguments where `brightness_value` is an integer (1-100).\n* SET_DEVICE_LOCKDOWN_STATE : Set lockdown state for a device. Requires `state` and `message` in command arguments where `state` is LOCKED/UNLOCKED and `message` is the message to be added with command\n* SET_GPS_STATE :Set the GPS state for a device. Requires `gps_state` in command arguments where `gps_state` should be either 0, 1, 2, 3 or 4 (LOCATION_MODE_HIGH_ACCURACY = 0, LOCATION_MODE_SENSORS_ONLY = 1, LOCATION_MODE_BATTERY_SAVING = 2, LOCATION_MODE_OFF = 3, LOCATION_MODE_ON = 4)\n* SET_KIOSK_APP : Command to set the Kiosk app for a device. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n\n* SET_MULTI_APP_MODE : Command to set the device back to multi app mode.\n* SET_NEW_POLICY : Apply policy on device. Requires `policy_url` in command arguments where `policy_url` is the URL to the policy\n* SET_ROTATION_STATE : Set screen orientation. Requires `rotate_state` in command arguments where `rotate_state` should be either 0, 1 or 2 (0 = AUTO, 1 = PORTRAIT_ONLY, 2 = LANDSCAPE_ONLY)\n* SET_SCREEN_OFF_TIMEOUT: Set screen off timeout for a device. Requires `screen_off_timeout` in command arguments where `screen_off_timeout` should be either -1 or between 5000 and 1800000\n* SET_STREAM_VOLUME : Set strema volume for a device. Requires `stream` and `volume_level` in command arguments where `stream` should be either 0(Ring), 1(Notification), 2(Alarm) or 3(Music) and `volume_level` should be a value from 0 to 100\n* SET_TIMEZONE : Set the timezone for a device. Requires `timezone_string` in command arguments where `timezone_string` is a valid string representing the timezone\n* SET_WIFI_STATE : Set the wifi state (ON/OFF) for a device. Requires `wifi_state` in command arguments where `wifi_state` is a boolean.\n* UNINSTALL: Uninstall an app from device. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* UNINSTALL_CERTIFICATE: Uninstall a certificate from an android device's system keystore using the installed certificate's alias name. Requires `cert_alias_name` and `cert_storage_type` in command arguments where `cert_alias_name` is the alias name of the certificate to be uninstalled and `cert_storage_type` must be set to \"system\"\n* UPDATE_DEVICE_CONFIG: Push additional configurations to the Device\n* UPDATE_HEARTBEAT: Ping a device\n* UPDATE_LATEST_DPC : Prompt device to update the DPC app to the latest versions.\n* WIPE : Wipes the device.\n* RESET_LOCKSCREEN_PASSWORD: Change the lockscreen password of the device. Requires `new_lockscreen_password` in command arguments where `new_lockscreen_password` is a valid string.\n* UPDATE_BLUEPRINT: Pushes or reapplies the most current Blueprint version to the device or group.\n* NOTIFY_DEVICE: Allows you to  broadcast message to the device.\n* SET_DEVICE_LANGUAGE: Set language for a device. Requires locale value in xx[_Zzzz]_yy where xx is language code, Zzzz is script (optional) and yy is country code.\n* SET_ETHERNET_SETTINGS: Set ethernet settings on supported Device\n* SET_STATIC_IP: Set static ip on the deivce. Requires interface, dhcp_dnabled, static_ip, primary_dns, subnet_mask, gateway, secondary_dns (optional)\n* BEEP_DEVICE: Allows you to make the device beep for a specified duration\n* SET_APP_NOTIFICATIONS: Enable/disable app notifications. Requries `app_notifications_state` and `package_name` in command arguments where `app_notifications_state` is a string that has the value `ENABLED` or `DISABLED` and `package_name` is the app package uploaded on Esper.\n* USE_ONLY_SAVED_WIFI_AP: Allow/disallow device to connect to unregistered WiFi APs. Requires boolean `use_only_saved_ap`..\n* DEVICE_INFORMATION: Prompt device to update the device information\n* VPP_APP_INSTALL: Install a vpp app on an iOS device. Requires `app_id` and `bundle_identifier` in command arguments that corresponds to the associate vpp app\n* APPLE_APP_UNINSTALL: Uninstall an app on an iOS device. Requires `app_id` and `bundle_identifier` in command arguments that corresponds to the associated app\n* CLEAR_PASSCODE: Clear the passcode in a device\n* LIST_INSTALLED_PROFILES: Returns a list of all installed profiles on an iOS device.\n* INSTALL_PROFILE: Install a profile on an iOS device.\n* REMOVE_PROFILE: Remove a profile from an iOS device.\n* RUN_SHELL_SCRIPT: Run a shell script on a Linux or Windows device. Requires `script` and `interpreter` in command arguments.\n* RUN_CUSTOM_ACTION: Run a custom action (script) on a Linux device. Requires custom action parameters in command arguments.\n* COLLECT_LOGS: Collect and upload Esper agent logs from a Linux device.\n```\n",
+        "enum": [
+          "ADD_TO_WHITELIST",
+          "ADD_WIFI_AP",
+          "APPLY_APP_CONFIG",
+          "CLEAR_APP_DATA",
+          "CONVERGE",
+          "INSTALL",
+          "INSTALL_CERTIFICATE",
+          "LIST_INSTALLED_PROFILES",
+          "LOCK",
+          "REBOOT",
+          "REMOVE_FROM_WHITELIST",
+          "REMOVE_PROFILE",
+          "REMOVE_WIFI_AP",
+          "SET_APP_PERMISSION",
+          "SET_APP_STATE",
+          "SET_BLUETOOTH_STATE",
+          "SET_BRIGHTNESS_SCALE",
+          "SET_DEVICE_LOCKDOWN_STATE",
+          "SET_GPS_STATE",
+          "SET_KIOSK_APP",
+          "SET_MULTI_APP_MODE",
+          "SET_NEW_POLICY",
+          "SET_ROTATION_STATE",
+          "SET_SCREEN_OFF_TIMEOUT",
+          "SET_STREAM_VOLUME",
+          "SET_TIMEZONE",
+          "SET_WIFI_STATE",
+          "UNINSTALL",
+          "UNINSTALL_CERTIFICATE",
+          "UPDATE_DEVICE_CONFIG",
+          "UPDATE_HEARTBEAT",
+          "UPDATE_LATEST_DPC",
+          "WIPE",
+          "RESET_LOCKSCREEN_PASSWORD",
+          "UPDATE_BLUEPRINT",
+          "NOTIFY_DEVICE",
+          "SET_DEVICE_LANGUAGE",
+          "SET_ETHERNET_SETTINGS",
+          "SET_STATIC_IP",
+          "BEEP_DEVICE",
+          "SET_APP_NOTIFICATIONS",
+          "USE_ONLY_SAVED_WIFI_AP",
+          "DEVICE_INFORMATION",
+          "VPP_APP_INSTALL",
+          "APPLE_APP_UNINSTALL",
+          "CLEAR_PASSCODE",
+          "INSTALL_PROFILE",
+          "RUN_SHELL_SCRIPT",
+          "RUN_CUSTOM_ACTION",
+          "COLLECT_LOGS"
+        ]
+      },
+      "CommandRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique command request identifier",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "command_type": {
+            "type": "string",
+            "description": "Identifies the type of command\n\n```\n* DEVICE: command request is meant for devices\n* GROUP: command request is meant for groups\n* DYNAMIC: command request is meant for dynamic set of devices\n  i.e subset of devices from different groups or otherwise.\n```\n",
+            "enum": [
+              "DEVICE",
+              "GROUP",
+              "DYNAMIC"
+            ]
+          },
+          "devices": {
+            "maxItems": 1000,
+            "minItems": 0,
+            "type": "array",
+            "description": "list of devices to run commands",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "groups": {
+            "maxItems": 500,
+            "minItems": 0,
+            "type": "array",
+            "description": "list of groups to run commands",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "device_type": {
+            "type": "string",
+            "description": "Filtering by device_type is not supported currently and applies to 'all' devices. If 'active' or 'inactive' is specified, it will be ignored.",
+            "default": "active",
+            "enum": [
+              "active",
+              "inactive",
+              "all"
+            ]
+          },
+          "command": {
+            "$ref": "#/components/schemas/DeviceCommandEnum"
+          },
+          "command_args": {
+            "$ref": "#/components/schemas/CommandArgs"
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/CommandScheduleEnum"
+          },
+          "schedule_args": {
+            "$ref": "#/components/schemas/CommandScheduleArgs"
+          },
+          "reason": {
+            "type": "string",
+            "description": "details briefing the reason for current command request processing stage"
+          },
+          "created_by": {
+            "type": "string",
+            "description": "user id of the user",
+            "readOnly": true
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Timestamp of command request",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
       "VPPLicense": {
         "type": "object",
         "properties": {
@@ -1756,6 +4084,381 @@
           },
           "total_count": {
             "type": "integer"
+          }
+        }
+      },
+      "DeviceOperationWithStats": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "CREATED",
+              "INITIATED",
+              "SUCCEDED",
+              "FAILED"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "example": ""
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "device_operation_activity": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceOperationActivity"
+            }
+          }
+        }
+      },
+      "DeviceOperationActivity": {
+        "type": "object",
+        "properties": {
+          "device_operation_state": {
+            "type": "string",
+            "description": "The state of the device operation (e.g., queued, processing).",
+            "example": "CREATED"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The start time of the device operation state."
+          }
+        }
+      },
+      "Operations_POST": {
+        "type": "object",
+        "properties": {
+          "operation_type": {
+            "type": "string",
+            "description": "",
+            "enum": [
+              "CONVERGE",
+              "INSTALL",
+              "UNINSTALL",
+              "INSTALL_APP",
+              "UNINSTALL_APP",
+              "REBOOT",
+              "LOCK",
+              "SHUT_DOWN",
+              "WIPE",
+              "ADD_EMM_ACCOUNT",
+              "ADD_OVERRIDE_APN",
+              "ADD_WIFI_AP",
+              "REMOVE_WIFI_AP",
+              "SET_ETHERNET_SETTINGS",
+              "SET_STATIC_IP",
+              "USE_ONLY_SAVED_WIFI_AP",
+              "ADD_TO_WHITELIST",
+              "REMOVE_FROM_WHITELIST",
+              "ALLOW_BLUETOOTH",
+              "ALLOW_CAMERA",
+              "ALLOW_FACTORY_RESET",
+              "ALLOW_UNENROLLMENT_FROM_DEVICE",
+              "DEFER_OS_UPDATES",
+              "PAUSE_OS_UPDATES",
+              "SET_OS_UPDATE_POLICY",
+              "APPLE_APP_UNINSTALL",
+              "APPLY_APP_CONFIG",
+              "CLEAR_APP_DATA",
+              "DIRECT_IOS_APP_INSTALL",
+              "INSTALL_CERTIFICATE",
+              "INSTALL_OTA",
+              "NOTIFY_OTA",
+              "REFRESH_APPLIST",
+              "SET_APP_NOTIFICATIONS",
+              "SET_APP_PERMISSION",
+              "SET_APP_STATE",
+              "SET_KIOSK_APP",
+              "SET_MULTI_APP_MODE",
+              "SET_NEW_POLICY",
+              "SIMPLE_INSTALL",
+              "SYNC_CONTENT",
+              "UNINSTALL_CERTIFICATE",
+              "VPP_APP_INSTALL",
+              "INSTALL_PROFILE",
+              "INSTALL_PROVISIONING_PROFILE",
+              "INSTALL_WEBCLIP",
+              "REMOVE_PROVISIONING_PROFILE",
+              "UNINSTALL_WEBCLIP",
+              "LIST_PROVISIONING_PROFILES",
+              "BEEP_DEVICE",
+              "CAPTURE_SCREENSHOT",
+              "INITIATE_CONFERENCE_CALL",
+              "INITIATE_OFFER",
+              "NOTIFY_DEVICE",
+              "NUDGE_DEVICE",
+              "REQUEST_BUGREPORT",
+              "REQUEST_DPCLOG",
+              "DEPLOY_SYSTEM_OTA",
+              "UPDATE_BLUEPRINT",
+              "UPDATE_DEVICE_CONFIG",
+              "UPDATE_OEM_CONFIG",
+              "CLEAR_PASSCODE",
+              "RESET_LOCKSCREEN_PASSWORD",
+              "SET_ADB_STATE",
+              "SET_DEVICE_LOCKDOWN_STATE",
+              "DISABLE_LOST_MODE",
+              "ENABLE_LOST_MODE",
+              "LOST_MODE_DEVICE_LOCATION",
+              "PLAY_LOST_MODE_SOUND",
+              "SET_BLUETOOTH_STATE",
+              "SET_BRIGHTNESS_SCALE",
+              "SET_DEVICE_LANGUAGE",
+              "SET_GEO_FENCE",
+              "SET_GPS_STATE",
+              "SET_LOCATION_SERVICE",
+              "SET_ROTATION_STATE",
+              "SET_SCREEN_OFF_TIMEOUT",
+              "SET_STREAM_VOLUME",
+              "SET_TIMEZONE",
+              "SET_WALLPAPER",
+              "SET_WIDGET",
+              "SET_WIFI_STATE",
+              "RUN_CSP_PAYLOAD",
+              "SET_PFN",
+              "COLLECT_LOGS",
+              "REMOTE_CONNECTION",
+              "REMOVE_AGENT",
+              "REMOVE_DEVICE",
+              "RUN_CUSTOM_ACTION",
+              "RUN_SHELL_SCRIPT",
+              "DECLARATIVE_MANAGEMENT",
+              "APPLY_GEO_FENCE"
+            ]
+          },
+          "schedule_type": {
+            "type": "string",
+            "description": "Following Schedule types are supported\n```\n* IMMEDIATE: Schedule the command to execcute Immediately\n* WINDOW: Schedule the command to execute within the given window\n",
+            "enum": [
+              "IMMEDIATE",
+              "WINDOW"
+            ]
+          },
+          "schedule_args": {
+            "$ref": "#/components/schemas/ScheduleArgs"
+          },
+          "operation_device_query": {
+            "type": "object",
+            "description": "A flexible JSON object to define device properties and filters.",
+            "properties": {}
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "converge_with_provision": {
+                "type": "boolean"
+              },
+              "sample_key": {
+                "type": "string"
+              },
+              "geofence_ids": {
+                "type": "array",
+                "description": "List of geofence UUIDs to apply (APPLY_GEO_FENCE).",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ScheduleArgs": {
+        "type": "object",
+        "properties": {
+          "start_datetime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start date and time in ISO 8601 format, including timezone (e.g., 2024-08-08T14:30:00Z or 2024-08-08T14:30:00+05:30)."
+          },
+          "end_datetime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End date and time in ISO 8601 format, including timezone (e.g., 2024-08-08T15:30:00Z or 2024-08-08T15:30:00+05:30)."
+          },
+          "time_type": {
+            "$ref": "#/components/schemas/OperationScheduleArgsTimeTypeEnum"
+          },
+          "window_start_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "It is automatically populated by the time field from the request's start_datetime and cannot be injected via the API request body."
+          },
+          "window_end_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "It is automatically populated by the time field from the request's end_datetime and cannot be injected via the API request body."
+          },
+          "days": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "OperationScheduleArgsTimeTypeEnum": {
+        "type": "string",
+        "description": "The Time-Type argument, in Schedule args, is to indicate which timezone the Command Framework should utilize when scheduling the command.\nFollowing Schedule Args for Time-Type are supported:\n\n```\n* CONSOLE: Use the local timezone of the user creating the schedule.\n* DEVICE: Use the local timezone of the device, to which the command is issued, wherever it may be.\n```\n",
+        "enum": [
+          "console",
+          "device"
+        ]
+      },
+      "OperationWithStats": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation": {
+            "type": "string",
+            "description": "",
+            "enum": [
+              "CONVERGE"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "description": "",
+            "enum": [
+              "CREATED",
+              "RESOLVING",
+              "RESOLVED",
+              "DISPATCHING",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "schedule_type": {
+            "type": "string",
+            "description": "Following Schedule types are supported\n```\n* IMMEDIATE: Schedule the command to execcute Immediately\n* WINDOW: Schedule the command to execute within the given window\n",
+            "enum": [
+              "IMMEDIATE",
+              "WINDOW"
+            ]
+          },
+          "schedule_args": {
+            "$ref": "#/components/schemas/ScheduleArgs"
+          },
+          "operation_device_query": {
+            "type": "object"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "converge_with_provision": {
+                "type": "boolean"
+              },
+              "sample_key": {
+                "type": "string"
+              },
+              "geofence_ids": {
+                "type": "array",
+                "description": "List of geofence UUIDs to apply (APPLY_GEO_FENCE).",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "reason": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation_activity": {
+            "$ref": "#/components/schemas/OperationActivity"
+          },
+          "operation_stats": {
+            "$ref": "#/components/schemas/OperationStats"
+          }
+        }
+      },
+      "OperationStats": {
+        "type": "object",
+        "properties": {
+          "device_operation_statuses_count": {
+            "type": "object",
+            "properties": {
+              "resolved_device_count": {
+                "type": "integer"
+              },
+              "dispatched_device_count": {
+                "type": "integer"
+              },
+              "dispatch_failed_count": {
+                "type": "integer"
+              },
+              "failed_device_count": {
+                "type": "integer"
+              },
+              "success_device_count": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "OperationActivity": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "operation_state": {
+              "type": "string",
+              "enum": [
+                "CREATED",
+                "QUERY INITIATED",
+                "QUERY RESOLVED",
+                "DISPATCHING",
+                "DISPATCHED",
+                "PROCESSING",
+                "SUCCESS",
+                "FAILURE"
+              ]
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            }
           }
         }
       },
@@ -1837,6 +4540,568 @@
         "required": [
           "code",
           "message"
+        ]
+      },
+      "V0CommandStatus": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Unique command identifier",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "request": {
+            "title": "Request Id",
+            "type": "string",
+            "description": "Request Id associated with this command",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "command": {
+            "title": "info about the command",
+            "type": "string"
+          },
+          "command_args": {
+            "type": "object",
+            "description": "arguments in command"
+          },
+          "issued_by": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "username": {
+                "type": "string"
+              }
+            }
+          },
+          "device": {
+            "title": "AndroidDevice",
+            "type": "string",
+            "description": "Device associated with this command",
+            "format": "url",
+            "readOnly": true
+          },
+          "state": {
+            "type": "string",
+            "description": "Current state of the command",
+            "enum": [
+              "Command Queued",
+              "Command Initiated",
+              "Command Acknowledged",
+              "Command In Progress",
+              "Command TimeOut",
+              "Command Success",
+              "Command Failure",
+              "Command Scheduled",
+              "Command Cancelled"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "description": "details briefing the reason for current command state"
+          },
+          "requeue_value": {
+            "type": "integer",
+            "description": "indicates the command's requeue count for the device, which is limited to a maximum of 3 retries."
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "description": "Timestamp of command creation",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_on": {
+            "title": "Updated on",
+            "type": "string",
+            "description": "Last updated timestamp of command",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "V0CommandStatus1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Unique command identifier",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "request": {
+            "title": "Request Id",
+            "type": "string",
+            "description": "Request Id associated with this command",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "device": {
+            "title": "AndroidDevice",
+            "type": "string",
+            "description": "Device associated with this command",
+            "format": "url",
+            "readOnly": true
+          },
+          "state": {
+            "type": "string",
+            "description": "Current state of the command",
+            "enum": [
+              "Command Queued",
+              "Command Initiated",
+              "Command Acknowledged",
+              "Command In Progress",
+              "Command TimeOut",
+              "Command Success",
+              "Command Failure",
+              "Command Scheduled",
+              "Command Cancelled"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "description": "details briefing the reason for current command state"
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "description": "Timestamp of command creation",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_on": {
+            "title": "Updated on",
+            "type": "string",
+            "description": "Last updated timestamp of command",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "device": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "device_name": {
+                    "type": "string"
+                  },
+                  "alias_name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "timezone_string": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "tags": {
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tags associated with the device"
+                  },
+                  "managed_by": {
+                    "type": "string",
+                    "enum": [
+                      "BLUEPRINT",
+                      "TEMPLATE"
+                    ],
+                    "description": "Indicates whether the device is managed by a Blueprint or Template"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "V0CommandRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Unique command request identifier",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "enterprise": {
+            "title": "Enterperise ID",
+            "type": "string",
+            "description": "Esper account identifier",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "command_type": {
+            "type": "string",
+            "description": "Identifies the type of command\n\n```\n* DEVICE: command request is meant for devices\n* GROUP: command request is meant for groups\n* DYNAMIC: command request is meant for dynamic set of devices\n  i.e subset of devices from different groups or otherwise.\n```\n",
+            "enum": [
+              "DEVICE",
+              "GROUP",
+              "DYNAMIC"
+            ]
+          },
+          "devices": {
+            "maxItems": 1000,
+            "minItems": 0,
+            "type": "array",
+            "description": "list of devices to run commands",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "groups": {
+            "maxItems": 500,
+            "minItems": 0,
+            "type": "array",
+            "description": "list of groups to run commands",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "command": {
+            "$ref": "#/components/schemas/V0DeviceCommandEnum"
+          },
+          "command_args": {
+            "$ref": "#/components/schemas/V0CommandArgs"
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/V0CommandScheduleEnum"
+          },
+          "schedule_args": {
+            "$ref": "#/components/schemas/V0CommandScheduleArgs"
+          },
+          "issued_by": {
+            "type": "string",
+            "description": "command is issued by this user",
+            "format": "url",
+            "readOnly": true
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "description": "Timestamp of command request",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "status": {
+            "title": "Current Status",
+            "type": "array",
+            "description": "Show current status of commands issued during this request",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/V0CommandRequestStatus"
+            }
+          }
+        }
+      },
+      "V0CommandRequestStatus": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "title": "Command State",
+            "type": "string",
+            "description": "Current State of command",
+            "format": "uuid"
+          },
+          "total": {
+            "title": "Count",
+            "type": "integer",
+            "description": "No of commands currently in this state",
+            "format": "int64"
+          }
+        }
+      },
+      "V0CommandScheduleArgs": {
+        "title": "Command Schedule Arguments",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "start_datetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_datetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "time_type": {
+            "$ref": "#/components/schemas/V0CommandScheduleArgsTimeTypeEnum"
+          },
+          "window_start_time": {
+            "type": "string",
+            "description": "It is automatically populated by the time field from the request's start_datetime and cannot be injected via the API request body."
+          },
+          "window_end_time": {
+            "type": "string",
+            "description": "It is automatically populated by the time field from the request's end_datetime and cannot be injected via the API request body."
+          },
+          "days": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "V0CommandScheduleArgsTimeTypeEnum": {
+        "type": "string",
+        "description": "The Time-Type argument, in Schedule args, is to indicate which timezone the Command Framework should utilize when scheduling the command.\nFollowing Schedule Args for Time-Type are supported:\n\n```\n* CONSOLE: Use the local timezone of the user creating the schedule.\n* DEVICE: Use the local timezone of the device, to which the command is issued, wherever it may be.\n```\n",
+        "enum": [
+          "console",
+          "device"
+        ]
+      },
+      "V0CommandScheduleEnum": {
+        "type": "string",
+        "description": "Following Schedule types are supported\n\n```\n* IMMEDIATE: Schedule the command to execcute Immediately\n* WINDOW: Schedule the command to execute within the given window\n* RECURRING: Schedule the command to execute during the scheduled time until it succeeds or expires. After executing successfully, it will not fire again.\n```\n",
+        "enum": [
+          "IMMEDIATE",
+          "WINDOW",
+          "RECURRING"
+        ]
+      },
+      "V0CommandArgs": {
+        "title": "Command args",
+        "type": "object",
+        "properties": {
+          "device_alias_name": {
+            "type": "string",
+            "description": "Alternate human-readable name for your Device"
+          },
+          "custom_settings_config": {
+            "type": "object",
+            "properties": {},
+            "description": "Managed configurations for your device (passed as JSON object)"
+          },
+          "app_version": {
+            "type": "string",
+            "description": "The version id of app uploaded on Esper"
+          },
+          "package_name": {
+            "type": "string",
+            "description": "The app package name uploaded on Esper"
+          },
+          "policy_url": {
+            "type": "string",
+            "description": "The URL to the policy"
+          },
+          "wifi_access_points": {
+            "type": "object",
+            "properties": {},
+            "description": "Wifi access points for the device (passed as JSON object)"
+          },
+          "state": {
+            "type": "string",
+            "description": "LOCKED/UNLOCKED"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message to be added with command to notify device."
+          },
+          "title": {
+            "type": "string",
+            "description": "Message title  to be added with command to notify device."
+          },
+          "url": {
+            "type": "string",
+            "description": "(Optional) Link to notify device."
+          },
+          "app_state": {
+            "type": "string",
+            "description": "The state of app - SHOW/HIDE/DISABLE/LAUNCHABLE_BUT_HIDDEN"
+          },
+          "bluetooth_state": {
+            "type": "boolean",
+            "description": "The state of bluetooth - ON/OFF"
+          },
+          "brightness_value": {
+            "type": "integer",
+            "description": "The brightness value of a device(1-100)"
+          },
+          "gps_state": {
+            "type": "integer",
+            "description": "The GPS state of a device. Should be either 0, 1, 2, 3 or 4 (LOCATION_MODE_HIGH_ACCURACY = 0, LOCATION_MODE_SENSORS_ONLY = 1, LOCATION_MODE_BATTERY_SAVING = 2, LOCATION_MODE_OFF = 3, LOCATION_MODE_ON = 4)"
+          },
+          "rotate_state": {
+            "type": "integer",
+            "description": "The screen orientation of a device. Should be either 0, 1 or 2 (0 = AUTO, 1 = PORTRAIT_ONLY, 2 = LANDSCAPE_ONLY)"
+          },
+          "screen_off_timeout": {
+            "type": "integer",
+            "description": "The value for screen timeout of a device. Should be either -1 or between 5000 and 1800000"
+          },
+          "stream": {
+            "type": "integer",
+            "description": "The value of the volume stream. Should be either 0(Ring), 1(Notification), 2(Alarm) or 3(Music)"
+          },
+          "volume_level": {
+            "type": "integer",
+            "description": "The level of volume. Should be a value from 0 to 100"
+          },
+          "timezone_string": {
+            "type": "integer",
+            "description": "The timezone of a device. Should be a valid timezone string"
+          },
+          "wifi_state": {
+            "type": "boolean",
+            "description": "The state of WIFI - ON/OFF"
+          },
+          "wifi_revert_timeout": {
+            "type": "integer",
+            "description": "The WIFI revert timeout. Should be greater than or equal to 1"
+          },
+          "locale": {
+            "type": "string",
+            "description": "Language and country code in xx[_Zzzz]_yy where xx is language code, Zzzz is script (optional) and yy is country code."
+          },
+          "ethernet_auth_mode": {
+            "type": "string",
+            "description": "Chosen mode of authentication",
+            "enum": [
+              "NONE",
+              "EAP_TLS"
+            ]
+          },
+          "ethernet_ca_cert_alias": {
+            "type": "string",
+            "description": "CA certificate alias. It is mandatory with Auth Mode EAP_TLS"
+          },
+          "ethernet_client_cert_alias": {
+            "type": "string",
+            "description": "Client certificate alias. It is mandatory with Auth Mode EAP_TLS"
+          },
+          "ethernet_eap_identity": {
+            "type": "string",
+            "description": "EAP identity"
+          },
+          "interface": {
+            "type": "string",
+            "description": "The network interface of the device - wlan/eth"
+          },
+          "dhcp_enabled": {
+            "type": "string",
+            "description": "The dhcp state on the device - true/false"
+          },
+          "static_ip": {
+            "type": "string",
+            "description": "The static ip to set on the device. Should be a valid ipv4"
+          },
+          "primary_dns": {
+            "type": "string",
+            "description": "The primary dns to set on the device. Should be a valid ipv4"
+          },
+          "subnet_mask": {
+            "type": "string",
+            "description": "The subnet mask set on the device. Should between 1-32 both inclusive"
+          },
+          "secondary_dns": {
+            "type": "string",
+            "description": "The secondary dns to set on the device. Should be a valid ipv4"
+          },
+          "gateway": {
+            "type": "string",
+            "description": "The gateway to set on the device. Should be a valid ipv4"
+          },
+          "duration": {
+            "type": "string",
+            "description": "The beep duration specified in seconds. Value must be between 10 and 300, both inclusive."
+          },
+          "tag": {
+            "type": "string",
+            "description": "The tag is an optional param that can be set to corresponding screenshot. Options are \"tag\"."
+          },
+          "video_quality": {
+            "type": "string",
+            "description": "The video quality of the respective Remote Viewer session. Options are \"STANDARD\" and \"DATA_SAVER\"."
+          },
+          "enable_debug_mode": {
+            "type": "boolean",
+            "default": false,
+            "description": "The flag to determine whether device must go into Debug Mode, in order to retreive bug report when the device is already in Kiosk Mode."
+          },
+          "converge_with_provision_option": {
+            "type": "boolean",
+            "default": false,
+            "description": "The flag to determine whether device should be converged with provision only or not."
+          },
+          "auto_update_mode": {
+            "type": "string",
+            "enum": [
+              "autoUpdateDefault",
+              "autoUpdateHighPriority",
+              "autoUpdatePostponed"
+            ],
+            "default": "autoUpdateHighPriority",
+            "description": "(Optional) Auto update mode for google play application"
+          },
+          "content_id": {
+            "type": "string",
+            "description": "The id of the content to be synced."
+          }
+        }
+      },
+      "V0DeviceCommandEnum": {
+        "type": "string",
+        "description": "Following commands are supported\n\n```\n* ADD_TO_WHITELIST: Whitelist an installed sytem app. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* ADD_WIFI_AP : Add wifi access points for device. Requires `wifi_access_points` in command arguments where `wifi_access_points` is the data with access points\n* CLEAR_APP_DATA : Clear data for an installed app. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* INSTALL: Install an app on a device. Requires `app_version` in command arguments where `app_version` is the version id of app uploaded on Esper\n* LOCK: Lock device screen\n* REBOOT: Reboot a device\n* REMOVE_FROM_WHITELIST : Remove an installed system app from whitelist. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* REMOVE_WIFI_AP : Remove Wifi access points for device. Requires `wifi_access_points` in command arguments where `wifi_access_points` is the data with access points\n* SET_APP_PERMISSION : Set permission for an installed app. Requires `package_name`, `grant_state`, `permission` in command arguments where `package_name` is the app package uploaded on Esper, `grant_state` should be \"PERMISSION_GRANT_STATE_DEFAULT\", \"PERMISSION_GRANT_STATE_DENIED\", \"PERMISSION_GRANT_STATE_GRANTED\" and `permission` is a valid permission\n* SET_APP_STATE : Set the state of an app - SHOW/HIDE/DISABLE/LAUNCHABLE_BUT_HIDDEN. Requries `app_state` and `package_name` in command arguments where `app_state` is the state of app and `package_name` is the app package uploaded on Esper\n* SET_BLUETOOTH_STATE : Set bluetooth state (ON/OFF) for device. Requires `bluetooth_state` in command arguments where `bluetooth_state` is a boolean.\n* SET_BRIGHTNESS_SCALE : Set brightness for device. Requires `brightness_value` in command arguments where `brightness_value` is an integer (1-100).\n* SET_DEVICE_LOCKDOWN_STATE : Set lockdown state for a device. Requires `state` and `message` in command arguments where `state` is LOCKED/UNLOCKED and `message` is the message to be added with command\n* SET_GPS_STATE :Set the GPS state for a device. Requires `gps_state` in command arguments where `gps_state` should be either 0, 1, 2, 3 or 4 (LOCATION_MODE_HIGH_ACCURACY = 0, LOCATION_MODE_SENSORS_ONLY = 1, LOCATION_MODE_BATTERY_SAVING = 2, LOCATION_MODE_OFF = 3, LOCATION_MODE_ON = 4)\n* SET_KIOSK_APP : Command to set the Kiosk app for a device. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* SET_NEW_POLICY : Apply policy on device. Requires `policy_url` in command arguments where `policy_url` is the URL to the policy\n* SET_ROTATION_STATE : Set screen orientation. Requires `rotate_state` in command arguments where `rotate_state` should be either 0, 1 or 2 (0 = AUTO, 1 = PORTRAIT_ONLY, 2 = LANDSCAPE_ONLY)\n* SET_SCREEN_OFF_TIMEOUT: Set screen off timeout for a device. Requires `screen_off_timeout` in command arguments where `screen_off_timeout` should be either -1 or between 5000 and 1800000\n* SET_STREAM_VOLUME : Set stream volume for a device. Requires `stream` and `volume_level` in command arguments where `stream` should be either 0(Ring), 1(Notification), 2(Alarm) or 3(Music) and `volume_level` should be a value from 0 to 100\n* SET_TIMEZONE : Set the timezone for a device. Requires `timezone_string` in command arguments where `timezone_string` is a valid string representing the timezone\n* SET_WIFI_STATE : Set the wifi state (ON/OFF) for a device. Requires `wifi_state` in command arguments where `wifi_state` is a boolean.\n* UNINSTALL: Uninstall an app from device. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* UPDATE_DEVICE_CONFIG: Push additional configurations to the Device\n* UPDATE_HEARTBEAT: Ping a device\n* UPDATE_LATEST_DPC : Prompt device to update the DPC app to the latest versions.\n* WIPE : Wipes the device.\n* RESET_LOCKSCREEN_PASSWORD: Change the lockscreen password of the device. Requires `new_lockscreen_password` in command arguments where `new_lockscreen_password` is a valid string.\n* CAPTURE_SCREENSHOT: Allows you to take a screenshot of the device's current screen. The \"tag\" is an optional param that can be set to corresponding screenshot.\n* UPDATE_BLUEPRINT: Pushes or reapplies the most current Blueprint version to the device or group.\n* NOTIFY_DEVICE: Allows you to  broadcast message to the device. Requires 'title', 'message' and 'url' (optional) as string in command arguments. For scheduled message command requires 'name', 'time_type' as string and 'start_datetime' and 'end_datetime' as date-time.\n* SET_DEVICE_LANGUAGE: Set language for a device. Requires locale value in xx[_Zzzz]_yy where xx is language code, Zzzz is script (optional) and yy is country code.\n* SET_ETHERNET_SETTINGS: Set ethernet settings on supported Device\n* SET_STATIC_IP: Set static ip on the deivce. Requires interface, dhcp_dnabled, static_ip, primary_dns, subnet_mask, gateway, secondary_dns (optional)\n* BEEP_DEVICE: Allows you to make the device beep for a specified duration\n* SET_APP_NOTIFICATIONS: Enable/disable app notifications. Requries `app_notifications_state` and `package_name` in command arguments where `app_notifications_state` is a string that has the value `ENABLED` or `DISABLED` and `package_name` is the app package uploaded on Esper.\n* USE_ONLY_SAVED_WIFI_AP: Allow/disallow device to connect to unregistered WiFi APs. Requires boolean `use_only_saved_ap`.\n* CONVERGE: Allows you to converge the device to the latest version of its assigned blueprint.\n* SYNC_CONTENT: Allows you to sync content to the device. Requires `content_id` in command arguments where `content_id` is the id of the content to be synced. ```\n",
+        "enum": [
+          "ADD_TO_WHITELIST",
+          "ADD_WIFI_AP",
+          "CLEAR_APP_DATA",
+          "INSTALL",
+          "LOCK",
+          "REBOOT",
+          "REMOVE_FROM_WHITELIST",
+          "REMOVE_WIFI_AP",
+          "SET_APP_PERMISSION",
+          "SET_APP_STATE",
+          "SET_BLUETOOTH_STATE",
+          "SET_BRIGHTNESS_SCALE",
+          "SET_DEVICE_LOCKDOWN_STATE",
+          "SET_GPS_STATE",
+          "SET_KIOSK_APP",
+          "SET_NEW_POLICY",
+          "SET_ROTATION_STATE",
+          "SET_SCREEN_OFF_TIMEOUT",
+          "SET_STREAM_VOLUME",
+          "SET_TIMEZONE",
+          "SET_WIFI_STATE",
+          "UNINSTALL",
+          "UPDATE_DEVICE_CONFIG",
+          "UPDATE_HEARTBEAT",
+          "UPDATE_LATEST_DPC",
+          "WIPE",
+          "RESET_LOCKSCREEN_PASSWORD",
+          "UPDATE_BLUEPRINT",
+          "CAPTURE_SCREENSHOT",
+          "NOTIFY_DEVICE",
+          "SET_DEVICE_LANGUAGE",
+          "SET_ETHERNET_SETTINGS",
+          "SET_STATIC_IP",
+          "BEEP_DEVICE",
+          "SET_APP_NOTIFICATIONS",
+          "USE_ONLY_SAVED_WIFI_AP",
+          "CONVERGE",
+          "SYNC_CONTENT"
         ]
       },
       "GoogleProductInstall": {

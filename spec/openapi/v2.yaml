@@ -3769,10 +3769,297 @@
         "x-esper-noun": "tenant-esper-app",
         "x-esper-response-envelope": "apps-envelope"
       }
+    },
+    "/v2/command-inbox/": {
+      "get": {
+        "summary": "Get queued commands to be executed by the physical device.",
+        "description": "API to get queued commands for a device",
+        "operationId": "getCommandInbox",
+        "tags": [
+          "5_Command Status"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "device_id",
+            "description": "Filter status result by device IDs.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Queued Command Status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/CommandInbox"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "command-inbox"
+      }
+    },
+    "/v2/converge/{id}/commands": {
+      "get": {
+        "summary": "List commands fires for converge action",
+        "description": "API to get and filter commands fired for converge action",
+        "operationId": "listConvergeCommands",
+        "tags": [
+          "6_Converge Command"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the converge object",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of commands fired for converge action for the tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/ConvergeCommand"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "command",
+        "x-esper-scope-parent": "converge"
+      }
     }
   },
   "components": {
     "schemas": {
+      "ConvergeCommand": {
+        "type": "object",
+        "properties": {
+          "command_request_id": {
+            "type": "string",
+            "description": "ID of the command request",
+            "format": "uuid"
+          },
+          "command_state": {
+            "type": "string",
+            "description": "Current state of the command",
+            "enum": [
+              "Command Queued",
+              "Command Initiated",
+              "Command Acknowledged",
+              "Command In Progress",
+              "Command TimeOut",
+              "Command Success",
+              "Command Failure",
+              "Command Scheduled",
+              "Command Cancelled"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "description": "Details briefing the reason for current command state."
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Creation timestamp of converge command",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Updation timestamp of converge command",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "CommandInbox": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique command identifier",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "command": {
+            "type": "string",
+            "description": "The command to be executed"
+          },
+          "command_args": {
+            "type": "object",
+            "description": "Arguments for the command",
+            "properties": {
+              "script": {
+                "type": "string",
+                "description": "The script to be executed"
+              }
+            }
+          },
+          "device_meta": {
+            "type": "object",
+            "description": "Metadata about the device",
+            "properties": {
+              "platform": {
+                "type": "string",
+                "description": "The platform of the device"
+              }
+            }
+          },
+          "state": {
+            "type": "string",
+            "description": "Current state of the command",
+            "enum": [
+              "Command Queued"
+            ]
+          },
+          "created_on": {
+            "type": "string",
+            "description": "Timestamp of command creation",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_on": {
+            "type": "string",
+            "description": "Last updated timestamp of command",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
       "TenantEsperAppsItem": {
         "type": "object",
         "properties": {

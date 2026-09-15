@@ -1835,6 +1835,131 @@
         "x-esper-scope-parent": "device"
       }
     },
+    "/enterprise/{enterprise_id}/device/{device_id}/status/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_AndroidDevice"
+        ],
+        "summary": "Get latest device event",
+        "description": "Returns DeviceStatus instance",
+        "operationId": "getDeviceEvent",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "device_id",
+            "in": "path",
+            "description": "A UUID string identifying device.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "latest_event",
+            "in": "query",
+            "description": "Returns the latest event. Must be set to 1.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DeviceStatus"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "get",
+        "x-esper-noun": "status"
+      }
+    },
     "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/": {
       "get": {
         "x-badges": [
@@ -3433,6 +3558,41 @@
             "type": "string",
             "format": "date-time",
             "readOnly": true
+          }
+        }
+      },
+      "DeviceStatus": {
+        "required": [
+          "data",
+          "device",
+          "enterprise"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer",
+            "readOnly": true
+          },
+          "data": {
+            "title": "Data",
+            "type": "string"
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "device": {
+            "title": "AndroidDevice",
+            "type": "string",
+            "format": "url"
+          },
+          "enterprise": {
+            "title": "Enterprise",
+            "type": "string",
+            "format": "url"
           }
         }
       },

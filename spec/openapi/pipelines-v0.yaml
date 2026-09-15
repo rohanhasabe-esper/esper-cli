@@ -69,9 +69,1474 @@
       "x-displayName": "Target Runs"
     }
   ],
-  "paths": {},
+  "paths": {
+    "/pipelines/v0/stages/{stage_id}/operationlists/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Get all Operation Lists attached to the Stage",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "getStageOperationLists",
+        "tags": [
+          "2_Operation Lists"
+        ],
+        "parameters": [
+          {
+            "name": "stage_id",
+            "in": "path",
+            "description": "ID of the Stage",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Operation Lists attached to the Stage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/OperationList"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Operation List get error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "operation-list",
+        "x-esper-scope-parent": "stage"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Create an Operation list for the Stage",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "addStageOperationList",
+        "tags": [
+          "2_Operation Lists"
+        ],
+        "parameters": [
+          {
+            "name": "stage_id",
+            "in": "path",
+            "description": "ID of the Stage",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperationList_POST"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Attach Operation list to a Stage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/OperationList"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Operation list attach error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "operation-list",
+        "x-esper-scope-parent": "stage"
+      }
+    },
+    "/pipelines/v0/stages/{stage_id}/operationlists/{operationlist_id}/": {
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Update an Operation List",
+        "operationId": "updatePipelineOperationList",
+        "tags": [
+          "2_Operation Lists"
+        ],
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "stage_id",
+            "in": "path",
+            "description": "ID of the Stage",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operationlist_id",
+            "in": "path",
+            "description": "ID of the Operation List",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperationList"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated Operation List Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/OperationList"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Operation List update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Operation List update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "operation-list",
+        "x-esper-scope-parent": "stage"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Delete stage operation list",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "deleteStageOperationList",
+        "tags": [
+          "2_Operation Lists"
+        ],
+        "parameters": [
+          {
+            "name": "stage_id",
+            "in": "path",
+            "description": "ID of the Stage",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operationlist_id",
+            "in": "path",
+            "description": "ID of the Operation List",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete operation list from stage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/OperationList"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Operation list detach error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "operation-list",
+        "x-esper-scope-parent": "stage"
+      }
+    },
+    "/pipelines/v0/operationlists/{operationlist_id}/operations/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Get all Operations in the Operation List",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "getOperationListOperations",
+        "tags": [
+          "2_Operations"
+        ],
+        "parameters": [
+          {
+            "name": "operationlist_id",
+            "in": "path",
+            "description": "ID of the Operation List",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operation_type",
+            "in": "query",
+            "description": "Operation Type to filter on as defined in Operation_POST model",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Operations in Operation List",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Operation"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Operation List get error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "operation",
+        "x-esper-scope-parent": "operation-list"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Create an Operation for Operation List",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "addOperationListOperations",
+        "tags": [
+          "2_Operations"
+        ],
+        "parameters": [
+          {
+            "name": "operationlist_id",
+            "in": "path",
+            "description": "ID of the Operation List",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Operation_POST"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/Operation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Operation create error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "operation",
+        "x-esper-scope-parent": "operation-list"
+      }
+    },
+    "/pipelines/v0/operationlists/{operationlist_id}/operations/{operation_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Get an Operation from the operation list",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "getOperationListOperation",
+        "tags": [
+          "2_Operations"
+        ],
+        "parameters": [
+          {
+            "name": "operationlist_id",
+            "in": "path",
+            "description": "ID of the Operation list",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "description": "ID of the Operation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get operation from operation list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/Operation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Operation get error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "operation",
+        "x-esper-scope-parent": "operation-list"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Update an Operation",
+        "operationId": "updateOperationListOperation",
+        "tags": [
+          "2_Operations"
+        ],
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operationlist_id",
+            "in": "path",
+            "description": "ID of the Operation List",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "description": "ID of the Operation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Operation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated Operation Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/Operation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Operation update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Operation update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "operation",
+        "x-esper-scope-parent": "operation-list"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Delete an Operation list operation",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "deleteOperationListOperation",
+        "tags": [
+          "2_Operations"
+        ],
+        "parameters": [
+          {
+            "name": "operationlist_id",
+            "in": "path",
+            "description": "ID of the Operation List",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "description": "ID of the Operation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/Operation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Operation delete error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "operation",
+        "x-esper-scope-parent": "operation-list"
+      }
+    },
+    "/pipelines/v0/stageruns/{stage_run_id}/operations/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Get all Operations for the Stage Run",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "getPipelineStageRunOperations",
+        "tags": [
+          "2_Stage Runs"
+        ],
+        "parameters": [
+          {
+            "name": "stage_run_id",
+            "in": "path",
+            "description": "Stage run Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Operations for the Stage Run",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/StageRunOperation"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stage run operation get error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "operation",
+        "x-esper-scope-parent": "stage-run"
+      }
+    },
+    "/pipelines/v0/stageruns/{stage_run_id}/operations/{stage_run_operation_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Get single Operation for the Stage Run",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "getPipelineStageRunOperation",
+        "tags": [
+          "2_Stage Runs"
+        ],
+        "parameters": [
+          {
+            "name": "stage_run_id",
+            "in": "path",
+            "description": "Stage run Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stage_run_operation_id",
+            "in": "path",
+            "description": "Stage run operation Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation for the Stage Run",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/StageRunOperation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stage run operation get error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "operation",
+        "x-esper-scope-parent": "stage-run"
+      }
+    },
+    "/pipelines/v0/stageruns/{stage_run_id}/targetruns/{target_run_id}/command/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Get status of the command running for Target run",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "getTargetRunCommandStatus",
+        "tags": [
+          "2_Target Runs"
+        ],
+        "parameters": [
+          {
+            "name": "stage_run_id",
+            "in": "path",
+            "description": "ID of the stage run",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "target_run_id",
+            "in": "path",
+            "description": "Id of the target run",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Command processor request status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/CommandResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Command request create error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "command",
+        "x-esper-scope-parent": "target-run"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Create an command processor request for Target Run",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "createTargetRunCommand",
+        "tags": [
+          "2_Target Runs"
+        ],
+        "parameters": [
+          {
+            "name": "stage_run_id",
+            "in": "path",
+            "description": "ID of the stage run",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "target_run_id",
+            "in": "path",
+            "description": "Id of the target run",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AndroidCommandRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created command processor request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/CommandResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Command request create error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "command",
+        "x-esper-scope-parent": "target-run"
+      }
+    },
+    "/pipelines/v0/stageruns/{stage_run_id}/targetruns/{target_run_id}/command/{command_id}/": {
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Update target run command information.",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "putTargetRunCommandStatus",
+        "tags": [
+          "2_Target Runs"
+        ],
+        "parameters": [
+          {
+            "name": "stage_run_id",
+            "in": "path",
+            "description": "ID of the stage run",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "target_run_id",
+            "in": "path",
+            "description": "Id of the target run",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "command_id",
+            "in": "path",
+            "description": "Id of the command",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandRequest_PUT"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Command processor request status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/CommandResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Target run command update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "command",
+        "x-esper-scope-parent": "target-run"
+      }
+    }
+  },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "CommandRequest_PUT": {
+        "type": "object",
+        "properties": {
+          "request_status": {
+            "type": "string",
+            "enum": [
+              "cancelled"
+            ]
+          }
+        }
+      },
+      "AndroidCommandRequest": {
+        "type": "object"
+      },
+      "CommandResponse": {
+        "type": "object",
+        "properties": {
+          "target_run_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "enterprise_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "command": {
+            "type": "string"
+          },
+          "command_type": {
+            "type": "string",
+            "default": "DEVICE"
+          },
+          "device_type": {
+            "type": "string",
+            "default": "all"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schedule": {
+            "type": "string",
+            "default": "IMMEDIATE"
+          },
+          "args": {
+            "type": "object"
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "request_status": {
+            "type": "string"
+          },
+          "request_status_reason": {
+            "type": "string"
+          }
+        }
+      },
+      "StageRunOperation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "operation_type": {
+            "type": "string"
+          },
+          "args": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "number",
+            "format": "int32"
+          },
+          "updated_by": {
+            "type": "number",
+            "format": "int32"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Operation_POST": {
+        "type": "object",
+        "properties": {
+          "args": {
+            "type": "object",
+            "description": "Arguments for the operation"
+          },
+          "operation_type": {
+            "type": "string",
+            "enum": [
+              "LOCK",
+              "REBOOT",
+              "SET_NEW_POLICY",
+              "UPDATE_HEARTBEAT",
+              "REQUEST_BUGREPORT",
+              "REQUEST_DPCLOG",
+              "ADD_TO_WHITELIST",
+              "REMOVE_FROM_WHITELIST",
+              "SET_APP_PERMISSION",
+              "WIPE",
+              "CAPTURE_SCREENSHOT",
+              "SET_WIFI_STATE",
+              "SET_BLUETOOTH_STATE",
+              "SET_ROTATION_STATE",
+              "SET_GPS_STATE",
+              "SET_BRIGHTNESS_SCALE",
+              "SET_STREAM_VOLUME",
+              "SET_SCREEN_OFF_TIMEOUT",
+              "SET_ADB_STATE",
+              "INITIATE_OFFER",
+              "INSTALL",
+              "SIMPLE_INSTALL",
+              "UNINSTALL",
+              "REFRESH_APPLIST",
+              "UPDATE_LATEST_DPC",
+              "NOTIFY_OTA",
+              "CLEAR_APP_DATA",
+              "SET_GEO_FENCE",
+              "SET_KIOSK_APP",
+              "SET_DEVICE_LOCKDOWN_STATE",
+              "SET_TIMEZONE",
+              "SET_APP_STATE",
+              "ADD_WIFI_AP",
+              "REMOVE_WIFI_AP",
+              "UPDATE_DEVICE_CONFIG",
+              "INITIATE_CONFERENCE_CALL",
+              "ADD_OVERRIDE_APN",
+              "SYNC_CONTENT",
+              "SET_WALLPAPER"
+            ]
+          }
+        }
+      },
+      "Operation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "operation_list_id": {
+            "type": "string"
+          },
+          "pipeline_id": {
+            "type": "string"
+          },
+          "operation_type": {
+            "type": "string"
+          },
+          "args": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "number",
+            "format": "int32"
+          },
+          "updated_by": {
+            "type": "number",
+            "format": "int32"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OperationList_POST": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "pipeline_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "OperationList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "pipeline_id": {
+            "type": "string"
+          },
+          "stage_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "number",
+            "format": "int32"
+          },
+          "updated_by": {
+            "type": "number",
+            "format": "int32"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Error_401_Unauthorized": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 401
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "Error_400_Bad_Data": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 400
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      }
+    },
     "parameters": {}
   }
 }

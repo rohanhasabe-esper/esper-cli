@@ -1413,6 +1413,285 @@
         "x-esper-noun": "application"
       }
     },
+    "/enterprise/{enterprise_id}/device/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_AndroidDevice"
+        ],
+        "summary": "Fetch all devices in an enterprise",
+        "description": "Returns a list of devices",
+        "operationId": "getAllDevices",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "ID of the enterprise",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "filter by device name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "description": "filter by group id. It will list all the devices under this gorup including the subgroups",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "imei",
+            "in": "query",
+            "description": "filter by imei",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "serial",
+            "in": "query",
+            "description": "filter by serial number",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/DeviceStateEnum"
+            }
+          },
+          {
+            "name": "brand",
+            "in": "query",
+            "description": "filter by brand",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "is_gms",
+            "in": "query",
+            "description": "filter for gms devices",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "A search term. Search by device name, imei or mac address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "A partial text search for device tags",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assigned_blueprint_id",
+            "in": "query",
+            "description": "Filter by assigned blueprint id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "current_blueprint_id",
+            "in": "query",
+            "description": "Filter by current blueprint id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "current_blueprint_version_id",
+            "in": "query",
+            "description": "Filter by current blueprint version id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "next": {
+                      "type": "string",
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": "string",
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DeviceInfo"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/enterprise/{enterprise_id}/device/{device_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Legacy",
+            "color": "orange"
+          }
+        ],
+        "tags": [
+          "0_AndroidDevice"
+        ],
+        "summary": "Fetch device details by ID",
+        "description": "Returns details of a device",
+        "operationId": "getDeviceById",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "ID of the enterprise",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "device_id",
+            "in": "path",
+            "description": "ID of the device",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "device"
+      }
+    },
     "/enterprise/{enterprise_id}/device/{device_id}/app/": {
       "get": {
         "x-badges": [
@@ -8537,6 +8816,228 @@
             "format": "uuid"
           }
         }
+      },
+      "DeviceInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "url": {
+            "type": "string",
+            "format": "url"
+          },
+          "device_name": {
+            "type": "string"
+          },
+          "alias_name": {
+            "type": "string",
+            "description": "Device friendly name"
+          },
+          "policy_name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "description": "Current status of device",
+            "format": "int32"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DeviceStateEnum"
+          },
+          "current_command": {
+            "type": "string",
+            "description": "Current command associated with device",
+            "format": "uuid"
+          },
+          "suid": {
+            "type": "string",
+            "description": "Device generated unique id"
+          },
+          "directory_record_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of Directory Record associated with the device (if available)"
+          },
+          "fcm_id": {
+            "type": "string"
+          },
+          "enterprise": {
+            "type": "string",
+            "format": "url"
+          },
+          "policy": {
+            "type": "string",
+            "format": "url"
+          },
+          "user": {
+            "type": "string",
+            "format": "url"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "url"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "api_level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "template_name": {
+            "type": "string"
+          },
+          "mqtt_id": {
+            "type": "string"
+          },
+          "softwareInfo": {
+            "type": "object",
+            "properties": {}
+          },
+          "hardwareInfo": {
+            "type": "object",
+            "properties": {}
+          },
+          "displays": {
+            "type": "object",
+            "properties": {}
+          },
+          "networkInfo": {
+            "type": "object",
+            "properties": {}
+          },
+          "memoryInfo": {
+            "type": "object",
+            "properties": {}
+          },
+          "esper_cient": {
+            "type": "string"
+          },
+          "device_type": {
+            "type": "string"
+          },
+          "audioConstraints": {
+            "type": "object",
+            "properties": {}
+          },
+          "provisioned_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "current_app_mode": {
+            "type": "integer"
+          },
+          "kiosk_app_name": {
+            "type": "string"
+          },
+          "lockdown_state": {
+            "type": "integer"
+          },
+          "timezone_string": {
+            "type": "string"
+          },
+          "initialtemplate": {
+            "type": "string"
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "emm_device": {
+            "$ref": "#/components/schemas/EmmDevice"
+          },
+          "is_gms": {
+            "type": "boolean",
+            "default": true
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": true
+          },
+          "has_seamlessInfo": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        }
+      },
+      "EmmDevice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "google_device_id": {
+            "type": "string"
+          },
+          "managementType": {
+            "type": "string"
+          },
+          "device": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "google_user": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "policy": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "DeviceStateEnum": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Following are the Device States and their description\n\n```\n* 0 = Device State is Unspecified\n* 1 = Online\n* 20 = Disabled (device has been factory reset or removed from the Esper Dashboard)\n* 30 = Beginning Provisioning\n* 40 = Configuring Google Play (still provisioning)\n* 50 = Applying Policies and Installing Applications (still provisioning)\n* 60 = Offline\n* 70 = Device is undergoing a Factory Reset (reset started from Dashboard)\n* 80 = Device Onboarding in Progress\n* 90 = Device Onboarding Failed\n* 100 = Device Onboarded in Esper\n* 110 = Android For Work Account added\n* 120 = Apps installed\n* 130 = Branding Processed\n* 140 = Permission Policy Processed\n* 150 = Device Policy Processed\n* 160 = Device Settings Processed\n* 170 = Security Policy Processed\n* 180 = Phone Policy Processed\n* 190 = Custom Settings Processed\n* 200 = Registered\n```\n",
+        "enum": [
+          0,
+          1,
+          20,
+          30,
+          40,
+          50,
+          60,
+          70,
+          80,
+          90,
+          100,
+          110,
+          120,
+          130,
+          140,
+          150,
+          160,
+          170,
+          180,
+          190,
+          200
+        ]
       },
       "InstallDevices": {
         "required": [

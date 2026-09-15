@@ -4910,6 +4910,110 @@
         "x-esper-noun": "operation"
       }
     },
+    "/v0/operations/{operationsId}/devices/": {
+      "get": {
+        "summary": "Get all DeviceOperations for a specific Operation",
+        "operationId": "getDeviceOperations",
+        "tags": [
+          "3_DeviceOperations"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "operationsId",
+            "in": "path",
+            "description": "ID of the Operation",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "5743470f-7dcc-4a92-8a4b-f41b1cea69ed"
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Following are the Device Operation States and their corresponding integer values\n```\nDEVICE_OPERATION_CREATED     = 10\nDEVICE_OPERATION_INITIATED   = 20\nDEVICE_OPERATION_DISPATCHED  = 30\nDEVICE_OPERATION_PROCESSING  = 40\nDEVICE_OPERATION_SUCCESS     = 50\nDEVICE_OPERATION_FAILURE     = 60\nDEVICE_OPERATION_CANCELLED   = 70\nDEVICE_OPERATION_TIMEOUT     = 80\nDEVICE_OPERATION_COMPLETED   = 90\n```\n"
+          },
+          {
+            "in": "query",
+            "name": "ordering",
+            "description": "Field to order the results by. Prefix with '-' to reverse the order.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "state",
+                "updated_at"
+              ]
+            }
+          }
+        ],
+        "x-scope": [
+          "read:operation:devices"
+        ],
+        "responses": {
+          "200": {
+            "description": "Device Operation information for the Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/DeviceOperationWithStats"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device",
+        "x-esper-scope-parent": "operation"
+      }
+    },
     "/v0/devices/{deviceId}/operations/": {
       "get": {
         "summary": "Get a Operations for a device",

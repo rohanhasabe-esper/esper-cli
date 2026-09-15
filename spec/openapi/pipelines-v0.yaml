@@ -2772,6 +2772,113 @@
         "x-esper-scope-parent": "target-list"
       }
     },
+    "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/devicegroups/{device_group_id}/devices/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Get all Devices in the device group",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "getDeviceGroupDevices",
+        "tags": [
+          "2_Device Groups"
+        ],
+        "parameters": [
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "description": "ID of the Pipeline",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "targetlist_id",
+            "in": "path",
+            "description": "ID of the Target List",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "device_group_id",
+            "in": "path",
+            "description": "ID of the Device Group",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Devices in Device group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Device"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Operation List get error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device",
+        "x-esper-scope-parent": "device-group"
+      }
+    },
     "/pipelines/v0/operationlists/{operationlist_id}/operations/": {
       "get": {
         "x-badges": [
@@ -5366,6 +5473,58 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "Device": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the Device"
+          },
+          "device_name": {
+            "type": "string",
+            "description": "Name of the device"
+          },
+          "serial": {
+            "type": "string",
+            "description": "Device serial number"
+          },
+          "template_name": {
+            "type": "string",
+            "description": "Device template name"
+          },
+          "manufacturer": {
+            "type": "string",
+            "description": "Manufacturer of the Device"
+          },
+          "android_version": {
+            "type": "string",
+            "description": "Version number of android"
+          },
+          "api_level": {
+            "type": "string",
+            "description": "Device api level"
+          },
+          "is_gms": {
+            "type": "boolean",
+            "description": "Is this a gms device"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "model": {
+            "type": "string",
+            "description": "Device model number"
+          },
+          "alias_name": {
+            "type": "string",
+            "description": "Device alias"
+          },
+          "esper_client": {
+            "type": "string"
           }
         }
       },

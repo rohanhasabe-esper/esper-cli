@@ -6096,6 +6096,566 @@
         "x-esper-scope-parent": "converge"
       }
     },
+    "/v2/emm/enrollment/begin/": {
+      "post": {
+        "summary": "Generate sign-up URL",
+        "tags": [
+          "8_Google Enterprise"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BeginGoogleEMMEnrollmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully generated sign-up URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/BeginGoogleEMMEnrollmentResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict: Google Enterprise already exists and is enrolled to Google EMM",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_409_Conflict"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "emm-enrollment-begin"
+      }
+    },
+    "/v2/emm/details/": {
+      "get": {
+        "summary": "Return the enrollment status of the Enterprise",
+        "tags": [
+          "8_Google Enterprise"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved enrollment status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "prev": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/GoogleEnterpriseDetails"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "emm-detail"
+      },
+      "post": {
+        "summary": "Creates a new Google Enterprise with the provided details",
+        "tags": [
+          "8_Google Enterprise"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleEnterpriseDetails"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/GoogleEnterpriseDetails"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict: Google Enterprise already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_409_Conflict"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "emm-detail"
+      }
+    },
+    "/v2/emm/web-token/": {
+      "post": {
+        "summary": "Create a Google Web Token",
+        "tags": [
+          "8_Google Enterprise"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWebTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/CreateWebTokenResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "emm-web-token"
+      }
+    },
+    "/v2/emm/enrollment/complete/": {
+      "post": {
+        "summary": "Complete EMM enrollment for a Google Enterprise",
+        "tags": [
+          "8_Google Enterprise"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "completion_token": {
+                    "type": "string"
+                  },
+                  "enterprise_token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "completion_token",
+                  "enterprise_token"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully completed EMM enrollment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/GoogleEnterpriseDetails"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "emm-enrollment-complete"
+      }
+    },
+    "/v2/emm/accounts/": {
+      "get": {
+        "summary": "Return the Google Service Account of the Enterprise",
+        "tags": [
+          "8_Google Enterprise"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved Google Service Account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "prev": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/GoogleServiceAccountDetails"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "emm-account"
+      },
+      "post": {
+        "summary": "Creates a new Google Service Account with the provided details",
+        "tags": [
+          "8_Google Enterprise"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleServiceAccountDetails"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/GoogleServiceAccountDetails"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict: Google Service Account already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_409_Conflict"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "emm-account"
+      }
+    },
     "/v2/devices/{id}/devicestate": {
       "put": {
         "x-badges": [
@@ -6267,6 +6827,175 @@
         "required": [
           "code",
           "message"
+        ]
+      },
+      "GoogleServiceAccountDetails": {
+        "required": [
+          "google_enterprise_id",
+          "key_id",
+          "type",
+          "is_set",
+          "is_active",
+          "data",
+          "public_data"
+        ],
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string"
+          },
+          "google_enterprise_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "key_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "integer"
+          },
+          "is_set": {
+            "type": "boolean"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "string"
+          },
+          "public_data": {
+            "type": "string"
+          },
+          "is_synced_to_scapi": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateWebTokenResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "The generated token.",
+            "example": "test_1245"
+          }
+        }
+      },
+      "CreateWebTokenRequest": {
+        "type": "object",
+        "properties": {
+          "google_enterprise_id": {
+            "type": "string",
+            "description": "The ID of the Google enterprise. It is required and cannot be empty.",
+            "example": "test",
+            "minLength": 1
+          },
+          "parent_url": {
+            "type": "string",
+            "description": "The parent URL. It must be a valid URL with the https scheme.",
+            "format": "uri",
+            "example": "https://valid.url",
+            "pattern": "^https://"
+          }
+        },
+        "required": [
+          "google_enterprise_id",
+          "parent_url"
+        ]
+      },
+      "GoogleEnterpriseDetails": {
+        "required": [
+          "google_enterprise_id",
+          "state",
+          "callback_url",
+          "signup_url",
+          "completion_token",
+          "enterprise_token"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "google_enterprise_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "state": {
+            "type": "integer"
+          },
+          "callback_url": {
+            "type": "string"
+          },
+          "signup_url": {
+            "type": "string"
+          },
+          "completion_token": {
+            "type": "string"
+          },
+          "enterprise_token": {
+            "type": "string"
+          },
+          "is_synced_to_scapi": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tenant_id": {
+            "type": "string"
+          }
+        }
+      },
+      "BeginGoogleEMMEnrollmentResponse": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string"
+          },
+          "callback_url": {
+            "type": "string"
+          },
+          "signup_url": {
+            "type": "string"
+          },
+          "completion_token": {
+            "type": "string"
+          }
+        }
+      },
+      "BeginGoogleEMMEnrollmentRequest": {
+        "type": "object",
+        "properties": {
+          "callback_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "callback_url"
         ]
       },
       "ConvergeCommand": {

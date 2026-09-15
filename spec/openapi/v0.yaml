@@ -130,6 +130,190 @@
     }
   ],
   "paths": {
+    "/v0/enterprise/{enterprise_id}/emm": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "List Google enterprises",
+        "description": "Returns enterprise instances",
+        "operationId": "getEMMInstances",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GoogleEnterprise"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "emm",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/emm/{emm_id}": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Get Google enterprise information",
+        "description": "Returns enterprise instance",
+        "operationId": "getEMMInstance",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoogleEnterprise"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "emm-instance"
+      }
+    },
     "/v0/enterprise/{enterprise_id}/emm/{emm_id}/product/": {
       "get": {
         "x-badges": [
@@ -7955,6 +8139,57 @@
           "status": {
             "title": "alias name",
             "type": "integer"
+          }
+        }
+      },
+      "GoogleEnterprise": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "google_enterprise_id": {
+            "title": "Google Enterprise Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name of Google Enterprise",
+            "type": "string"
+          },
+          "state": {
+            "type": "integer"
+          },
+          "callback_url": {
+            "type": "string",
+            "format": "url"
+          },
+          "signup_url": {
+            "type": "string",
+            "format": "url"
+          },
+          "completion_token": {
+            "type": "string"
+          },
+          "enterprise_token": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "enterprise": {
+            "type": "string"
           }
         }
       }

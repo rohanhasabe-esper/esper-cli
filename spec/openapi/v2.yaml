@@ -6764,6 +6764,162 @@
         "x-esper-scope-parent": "converge"
       }
     },
+    "/v2/seamless/upload": {
+      "post": {
+        "summary": "Create a ABM provisioning request by uploading file",
+        "tags": [
+          "7_ABM Provisioning"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "csv_file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "platform": {
+                    "type": "string",
+                    "default": "APPLE",
+                    "enum": [
+                      "APPLE",
+                      "LINUX",
+                      "WINDOWS"
+                    ]
+                  }
+                },
+                "required": [
+                  "csv_file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ABM provisioning request successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeamlessSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "upload",
+        "x-esper-noun": "seamless"
+      }
+    },
+    "/v2/seamless": {
+      "post": {
+        "summary": "Create a ABM provisioning request using device serial number",
+        "tags": [
+          "7_ABM Provisioning"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeamlessRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Seamless request successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeamlessSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeamlessErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "seamless"
+      }
+    },
     "/v2/emm/enrollment/begin/": {
       "post": {
         "summary": "Generate sign-up URL",
@@ -7664,6 +7820,209 @@
         },
         "required": [
           "callback_url"
+        ]
+      },
+      "SeamlessRequestBody": {
+        "type": "object",
+        "properties": {
+          "assigned_blueprint_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3e41fd18-d53d-4673-a10a-23089cbb6b73"
+          },
+          "group_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3e41fd18-d53d-4673-a10a-23089cbb6b73"
+          },
+          "alias": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 5
+          },
+          "seamless_info": {
+            "$ref": "#/components/schemas/SeamlessInfo"
+          }
+        },
+        "required": [
+          "assigned_blueprint_id",
+          "seamless_info"
+        ]
+      },
+      "SeamlessInfo": {
+        "type": "object",
+        "properties": {
+          "unique_ids": {
+            "type": "string",
+            "example": "3e41fd18-d53d-4673-a10a-23089cbb6b73"
+          },
+          "unique_id_type": {
+            "type": "integer",
+            "enum": [
+              2,
+              3
+            ],
+            "example": 2
+          },
+          "platform": {
+            "type": "string",
+            "default": "APPLE",
+            "enum": [
+              "APPLE",
+              "LINUX",
+              "WINDOWS"
+            ]
+          }
+        },
+        "required": [
+          "unique_ids",
+          "unique_id_type"
+        ]
+      },
+      "SeamlessErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "content"
+        ]
+      },
+      "SeamlessSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer"
+              },
+              "prev": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "next": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "results": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SeamlessRequest"
+                }
+              }
+            },
+            "required": [
+              "count",
+              "prev",
+              "next",
+              "results"
+            ]
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "SeamlessRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assigned_blueprint_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "group_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "alias": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unique_ids": {
+            "type": "string"
+          },
+          "unique_id_type": {
+            "type": "string",
+            "enum": [
+              "SERIAL",
+              "UUID"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "FAILED",
+              "IN_PROGRESS",
+              "IN_QUEUE",
+              "SUCCESS"
+            ]
+          },
+          "meta": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true
+          },
+          "tenant_id": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "APPLE",
+              "LINUX",
+              "WINDOWS"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "assigned_blueprint_id",
+          "unique_ids",
+          "unique_id_type",
+          "status",
+          "meta",
+          "tenant_id",
+          "platform"
         ]
       },
       "ConvergeCommand": {

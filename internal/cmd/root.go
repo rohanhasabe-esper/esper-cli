@@ -8,6 +8,7 @@ import (
 	"github.com/esper-io/esper-cli/internal/cmd/configure"
 	contextcmd "github.com/esper-io/esper-cli/internal/cmd/context"
 	"github.com/esper-io/esper-cli/internal/cmd/generated"
+	"github.com/esper-io/esper-cli/internal/cmd/secureadb"
 	esperruntime "github.com/esper-io/esper-cli/internal/runtime"
 	"github.com/esper-io/esper-cli/internal/version"
 	"github.com/spf13/cobra"
@@ -35,6 +36,7 @@ func NewRootCommand() *cobra.Command {
 	command.AddCommand(approval.NewCommand(options))
 	command.AddCommand(configure.NewCommand(options))
 	command.AddCommand(contextcmd.NewCommand(options))
+	command.AddCommand(secureadb.NewCommand(options))
 	addVersionCommand(command, options)
 	for _, child := range command.Commands() {
 		if child.Name() != "api" {

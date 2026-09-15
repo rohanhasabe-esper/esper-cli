@@ -113,10 +113,812 @@
         "x-esper-noun": "group",
         "x-esper-scope-parent": "user"
       }
+    },
+    "/authz2/v1/roles/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Roles"
+        ],
+        "summary": "List Roles API",
+        "description": "API to retrieve all the roles for the tenant",
+        "operationId": "GetRoleURL",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "role_type",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request Succeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RoleResponse"
+                      }
+                    }
+                  },
+                  "required": [
+                    "count",
+                    "roles"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "role"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Roles"
+        ],
+        "summary": "Create a new role. Then optionally add scopes by using the Update Role Scopes API. No scopes are added by default.",
+        "description": "Learn more about <a target=\"_blank\" href=\"https://help.esper.io/hc/en-us/articles/13714316325393-Creating-Custom-Roles\">Creating Custom Roles</a>.\n",
+        "operationId": "PostRoleURL",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRole"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Request Succeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "role"
+      }
+    },
+    "/authz2/v1/roles/{role_id}": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Roles"
+        ],
+        "summary": "Get Role API",
+        "description": "API to retrieve the role for the tenant",
+        "operationId": "GetRoleIdURL",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RoleID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request Succeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "role"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Roles"
+        ],
+        "summary": "Patch Role API",
+        "description": "API to update role details",
+        "operationId": "UpdateRoleIdURL",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RoleID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRole"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Request Succeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "role"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Roles"
+        ],
+        "summary": "Delete Role API",
+        "description": "API to delete the role for the tenant",
+        "operationId": "DeleteRoleIdURL",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RoleID"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted succesfully"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "role"
+      }
+    },
+    "/authz2/v1/roles/{role_id}/scopes": {
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Roles"
+        ],
+        "summary": "Update Role Scopes API",
+        "description": "API to update scopes of an roles for the tenant",
+        "operationId": "PutRoleScopeURL",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "scope_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  },
+                  "scope_names": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "read:device",
+                        "read:group",
+                        "read:blueprint",
+                        "read:directory_record",
+                        "create:device_command:SET_DEVICE_LOCKDOWN_STATE",
+                        "create:device_command:REBOOT",
+                        "create:device_command:BEEP_DEVICE",
+                        "create:device_command:WIPE",
+                        "create:device_command:UPDATE_HEARTBEAT",
+                        "create:device_command:NOTIFY_DEVICE",
+                        "create:device_command:LOCK",
+                        "create:device_command:SET_KIOSK_APP",
+                        "update:device:group",
+                        "create:device:tag",
+                        "update:device:tag",
+                        "delete:device:tag",
+                        "update:device:alias",
+                        "create:template_upgrade",
+                        "create:device_command:SET_STREAM_VOLUME",
+                        "create:device_command:SET_BRIGHTNESS_SCALE",
+                        "create:device_command:SET_ROTATION_STATE",
+                        "create:device_command:SET_SCREEN_OFF_TIMEOUT",
+                        "create:device_command:SET_WALLPAPER",
+                        "create:device_command:SET_WIFI_STATE",
+                        "create:device_command:ADD_WIFI_AP",
+                        "create:device_command:REMOVE_WIFI_AP",
+                        "create:device_command:SET_STATIC_IP",
+                        "create:device_command:SET_ETHERNET_SETTINGS",
+                        "create:device_command:SET_GPS_STATE",
+                        "create:device_command:SET_BLUETOOTH_STATE",
+                        "create:device_command:SET_TIMEZONE",
+                        "create:device_command:SET_ADB_STATE",
+                        "create:device_command:UPDATE_DEVICE_CONFIG",
+                        "create:device_command:UPDATE_BLUEPRINT",
+                        "create:device_command:SHUT_DOWN",
+                        "create:device_command:CLEAR_PASSCODE",
+                        "create:device_command:LOST_MODE",
+                        "read:device_app",
+                        "create:device_command:REFRESH_APPLIST",
+                        "create:device_command:INSTALL",
+                        "create:device_command:INSTALL_APP",
+                        "create:device_command:UNINSTALL",
+                        "create:device_command:UNINSTALL_APP",
+                        "create:device_command:SET_APP_STATE",
+                        "create:device_command:CLEAR_APP_DATA",
+                        "create:device_command:SET_APP_PERMISSION",
+                        "create:device_command:REQUEST_BUGREPORT",
+                        "create:device_command:SET_NEW_POLICY",
+                        "create:group_command:SET_NEW_POLICY",
+                        "create:group",
+                        "create:group_command:REBOOT",
+                        "create:group_command:LOCK",
+                        "create:group_command:UPDATE_HEARTBEAT",
+                        "create:group_command:WIPE",
+                        "create:group_command:NOTIFY_DEVICE",
+                        "create:group_command:SET_KIOSK_APP",
+                        "create:group_command:SET_STREAM_VOLUME",
+                        "create:group_command:SET_BRIGHTNESS_SCALE",
+                        "create:group_command:SET_ROTATION_STATE",
+                        "create:group_command:SET_SCREEN_OFF_TIMEOUT",
+                        "create:group_command:SET_WALLPAPER",
+                        "create:group_command:SET_WIFI_STATE",
+                        "create:group_command:ADD_WIFI_AP",
+                        "create:group_command:REMOVE_WIFI_AP",
+                        "create:group_command:SET_STATIC_IP",
+                        "create:group_command:SET_ETHERNET_SETTINGS",
+                        "create:group_command:SET_GPS_STATE",
+                        "create:group_command:SET_BLUETOOTH_STATE",
+                        "create:group_command:SET_TIMEZONE",
+                        "create:group_command:SET_ADB_STATE",
+                        "create:group_command:UPDATE_DEVICE_CONFIG",
+                        "create:group_command:UPDATE_BLUEPRINT",
+                        "create:group_command:INSTALL",
+                        "create:group_command:INSTALL_APP",
+                        "create:group_command:UNINSTALL",
+                        "create:group_command:UNINSTALL_APP",
+                        "create:group_command:SET_APP_STATE",
+                        "create:device_command:INITIATE_OFFER",
+                        "read:device_screenshot",
+                        "create:device_command:CAPTURE_SCREENSHOT",
+                        "create:device_screenshot",
+                        "read:device_graph",
+                        "read:event_feed",
+                        "create:blueprint",
+                        "update:blueprint",
+                        "delete:blueprint",
+                        "create:device_command:CONVERGE",
+                        "update:device:blueprint",
+                        "update:group:blueprint",
+                        "provision:device",
+                        "read:compliance_policy",
+                        "create:compliance_policy",
+                        "update:compliance_policy",
+                        "delete:compliance_policy",
+                        "read:provisioning_template",
+                        "create:provisioning_template",
+                        "update:provisioning_template",
+                        "delete:provisioning_template",
+                        "create:provisioning_template:imei_serial",
+                        "update:provisioning_template:imei_serial",
+                        "delete:provisioning_template:imei_serial",
+                        "update:provisioning_template:wifi_management",
+                        "read:app",
+                        "read:emm",
+                        "create:emm",
+                        "update:emm",
+                        "create:app:esper_android",
+                        "update:app:esper_android",
+                        "delete:app:esper_android",
+                        "read:alert",
+                        "read:pipeline",
+                        "read:geofence",
+                        "read:report",
+                        "create:report",
+                        "read:personal_access_token",
+                        "create:personal_access_token",
+                        "update:personal_access_token",
+                        "delete:personal_access_token",
+                        "read:foundation_build",
+                        "read:foundation_device_model",
+                        "update:foundation_build",
+                        "update:foundation_device_model",
+                        "read:foundry_event",
+                        "update:command",
+                        "read:user:group",
+                        "create:app:esper_ios",
+                        "update:app:esper_ios",
+                        "delete:app:esper_ios",
+                        "create:operation:CONVERGE",
+                        "create:operation:REBOOT",
+                        "create:operation:INSTALL",
+                        "create:operation:UNINSTALL",
+                        "create:operation:APP_INSTALL",
+                        "create:operation:APP_UNINSTALL",
+                        "read:operation",
+                        "update:operation",
+                        "read:operation:devices",
+                        "read:device:operations",
+                        "update:operation:devices",
+                        "create:device_command:RUN_SHELL_SCRIPT",
+                        "create:remote_terminal",
+                        "read:report:query",
+                        "create:report:query",
+                        "read:report:saved_query",
+                        "create:report:saved_query",
+                        "update:report:saved_query",
+                        "delete:report:saved_query",
+                        "create:device_command:REMOVE_DEVICE",
+                        "read:report:ingest",
+                        "create:report:ingest",
+                        "read:esper_apps",
+                        "create:device_command:RUN_CUSTOM_ACTION",
+                        "create:device_command:LIST_RESTRICTED_PROFILES",
+                        "create:device_command:LIST_PROVISIONING_PROFILES",
+                        "create:group_command:SYNC_CONTENT",
+                        "create:device_command:SYNC_CONTENT"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RoleID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request Succeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "scopes": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ScopeResponse"
+                      }
+                    }
+                  },
+                  "required": [
+                    "scopes"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role or scopes not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "scope",
+        "x-esper-scope-parent": "role"
+      },
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Roles"
+        ],
+        "summary": "List Role Scopes API",
+        "description": "API to retrieve scopes of an roles for the tenant",
+        "operationId": "GetRoleScopeURL",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RoleID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request Succeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScopeResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "scope",
+        "x-esper-scope-parent": "role"
+      }
     }
   },
   "components": {
     "schemas": {
+      "ScopeResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "scope_type": {
+            "type": "integer"
+          },
+          "organization_type": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "scope_type",
+          "organization_type"
+        ]
+      },
+      "UpdateRole": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateRole": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ]
+      },
+      "RoleResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "role_type": {
+            "type": "integer"
+          },
+          "organization_type": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "role_type",
+          "organization_type"
+        ]
+      },
       "UserGroups": {
         "type": "object",
         "properties": {
@@ -164,6 +966,16 @@
       }
     },
     "parameters": {
+      "RoleID": {
+        "name": "role_id",
+        "description": "Role ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
       "AuthNUserID": {
         "name": "user_id",
         "description": "AuthN User Id. The authn_user_id from the Get Users response.",

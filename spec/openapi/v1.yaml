@@ -2792,10 +2792,515 @@
         "x-esper-noun": "installdevice",
         "x-esper-scope-parent": "version"
       }
+    },
+    "/v1/enterprise/{enterprise_id}/directory_record/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Directory Record"
+        ],
+        "summary": "Get all Directory Records",
+        "description": "Returns a list of all Directory Record instances",
+        "operationId": "getDirectoryRecords",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Directory records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "previous": {
+                      "type": "string"
+                    },
+                    "next": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DirectoryRecord"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "directory-record",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Directory Record"
+        ],
+        "summary": "Create a new Directory Record",
+        "description": "Returns the created Directory Record intance",
+        "operationId": "createDirectoryRecord",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DirectoryRecordCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DirectoryRecord"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Directory record create error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Directory record create error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "directory-record",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/directory_record/{directory_record_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Directory Record"
+        ],
+        "summary": "Get details about a Directory Record",
+        "description": "Returns detail of the Directory Record instance",
+        "operationId": "getDirectoryRecord",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/DirectoryRecordID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Directory record information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DirectoryRecord"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "directory-record"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Directory Record"
+        ],
+        "summary": "Update a Directory Record",
+        "description": "Returns the updated Directory Record instance",
+        "operationId": "updateDirectoryRecord",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/DirectoryRecordID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DirectoryRecordUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated Directory Record Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DirectoryRecord"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Directory record update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Directory record update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "directory-record"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Directory Record"
+        ],
+        "summary": "Delete a Directory Record",
+        "description": "Deletes the requested Directory Record instance",
+        "operationId": "deleteDirectoryRecord",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/DirectoryRecordID"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted Directory Record"
+          },
+          "401": {
+            "description": "Directory record delete error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "directory-record"
+      }
     }
   },
   "components": {
     "schemas": {
+      "DirectoryRecordUpdate": {
+        "title": "DirectoryRecordUpdate",
+        "required": [
+          "unique_identifiers"
+        ],
+        "type": "object",
+        "properties": {
+          "unique_identifiers": {
+            "title": "Unique Identifiers",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/UniqueIdentifierCreate"
+                }
+              ]
+            }
+          },
+          "group_id": {
+            "title": "Group ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "alias": {
+            "title": "Alias name",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UniqueIdentifierCreate": {
+        "title": "UniqueIdentifierCreate",
+        "type": "object",
+        "properties": {
+          "unique_id": {
+            "title": "Unique identifier",
+            "type": "string"
+          },
+          "type": {
+            "title": "Unique identifier type",
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "description": "Following are the valid Unique Identifier Types:\n\n```\nIMEI1 = 0\nIMEI2 = 1\nSERIAL = 2\nMEI = 3\nWIFI_MAC_ID = 4\nETHERNET_MAC_ID = 5\n```\n"
+          }
+        }
+      },
+      "DirectoryRecordCreate": {
+        "title": "DirectoryRecordCreate",
+        "required": [
+          "unique_identifiers"
+        ],
+        "type": "object",
+        "properties": {
+          "unique_identifiers": {
+            "title": "Unique Identifiers",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/UniqueIdentifierCreate"
+                }
+              ]
+            }
+          },
+          "group_id": {
+            "title": "Group ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "alias": {
+            "title": "Alias name",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DirectoryRecord": {
+        "title": "DirectoryRecord",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Directory Record ID",
+            "type": "string"
+          },
+          "name": {
+            "title": "Device name",
+            "type": "string"
+          },
+          "online_status": {
+            "type": "string",
+            "enum": [
+              "ONLINE",
+              "OFFLINE",
+              "NONE"
+            ]
+          },
+          "alias": {
+            "title": "Alias name",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "group_id": {
+            "title": "Group ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "title": "Device ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "approval_status": {
+            "title": "Approval Status",
+            "type": "string",
+            "enum": [
+              "WAITING_FOR_APPROVAL",
+              "APPROVED",
+              "REJECTED",
+              "BLOCKED"
+            ]
+          },
+          "provisioned_on": {
+            "title": "Provisioned on",
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "unique_identifiers": {
+            "title": "Unique Identifiers",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/UniqueIdentifier"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "UniqueIdentifier": {
+        "title": "UniqueIdentifier",
+        "type": "object",
+        "properties": {
+          "unique_id": {
+            "title": "Unique identifier",
+            "type": "string"
+          },
+          "type": {
+            "title": "Unique identifier type",
+            "type": "string",
+            "enum": [
+              "IMEI1",
+              "IMEI2",
+              "SERIAL",
+              "MEI",
+              "WIFI_MAC_ID",
+              "ETHERNET_MAC_ID"
+            ]
+          }
+        }
+      },
       "InstallDevices": {
         "required": [
           "id"
@@ -3569,6 +4074,27 @@
         }
       }
     },
-    "parameters": {}
+    "parameters": {
+      "DirectoryRecordID": {
+        "name": "directory_record_id",
+        "description": "Directory record ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "EnterpriseID": {
+        "name": "enterprise_id",
+        "description": "Enterprise ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
   }
 }

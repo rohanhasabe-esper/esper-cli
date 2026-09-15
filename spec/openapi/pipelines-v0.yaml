@@ -407,6 +407,287 @@
         "x-esper-scope-parent": "stage"
       }
     },
+    "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/devicegroups/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Get all Device Groups in the Target List",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "getTargetListDeviceGroups",
+        "tags": [
+          "2_Device Groups"
+        ],
+        "parameters": [
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "description": "ID of the Pipeline",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "targetlist_id",
+            "in": "path",
+            "description": "ID of the Target List",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Device Groups in Target List",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/TargetListDeviceGroup"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Target List device group get error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device-group",
+        "x-esper-scope-parent": "target-list"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Add a Device Group to the Target List",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "addTargetListDeviceGroups",
+        "tags": [
+          "2_Device Groups"
+        ],
+        "parameters": [
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "description": "ID of the Pipeline",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "targetlist_id",
+            "in": "path",
+            "description": "ID of the Target List",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TargetListDeviceGroups_POST"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Added Device group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/TargetListDeviceGroup"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Target List Device Group add error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-platform-source": "src/services/pipelines-api/api/domain/targets/views/target_list_devicegroup.py:38-64",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "device-group",
+        "x-esper-scope-parent": "target-list"
+      }
+    },
+    "/pipelines/v0/pipelines/{pipeline_id}/targetlists/{targetlist_id}/devicegroups/{devicegroup_id}/": {
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Delete Device Group from a Target List",
+        "security": [
+          {
+            "SCAPIAuthToken": []
+          }
+        ],
+        "operationId": "deleteTargetListDeviceGroup",
+        "tags": [
+          "2_Device Groups"
+        ],
+        "parameters": [
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "description": "ID of the Pipeline",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "targetlist_id",
+            "in": "path",
+            "description": "ID of the Target List",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "devicegroup_id",
+            "in": "path",
+            "description": "ID of the Device Group",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted Device Group from Target List",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "target_list": {
+                          "type": "string"
+                        },
+                        "device_group": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Target List device delete error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-platform-source": "src/services/pipelines-api/api/domain/targets/views/target_list_devicegroup.py:66-87",
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "device-group",
+        "x-esper-scope-parent": "target-list"
+      }
+    },
     "/pipelines/v0/operationlists/{operationlist_id}/operations/": {
       "get": {
         "x-badges": [
@@ -1421,6 +1702,47 @@
             "type": "string"
           },
           "args": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "number",
+            "format": "int32"
+          },
+          "updated_by": {
+            "type": "number",
+            "format": "int32"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TargetListDeviceGroups_POST": {
+        "type": "object",
+        "properties": {
+          "device_group_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the Device Group"
+          }
+        }
+      },
+      "TargetListDeviceGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "device_group_id": {
+            "type": "string"
+          },
+          "target_list_id": {
             "type": "string"
           },
           "created_by": {

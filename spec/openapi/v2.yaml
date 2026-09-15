@@ -170,6 +170,102 @@
     }
   ],
   "paths": {
+    "/v2/subgroups": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Group"
+        ],
+        "summary": "List the subgroups of list of groups",
+        "description": "Returns EnterpriseDeviceGroup list",
+        "operationId": "getAllSubGroups",
+        "parameters": [
+          {
+            "name": "parent_group_ids",
+            "in": "query",
+            "description": "Filter by parent group ids. This is a comma separated list of group ids.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "immediate",
+            "in": "query",
+            "description": "This is a boolean value. If true, only immediate subgroups are returned.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/DeviceSubGroup"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-platform-source": "src/services/shoonyacloud/shoonyapoc/api/enterprise/views/device_group.py:346-381",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "sub-group"
+      }
+    },
     "/v2/blueprints/": {
       "get": {
         "x-badges": [
@@ -13129,6 +13225,38 @@
           },
           "settings": {
             "$ref": "#/components/schemas/settingsV2"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "title": "Messages describing the error",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "title": "Message describing the error",
+            "type": "string"
+          },
+          "status": {
+            "title": "alias name",
+            "type": "integer"
+          }
+        }
+      },
+      "DeviceSubGroup": {
+        "type": "object",
+        "properties": {
+          "subgroups": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         }
       }

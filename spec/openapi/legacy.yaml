@@ -2084,6 +2084,1012 @@
         "x-esper-scope-parent": "device"
       }
     },
+    "/enterprise/{enterprise_id}/group/{group_id}/download/eventfeed/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_AndroidDevice"
+        ],
+        "summary": "Download Event Feed for Group",
+        "description": "Download Event Feed for group, ordered by date the event was created on",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "group_id",
+            "in": "path",
+            "description": "A UUID string identifying the group",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer",
+              "default": 250
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/V0CommandRequest"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "group-eventfeed",
+        "x-esper-scope-parent": "group"
+      }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Group"
+        ],
+        "summary": "List device groups",
+        "description": "Get a list of groups in the Devices & Groups.",
+        "operationId": "getAllGroups",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by group name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DeviceGroup"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device-group",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Group"
+        ],
+        "summary": "Create a device group",
+        "description": "Create a group in Devices & Groups.",
+        "operationId": "createGroup",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroupUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceGroup"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/urls.py:250-252",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/views/device_group.py:163-245",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/serializers/device_group.py:61-243"
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "device-group",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/{group_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Group"
+        ],
+        "summary": "Get device group information",
+        "description": "Find a group by its ID. Use List groups to find a group’s ID in Devices & Groups.",
+        "operationId": "getGroupById",
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise device group.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceGroup"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "group"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Group"
+        ],
+        "summary": "Update device group",
+        "description": "Update a group in Devices & Groups.",
+        "operationId": "updateGroup",
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise device group.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "description": "add / remove / rename / move",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroupUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceGroup"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/urls.py:250-252",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/views/device_group.py:163-262",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/serializers/device_group.py:61-440"
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "group"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Group"
+        ],
+        "summary": "Delete a device group",
+        "description": "Delete a group from Devices & Groups.",
+        "operationId": "deleteGroup",
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise device group.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "group"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Device Group"
+        ],
+        "summary": "Partially update a device group",
+        "description": "Partially update a group in Devices & Groups.",
+        "operationId": "partialUpdateGroup",
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise device group.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "description": "add / remove / rename / move",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroupPartialUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceGroup"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-platform-source": [
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/urls.py:250-252",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/views/device_group.py:163-262",
+          "src/services/shoonyacloud/shoonyapoc/api/enterprise/serializers/device_group.py:61-440"
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "partial-update",
+        "x-esper-noun": "group"
+      }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/thumbnail/": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          }
+        ],
+        "tags": [
+          "0_Device Group"
+        ],
+        "summary": "Upload a thumbnail pic",
+        "description": "Upload an image to represent the group in Devices & Groups.",
+        "operationId": "uploadGroupThumbnail",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image_file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Thumbnail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupThumbnail"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "upload",
+        "x-esper-noun": "group-thumbnail"
+      },
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          }
+        ],
+        "tags": [
+          "0_Device Group"
+        ],
+        "summary": "List thumbnail pics",
+        "description": "Get a list of group thumbnail image files in Devices & Groups.",
+        "operationId": "listGroupThumbnail",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Thumbnail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "previous": {
+                      "type": "string"
+                    },
+                    "next": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GroupThumbnail"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "group-thumbnail",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/enterprise/{enterprise_id}/devicegroup/thumbnail/{thumbnail_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/GroupThumbnailID"
+          }
+        ],
+        "tags": [
+          "0_Device Group"
+        ],
+        "summary": "Get thumbnail detail",
+        "description": "Get a thumbnail by its ID. Use List thumbnail pics to find thumbnail IDs. ",
+        "operationId": "getGroupThumbnail",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Thumbnail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupThumbnail"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "group-thumbnail"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/GroupThumbnailID"
+          }
+        ],
+        "tags": [
+          "0_Device Group"
+        ],
+        "summary": "Delete group thumbnail",
+        "description": "Delete a thumbnail in Devices & Groups.",
+        "operationId": "deleteGroupThumbnail",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted group thumbnail"
+          },
+          "401": {
+            "description": "Group thumbnail delete error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "group-thumbnail"
+      }
+    },
     "/enterprise/{enterprise_id}/policy/{policy_id}/": {
       "delete": {
         "x-badges": [
@@ -3885,6 +4891,606 @@
           }
         }
       },
+      "GroupThumbnail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "image_file": {
+            "type": "string",
+            "readOnly": true
+          },
+          "thumbnail_url": {
+            "type": "string",
+            "readOnly": true
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "DeviceGroupPartialUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Group id",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "description": "Group name"
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "description": "Date and time of when the group was created",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "enterprise": {
+            "title": "Enterprise",
+            "type": "string",
+            "description": "Enterprise url",
+            "format": "url",
+            "readOnly": true
+          },
+          "parent": {
+            "title": "Parent",
+            "type": "string",
+            "description": "Parent group id",
+            "format": "uuid"
+          },
+          "device_ids": {
+            "title": "Device ids",
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Device ids",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "device_count": {
+            "title": "Device count",
+            "type": "integer",
+            "description": "Count of devices in the group",
+            "readOnly": true
+          },
+          "path": {
+            "title": "Path",
+            "type": "string",
+            "description": "Path of the group",
+            "readOnly": true
+          },
+          "children_count": {
+            "title": "Children Count",
+            "type": "integer",
+            "description": "Count of child groups",
+            "readOnly": true
+          }
+        }
+      },
+      "DeviceGroupUpdate": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Group id",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "description": "Group name"
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "description": "Date and time of when the group was created",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "enterprise": {
+            "title": "Enterprise",
+            "type": "string",
+            "description": "Enterprise url",
+            "format": "url",
+            "readOnly": true
+          },
+          "parent": {
+            "title": "Parent",
+            "type": "string",
+            "description": "Parent group id",
+            "format": "uuid"
+          },
+          "device_ids": {
+            "title": "Device ids",
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Devices ids",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "device_count": {
+            "title": "Device count",
+            "type": "integer",
+            "readOnly": true
+          },
+          "path": {
+            "title": "Path",
+            "type": "string",
+            "description": "Path of the group",
+            "readOnly": true
+          },
+          "children_count": {
+            "title": "Children Count",
+            "type": "integer",
+            "description": "Count of child groups",
+            "readOnly": true
+          }
+        }
+      },
+      "DeviceGroup": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Group id",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "description": "Group name"
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "description": "Date and time of when the group was created",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "enterprise": {
+            "title": "Enterprise",
+            "type": "string",
+            "description": "Enterprise url",
+            "format": "url",
+            "readOnly": true
+          },
+          "parent": {
+            "title": "Parent",
+            "type": "string",
+            "description": "Parent group url",
+            "format": "url"
+          },
+          "device_count": {
+            "title": "Device count",
+            "type": "integer",
+            "description": "Count of devices in the group",
+            "readOnly": true
+          },
+          "path": {
+            "title": "Path",
+            "type": "string",
+            "description": "Path of the group",
+            "readOnly": true
+          },
+          "children_count": {
+            "title": "Children count",
+            "type": "integer",
+            "description": "Count of child groups",
+            "readOnly": true
+          },
+          "thumbnail": {
+            "title": "thumbnail",
+            "description": "thumbnail associated with the group",
+            "type": "string",
+            "format": "uuid"
+          },
+          "blueprint": {
+            "title": "Blueprint",
+            "description": "Blueprint associated with the group.",
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          }
+        }
+      },
+      "V0CommandRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Unique command request identifier",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "enterprise": {
+            "title": "Enterperise ID",
+            "type": "string",
+            "description": "Esper account identifier",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "command_type": {
+            "type": "string",
+            "description": "Identifies the type of command\n\n```\n* DEVICE: command request is meant for devices\n* GROUP: command request is meant for groups\n* DYNAMIC: command request is meant for dynamic set of devices\n  i.e subset of devices from different groups or otherwise.\n```\n",
+            "enum": [
+              "DEVICE",
+              "GROUP",
+              "DYNAMIC"
+            ]
+          },
+          "devices": {
+            "maxItems": 1000,
+            "minItems": 0,
+            "type": "array",
+            "description": "list of devices to run commands",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "groups": {
+            "maxItems": 500,
+            "minItems": 0,
+            "type": "array",
+            "description": "list of groups to run commands",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "command": {
+            "$ref": "#/components/schemas/V0DeviceCommandEnum"
+          },
+          "command_args": {
+            "$ref": "#/components/schemas/V0CommandArgs"
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/V0CommandScheduleEnum"
+          },
+          "schedule_args": {
+            "$ref": "#/components/schemas/V0CommandScheduleArgs"
+          },
+          "issued_by": {
+            "type": "string",
+            "description": "command is issued by this user",
+            "format": "url",
+            "readOnly": true
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "description": "Timestamp of command request",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "status": {
+            "title": "Current Status",
+            "type": "array",
+            "description": "Show current status of commands issued during this request",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/V0CommandRequestStatus"
+            }
+          }
+        }
+      },
+      "V0CommandRequestStatus": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "title": "Command State",
+            "type": "string",
+            "description": "Current State of command",
+            "format": "uuid"
+          },
+          "total": {
+            "title": "Count",
+            "type": "integer",
+            "description": "No of commands currently in this state",
+            "format": "int64"
+          }
+        }
+      },
+      "V0CommandScheduleArgs": {
+        "title": "Command Schedule Arguments",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "start_datetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_datetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "time_type": {
+            "$ref": "#/components/schemas/V0CommandScheduleArgsTimeTypeEnum"
+          },
+          "window_start_time": {
+            "type": "string",
+            "description": "It is automatically populated by the time field from the request's start_datetime and cannot be injected via the API request body."
+          },
+          "window_end_time": {
+            "type": "string",
+            "description": "It is automatically populated by the time field from the request's end_datetime and cannot be injected via the API request body."
+          },
+          "days": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "V0CommandScheduleArgsTimeTypeEnum": {
+        "type": "string",
+        "description": "The Time-Type argument, in Schedule args, is to indicate which timezone the Command Framework should utilize when scheduling the command.\nFollowing Schedule Args for Time-Type are supported:\n\n```\n* CONSOLE: Use the local timezone of the user creating the schedule.\n* DEVICE: Use the local timezone of the device, to which the command is issued, wherever it may be.\n```\n",
+        "enum": [
+          "console",
+          "device"
+        ]
+      },
+      "V0CommandScheduleEnum": {
+        "type": "string",
+        "description": "Following Schedule types are supported\n\n```\n* IMMEDIATE: Schedule the command to execcute Immediately\n* WINDOW: Schedule the command to execute within the given window\n* RECURRING: Schedule the command to execute during the scheduled time until it succeeds or expires. After executing successfully, it will not fire again.\n```\n",
+        "enum": [
+          "IMMEDIATE",
+          "WINDOW",
+          "RECURRING"
+        ]
+      },
+      "V0CommandArgs": {
+        "title": "Command args",
+        "type": "object",
+        "properties": {
+          "device_alias_name": {
+            "type": "string",
+            "description": "Alternate human-readable name for your Device"
+          },
+          "custom_settings_config": {
+            "type": "object",
+            "properties": {},
+            "description": "Managed configurations for your device (passed as JSON object)"
+          },
+          "app_version": {
+            "type": "string",
+            "description": "The version id of app uploaded on Esper"
+          },
+          "package_name": {
+            "type": "string",
+            "description": "The app package name uploaded on Esper"
+          },
+          "policy_url": {
+            "type": "string",
+            "description": "The URL to the policy"
+          },
+          "wifi_access_points": {
+            "type": "object",
+            "properties": {},
+            "description": "Wifi access points for the device (passed as JSON object)"
+          },
+          "state": {
+            "type": "string",
+            "description": "LOCKED/UNLOCKED"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message to be added with command to notify device."
+          },
+          "title": {
+            "type": "string",
+            "description": "Message title  to be added with command to notify device."
+          },
+          "url": {
+            "type": "string",
+            "description": "(Optional) Link to notify device."
+          },
+          "app_state": {
+            "type": "string",
+            "description": "The state of app - SHOW/HIDE/DISABLE/LAUNCHABLE_BUT_HIDDEN"
+          },
+          "bluetooth_state": {
+            "type": "boolean",
+            "description": "The state of bluetooth - ON/OFF"
+          },
+          "brightness_value": {
+            "type": "integer",
+            "description": "The brightness value of a device(1-100)"
+          },
+          "gps_state": {
+            "type": "integer",
+            "description": "The GPS state of a device. Should be either 0, 1, 2, 3 or 4 (LOCATION_MODE_HIGH_ACCURACY = 0, LOCATION_MODE_SENSORS_ONLY = 1, LOCATION_MODE_BATTERY_SAVING = 2, LOCATION_MODE_OFF = 3, LOCATION_MODE_ON = 4)"
+          },
+          "rotate_state": {
+            "type": "integer",
+            "description": "The screen orientation of a device. Should be either 0, 1 or 2 (0 = AUTO, 1 = PORTRAIT_ONLY, 2 = LANDSCAPE_ONLY)"
+          },
+          "screen_off_timeout": {
+            "type": "integer",
+            "description": "The value for screen timeout of a device. Should be either -1 or between 5000 and 1800000"
+          },
+          "stream": {
+            "type": "integer",
+            "description": "The value of the volume stream. Should be either 0(Ring), 1(Notification), 2(Alarm) or 3(Music)"
+          },
+          "volume_level": {
+            "type": "integer",
+            "description": "The level of volume. Should be a value from 0 to 100"
+          },
+          "timezone_string": {
+            "type": "integer",
+            "description": "The timezone of a device. Should be a valid timezone string"
+          },
+          "wifi_state": {
+            "type": "boolean",
+            "description": "The state of WIFI - ON/OFF"
+          },
+          "wifi_revert_timeout": {
+            "type": "integer",
+            "description": "The WIFI revert timeout. Should be greater than or equal to 1"
+          },
+          "locale": {
+            "type": "string",
+            "description": "Language and country code in xx[_Zzzz]_yy where xx is language code, Zzzz is script (optional) and yy is country code."
+          },
+          "ethernet_auth_mode": {
+            "type": "string",
+            "description": "Chosen mode of authentication",
+            "enum": [
+              "NONE",
+              "EAP_TLS"
+            ]
+          },
+          "ethernet_ca_cert_alias": {
+            "type": "string",
+            "description": "CA certificate alias. It is mandatory with Auth Mode EAP_TLS"
+          },
+          "ethernet_client_cert_alias": {
+            "type": "string",
+            "description": "Client certificate alias. It is mandatory with Auth Mode EAP_TLS"
+          },
+          "ethernet_eap_identity": {
+            "type": "string",
+            "description": "EAP identity"
+          },
+          "interface": {
+            "type": "string",
+            "description": "The network interface of the device - wlan/eth"
+          },
+          "dhcp_enabled": {
+            "type": "string",
+            "description": "The dhcp state on the device - true/false"
+          },
+          "static_ip": {
+            "type": "string",
+            "description": "The static ip to set on the device. Should be a valid ipv4"
+          },
+          "primary_dns": {
+            "type": "string",
+            "description": "The primary dns to set on the device. Should be a valid ipv4"
+          },
+          "subnet_mask": {
+            "type": "string",
+            "description": "The subnet mask set on the device. Should between 1-32 both inclusive"
+          },
+          "secondary_dns": {
+            "type": "string",
+            "description": "The secondary dns to set on the device. Should be a valid ipv4"
+          },
+          "gateway": {
+            "type": "string",
+            "description": "The gateway to set on the device. Should be a valid ipv4"
+          },
+          "duration": {
+            "type": "string",
+            "description": "The beep duration specified in seconds. Value must be between 10 and 300, both inclusive."
+          },
+          "tag": {
+            "type": "string",
+            "description": "The tag is an optional param that can be set to corresponding screenshot. Options are \"tag\"."
+          },
+          "video_quality": {
+            "type": "string",
+            "description": "The video quality of the respective Remote Viewer session. Options are \"STANDARD\" and \"DATA_SAVER\"."
+          },
+          "enable_debug_mode": {
+            "type": "boolean",
+            "default": false,
+            "description": "The flag to determine whether device must go into Debug Mode, in order to retreive bug report when the device is already in Kiosk Mode."
+          },
+          "converge_with_provision_option": {
+            "type": "boolean",
+            "default": false,
+            "description": "The flag to determine whether device should be converged with provision only or not."
+          },
+          "auto_update_mode": {
+            "type": "string",
+            "enum": [
+              "autoUpdateDefault",
+              "autoUpdateHighPriority",
+              "autoUpdatePostponed"
+            ],
+            "default": "autoUpdateHighPriority",
+            "description": "(Optional) Auto update mode for google play application"
+          },
+          "content_id": {
+            "type": "string",
+            "description": "The id of the content to be synced."
+          }
+        }
+      },
+      "V0DeviceCommandEnum": {
+        "type": "string",
+        "description": "Following commands are supported\n\n```\n* ADD_TO_WHITELIST: Whitelist an installed sytem app. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* ADD_WIFI_AP : Add wifi access points for device. Requires `wifi_access_points` in command arguments where `wifi_access_points` is the data with access points\n* CLEAR_APP_DATA : Clear data for an installed app. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* INSTALL: Install an app on a device. Requires `app_version` in command arguments where `app_version` is the version id of app uploaded on Esper\n* LOCK: Lock device screen\n* REBOOT: Reboot a device\n* REMOVE_FROM_WHITELIST : Remove an installed system app from whitelist. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* REMOVE_WIFI_AP : Remove Wifi access points for device. Requires `wifi_access_points` in command arguments where `wifi_access_points` is the data with access points\n* SET_APP_PERMISSION : Set permission for an installed app. Requires `package_name`, `grant_state`, `permission` in command arguments where `package_name` is the app package uploaded on Esper, `grant_state` should be \"PERMISSION_GRANT_STATE_DEFAULT\", \"PERMISSION_GRANT_STATE_DENIED\", \"PERMISSION_GRANT_STATE_GRANTED\" and `permission` is a valid permission\n* SET_APP_STATE : Set the state of an app - SHOW/HIDE/DISABLE/LAUNCHABLE_BUT_HIDDEN. Requries `app_state` and `package_name` in command arguments where `app_state` is the state of app and `package_name` is the app package uploaded on Esper\n* SET_BLUETOOTH_STATE : Set bluetooth state (ON/OFF) for device. Requires `bluetooth_state` in command arguments where `bluetooth_state` is a boolean.\n* SET_BRIGHTNESS_SCALE : Set brightness for device. Requires `brightness_value` in command arguments where `brightness_value` is an integer (1-100).\n* SET_DEVICE_LOCKDOWN_STATE : Set lockdown state for a device. Requires `state` and `message` in command arguments where `state` is LOCKED/UNLOCKED and `message` is the message to be added with command\n* SET_GPS_STATE :Set the GPS state for a device. Requires `gps_state` in command arguments where `gps_state` should be either 0, 1, 2, 3 or 4 (LOCATION_MODE_HIGH_ACCURACY = 0, LOCATION_MODE_SENSORS_ONLY = 1, LOCATION_MODE_BATTERY_SAVING = 2, LOCATION_MODE_OFF = 3, LOCATION_MODE_ON = 4)\n* SET_KIOSK_APP : Command to set the Kiosk app for a device. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* SET_NEW_POLICY : Apply policy on device. Requires `policy_url` in command arguments where `policy_url` is the URL to the policy\n* SET_ROTATION_STATE : Set screen orientation. Requires `rotate_state` in command arguments where `rotate_state` should be either 0, 1 or 2 (0 = AUTO, 1 = PORTRAIT_ONLY, 2 = LANDSCAPE_ONLY)\n* SET_SCREEN_OFF_TIMEOUT: Set screen off timeout for a device. Requires `screen_off_timeout` in command arguments where `screen_off_timeout` should be either -1 or between 5000 and 1800000\n* SET_STREAM_VOLUME : Set stream volume for a device. Requires `stream` and `volume_level` in command arguments where `stream` should be either 0(Ring), 1(Notification), 2(Alarm) or 3(Music) and `volume_level` should be a value from 0 to 100\n* SET_TIMEZONE : Set the timezone for a device. Requires `timezone_string` in command arguments where `timezone_string` is a valid string representing the timezone\n* SET_WIFI_STATE : Set the wifi state (ON/OFF) for a device. Requires `wifi_state` in command arguments where `wifi_state` is a boolean.\n* UNINSTALL: Uninstall an app from device. Requires `package_name` in command arguments where `package_name` is the app package uploaded on Esper\n* UPDATE_DEVICE_CONFIG: Push additional configurations to the Device\n* UPDATE_HEARTBEAT: Ping a device\n* UPDATE_LATEST_DPC : Prompt device to update the DPC app to the latest versions.\n* WIPE : Wipes the device.\n* RESET_LOCKSCREEN_PASSWORD: Change the lockscreen password of the device. Requires `new_lockscreen_password` in command arguments where `new_lockscreen_password` is a valid string.\n* CAPTURE_SCREENSHOT: Allows you to take a screenshot of the device's current screen. The \"tag\" is an optional param that can be set to corresponding screenshot.\n* UPDATE_BLUEPRINT: Pushes or reapplies the most current Blueprint version to the device or group.\n* NOTIFY_DEVICE: Allows you to  broadcast message to the device. Requires 'title', 'message' and 'url' (optional) as string in command arguments. For scheduled message command requires 'name', 'time_type' as string and 'start_datetime' and 'end_datetime' as date-time.\n* SET_DEVICE_LANGUAGE: Set language for a device. Requires locale value in xx[_Zzzz]_yy where xx is language code, Zzzz is script (optional) and yy is country code.\n* SET_ETHERNET_SETTINGS: Set ethernet settings on supported Device\n* SET_STATIC_IP: Set static ip on the deivce. Requires interface, dhcp_dnabled, static_ip, primary_dns, subnet_mask, gateway, secondary_dns (optional)\n* BEEP_DEVICE: Allows you to make the device beep for a specified duration\n* SET_APP_NOTIFICATIONS: Enable/disable app notifications. Requries `app_notifications_state` and `package_name` in command arguments where `app_notifications_state` is a string that has the value `ENABLED` or `DISABLED` and `package_name` is the app package uploaded on Esper.\n* USE_ONLY_SAVED_WIFI_AP: Allow/disallow device to connect to unregistered WiFi APs. Requires boolean `use_only_saved_ap`.\n* CONVERGE: Allows you to converge the device to the latest version of its assigned blueprint.\n* SYNC_CONTENT: Allows you to sync content to the device. Requires `content_id` in command arguments where `content_id` is the id of the content to be synced. ```\n",
+        "enum": [
+          "ADD_TO_WHITELIST",
+          "ADD_WIFI_AP",
+          "CLEAR_APP_DATA",
+          "INSTALL",
+          "LOCK",
+          "REBOOT",
+          "REMOVE_FROM_WHITELIST",
+          "REMOVE_WIFI_AP",
+          "SET_APP_PERMISSION",
+          "SET_APP_STATE",
+          "SET_BLUETOOTH_STATE",
+          "SET_BRIGHTNESS_SCALE",
+          "SET_DEVICE_LOCKDOWN_STATE",
+          "SET_GPS_STATE",
+          "SET_KIOSK_APP",
+          "SET_NEW_POLICY",
+          "SET_ROTATION_STATE",
+          "SET_SCREEN_OFF_TIMEOUT",
+          "SET_STREAM_VOLUME",
+          "SET_TIMEZONE",
+          "SET_WIFI_STATE",
+          "UNINSTALL",
+          "UPDATE_DEVICE_CONFIG",
+          "UPDATE_HEARTBEAT",
+          "UPDATE_LATEST_DPC",
+          "WIPE",
+          "RESET_LOCKSCREEN_PASSWORD",
+          "UPDATE_BLUEPRINT",
+          "CAPTURE_SCREENSHOT",
+          "NOTIFY_DEVICE",
+          "SET_DEVICE_LANGUAGE",
+          "SET_ETHERNET_SETTINGS",
+          "SET_STATIC_IP",
+          "BEEP_DEVICE",
+          "SET_APP_NOTIFICATIONS",
+          "USE_ONLY_SAVED_WIFI_AP",
+          "CONVERGE",
+          "SYNC_CONTENT"
+        ]
+      },
       "EventFeed": {
         "type": "object",
         "properties": {
@@ -4643,6 +6249,16 @@
       "GroupID": {
         "name": "group_id",
         "description": "Device Group ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "GroupThumbnailID": {
+        "name": "thumbnail_id",
+        "description": "Group thumbnail ID",
         "in": "path",
         "required": true,
         "schema": {

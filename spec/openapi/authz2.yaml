@@ -32,9 +32,148 @@
       "x-displayName": "Roles"
     }
   ],
-  "paths": {},
+  "paths": {
+    "/authz2/v1/users/{user_id}/groups": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_User"
+        ],
+        "summary": "Get user groups",
+        "description": "Get user's groups",
+        "operationId": "getUserGroups",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AuthNUserID"
+          },
+          {
+            "in": "query",
+            "name": "sub_groups",
+            "description": "Set to true to get a list of the user’s subgroup access. Users have access to their group’s subgroups.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User Groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserGroups"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "group",
+        "x-esper-scope-parent": "user"
+      }
+    }
+  },
   "components": {
-    "schemas": {},
-    "parameters": {}
+    "schemas": {
+      "UserGroups": {
+        "type": "object",
+        "properties": {
+          "group_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "has_all_group_access": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GenericErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Either 'status' or 'code' will be present, but not both."
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Either 'status' or 'code' will be present, but not both."
+          },
+          "error": {
+            "type": "string",
+            "description": "Either 'error' or 'errors' will be present, but not both."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Either 'error' or 'errors' will be present, but not both."
+          },
+          "message": {
+            "title": "Message describing the error",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "AuthNUserID": {
+        "name": "user_id",
+        "description": "AuthN User Id. The authn_user_id from the Get Users response.",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
   }
 }

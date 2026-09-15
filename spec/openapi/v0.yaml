@@ -314,6 +314,621 @@
         "x-esper-noun": "emm-instance"
       }
     },
+    "/v0/enterprise/{enterprise_id}/emm/{emm_id}/webtoken/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "List webtokens",
+        "description": "Returns list of webtokens",
+        "operationId": "getWebtokens",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GoogleWebToken"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "webtoken",
+        "x-esper-scope-parent": "emm"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Creates a webtoken instance",
+        "description": "Returns webtoken instance",
+        "operationId": "createWebtoken",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleWebTokenUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoogleWebToken"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "webtoken",
+        "x-esper-scope-parent": "emm"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/emm/{emm_id}/webtoken/{webtoken_id}": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Get webtoken instance",
+        "description": "Returns webtoken instance",
+        "operationId": "getWebtokenInstance",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "webtoken_id",
+            "in": "path",
+            "description": "An integer identifying the webtoken.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoogleWebToken"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "webtoken-instance",
+        "x-esper-scope-parent": "emm"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Updates webtoken instance",
+        "description": "Returns webtoken instance",
+        "operationId": "updateWebtokenInstance",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "webtoken_id",
+            "in": "path",
+            "description": "An integer identifying the webtoken.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleWebTokenUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoogleWebToken"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "webtoken-instance",
+        "x-esper-scope-parent": "emm"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Patches webtoken instance",
+        "description": "Returns webtoken instance",
+        "operationId": "patchWebtokenInstance",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "webtoken_id",
+            "in": "path",
+            "description": "An integer identifying the webtoken.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleWebTokenUpdateNoRequirements"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoogleWebToken"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "patch",
+        "x-esper-noun": "webtoken-instance",
+        "x-esper-scope-parent": "emm"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Deletes a webtoken instance",
+        "description": "Empty response",
+        "operationId": "deleteWebtokenInstance",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "webtoken_id",
+            "in": "path",
+            "description": "An integer identifying the webtoken.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "webtoken-instance",
+        "x-esper-scope-parent": "emm"
+      }
+    },
     "/v0/enterprise/{enterprise_id}/emm/{emm_id}/product/": {
       "get": {
         "x-badges": [
@@ -2455,6 +3070,114 @@
         "x-esper-pagination": "none",
         "x-esper-verb": "generate",
         "x-esper-noun": "download"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/developerapp/{developerapp_id}/renew-token/": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "tags": [
+          "0_Token (Deprecated)"
+        ],
+        "summary": "Renew Token",
+        "description": "API to renew your token",
+        "operationId": "renewToken",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "developerapp_id",
+            "in": "path",
+            "description": "A UUID string identifying the developerapp",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "query",
+            "description": "Token to be renewed",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenRenewV0"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "renew",
+        "x-esper-noun": "renew-token"
       }
     },
     "/v0/enterprise/{enterprise_id}/device/{device_id}/command-history/": {
@@ -6037,6 +6760,639 @@
         "x-esper-noun": "apns-cert"
       }
     },
+    "/tenant/v0/vpptokens/": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Get all VPP tokens for the tenant",
+        "description": "Returns all the VPP tokens for the tenant",
+        "tags": [
+          "8_VPP Token Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "VPP tokens for the Tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "default": 200
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "previous": {
+                          "type": "string"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/VPPToken"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "tenant-vpptoken"
+      },
+      "post": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Store a VPP token",
+        "description": "Uploads a VPP token",
+        "tags": [
+          "8_VPP Token Management"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filename": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "default": 201
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/VPPToken"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "tenant-vpptoken"
+      }
+    },
+    "/tenant/v0/vpptokens/{id}": {
+      "delete": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "summary": "Delete VPP Token",
+        "description": "API to delete vpp token for a tenant",
+        "tags": [
+          "8_VPP Token Management"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "response code",
+                      "default": 204
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "response message"
+                    },
+                    "content": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "tenant-vpptoken"
+      }
+    },
+    "/tenant/v0/deptokens/": {
+      "post": {
+        "summary": "Generate the public key file",
+        "description": "Generate the public key file which is uploaded to Apple Business Manager(ABM) console to generate the DEP token.",
+        "operationId": "DEPToken",
+        "tags": [
+          "8_DEP Tokens"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DEP_Token_POST"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Public key generation for ABM",
+            "headers": {
+              "Content-Disposition": {
+                "schema": {
+                  "type": "string",
+                  "example": "attachment; filename=\"Esper_Public_Key.pem\""
+                }
+              }
+            },
+            "content": {
+              "text/plain; charset=utf-8": {
+                "schema": {
+                  "type": "string",
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    }
+                  },
+                  "example": "-----BEGIN PUBLIC KEY----- MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgE7FsxhVgAauNzV2S+B2O2TVpcKc /aPylhD8Abq0/5swcu3XFseP/GVttTH7JzSLLKdpyculA/DWfc73OP+r4LeswbAc pyvI8uDVCexU7YsND00Vs/L1i9RZXpCBk0oNECjIKQ6ex7ccI6VzZaTH6DallGkY eUcBApaAiL5QILTlAgMBAAE= -----END PUBLIC KEY-----"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Public key generation error - Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Public key generation error - Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Public key generation error - Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "dep-token"
+      },
+      "get": {
+        "summary": "Get all DEP tokens",
+        "description": "Get the list of all DEP tokens available in the tenant",
+        "operationId": "ListDEPTokens",
+        "tags": [
+          "8_DEP Tokens"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "state",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CSR_GENERATED",
+                "COMPLETED"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all dep tokens for a tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "next": {
+                          "type": "string"
+                        },
+                        "prev": {
+                          "type": "string"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/DEP_Token_GET"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Get DEP tokens error - Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Get DEP tokens error - Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "dep-token"
+      }
+    },
+    "/tenant/v0/deptokens/{id}/": {
+      "get": {
+        "summary": "Get dep token by id",
+        "description": "Retrive information of a DEP token by ID",
+        "operationId": "DEPTokenBasedOnID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the token object",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          }
+        ],
+        "tags": [
+          "8_DEP Tokens"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get DEP token by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "schema": {
+                          "$ref": "#/components/schemas/DEP_Token_GET"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Get DEP token by id error - Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Get DEP token by id error - Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "dep-token-based-on"
+      },
+      "put": {
+        "summary": "Upload dep token to a tenant",
+        "description": "Upload dep token for a public key for a tenant based on ID of DEP public key",
+        "operationId": "DEPTokenUpload",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the token object",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": ".p7m file from abm console"
+                  },
+                  "token_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "file",
+                  "token_name"
+                ]
+              }
+            }
+          }
+        },
+        "tags": [
+          "8_DEP Tokens"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upload dep token for a public key by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "schema": {
+                          "$ref": "#/components/schemas/DEP_Token_GET"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Upload DEP token by id error - Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Upload DEP token by id error - Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Upload DEP token by id error - Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "dep-token-upload"
+      }
+    },
     "/report/v0/report-types": {
       "get": {
         "tags": [
@@ -6634,6 +7990,99 @@
             }
           }
         }
+      },
+      "DEP_Token_GET": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "UUID",
+            "description": "id of DEP token"
+          },
+          "token_name": {
+            "type": "string",
+            "description": "name of DEP Token"
+          },
+          "meta": {
+            "type": "object",
+            "description": "meta information about the DEP token",
+            "properties": {
+              "token_expiry_on": {
+                "type": "string"
+              }
+            }
+          },
+          "state": {
+            "type": "string",
+            "description": "state of DEP token upload",
+            "enum": [
+              "CSR_GENERATED",
+              "COMPLETED"
+            ]
+          },
+          "created_by": {
+            "type": "string",
+            "description": "user id of the user"
+          },
+          "updated_by": {
+            "type": "string",
+            "description": "user id of the user"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Timestamp of DEP token creation",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Timestamp of DEP token creation",
+            "readOnly": true
+          }
+        }
+      },
+      "DEP_Token_POST": {
+        "type": "object"
+      },
+      "VPPToken": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenant_id": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "key": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "meta": {
+            "type": "object"
+          },
+          "created_by": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "updated_by": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "created_by",
+          "updated_by"
+        ]
       },
       "APNSCert_PUT": {
         "type": "object",
@@ -9257,6 +10706,71 @@
           }
         }
       },
+      "TokenRenewV0": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Token id",
+            "type": "string",
+            "description": "Id of the token",
+            "format": "integer",
+            "readOnly": true
+          },
+          "user": {
+            "title": "User id",
+            "type": "string",
+            "description": "Id of the user resource",
+            "readOnly": true
+          },
+          "enterprise": {
+            "title": "Enterprise id",
+            "type": "string",
+            "description": "Id of the enterprise resource",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "token": {
+            "title": "API Token",
+            "type": "string",
+            "description": "API token for accessing esper APIs",
+            "readOnly": true
+          },
+          "expires_at": {
+            "title": "API token expiry",
+            "type": "string",
+            "description": "Date and time of when your API token will get expired",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "developerapp": {
+            "title": "Developer app id",
+            "type": "string",
+            "description": "Id of the developer app resource that you created using the esper dev console",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "scope": {
+            "title": "Scope of API token",
+            "type": "string",
+            "description": "This defines what access scopes your API token has",
+            "readOnly": true
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "description": "Date and time of when this resource was created",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_on": {
+            "title": "Updated on",
+            "type": "string",
+            "description": "Date and time of when this resource was updated",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
       "Content": {
         "required": [
           "id"
@@ -9978,6 +11492,86 @@
           },
           "google_enterprise": {
             "type": "integer"
+          }
+        }
+      },
+      "GoogleWebTokenUpdateNoRequirements": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "emm": {
+            "title": "emm Id",
+            "type": "integer"
+          },
+          "token": {
+            "title": "Webtoken",
+            "type": "string"
+          },
+          "parent_url": {
+            "type": "string",
+            "format": "url"
+          },
+          "is_active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GoogleWebTokenUpdate": {
+        "type": "object",
+        "required": [
+          "emm",
+          "parent_url"
+        ],
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "emm": {
+            "title": "emm Id",
+            "type": "integer"
+          },
+          "token": {
+            "title": "Webtoken",
+            "type": "string"
+          },
+          "parent_url": {
+            "type": "string",
+            "format": "url"
+          },
+          "is_active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GoogleWebToken": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "emm": {
+            "title": "emm Id",
+            "type": "integer"
+          },
+          "token": {
+            "title": "Webtoken",
+            "type": "string"
+          },
+          "parent_url": {
+            "type": "string",
+            "format": "url"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

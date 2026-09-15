@@ -4546,6 +4546,566 @@
         "x-esper-noun": "subscription-report"
       }
     },
+    "/user_info/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_User"
+        ],
+        "summary": "User information",
+        "description": "User information",
+        "operationId": "userInfo",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User Info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "user-info"
+      }
+    },
+    "/user/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_User"
+        ],
+        "summary": "Get Users",
+        "description": "Get a list of users in the tenant",
+        "operationId": "getUsers",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users List",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "previous": {
+                      "type": "string"
+                    },
+                    "next": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserList"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "user"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "tags": [
+          "0_User (Deprecated)"
+        ],
+        "summary": "Create a new User",
+        "description": "Create a new User",
+        "operationId": "createUser",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "user"
+      }
+    },
+    "/user/{user_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_User"
+        ],
+        "summary": "Get User Information",
+        "description": "Get User Information",
+        "operationId": "getUser",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "user"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "tags": [
+          "0_User (Deprecated)"
+        ],
+        "summary": "Update a User",
+        "description": "Update a User",
+        "operationId": "updateUser",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "user"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "tags": [
+          "0_User (Deprecated)"
+        ],
+        "summary": "Partial update a User",
+        "description": "Partial update a User",
+        "operationId": "partialUpdateUser",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Partial updated User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "partial-update",
+        "x-esper-noun": "user"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "tags": [
+          "0_User (Deprecated)"
+        ],
+        "summary": "Delete a user",
+        "operationId": "userDelete",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserID"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted User"
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "user-delete"
+      }
+    },
     "/enterprise/{enterprise_id}/devicegroup/{group_id}/blueprint/": {
       "get": {
         "x-badges": [
@@ -6144,6 +6704,458 @@
             "type": "string",
             "format": "date-time",
             "readOnly": true
+          }
+        }
+      },
+      "UserUpdate": {
+        "title": "UserUpdation",
+        "type": "object",
+        "properties": {
+          "username": {
+            "title": "User name",
+            "type": "string"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "first_name": {
+            "title": "First name",
+            "type": "string"
+          },
+          "last_name": {
+            "title": "Last name",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is user active",
+            "type": "boolean"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "format": "email"
+          },
+          "profile": {
+            "title": "User Profile",
+            "type": "object",
+            "$ref": "#/components/schemas/UserProfileCreate"
+          }
+        }
+      },
+      "UserProfileCreate": {
+        "title": "UserProfile",
+        "type": "object",
+        "properties": {
+          "role": {
+            "title": "Role",
+            "type": "string",
+            "enum": [
+              "Shoonya Admin",
+              "Enterprise Admin",
+              "Enterprise User",
+              "Viewer",
+              "Group Admin",
+              "Group Viewer"
+            ]
+          },
+          "groups": {
+            "title": "Groups",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "enterprise": {
+            "title": "Enterprise ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "is_customer": {
+            "title": "Is Customer",
+            "type": "boolean"
+          },
+          "is_endpoint_creator": {
+            "title": "Is Endpoint Creator",
+            "type": "boolean"
+          },
+          "setup_wizard_complete": {
+            "title": "Setup Wizard Complete",
+            "type": "boolean"
+          },
+          "default_password_changed": {
+            "title": "Default Password Changed",
+            "type": "boolean"
+          },
+          "is_developer": {
+            "title": "Is Developer",
+            "type": "boolean"
+          },
+          "can_factory_reset": {
+            "title": "Can Factory Reset",
+            "type": "boolean"
+          }
+        }
+      },
+      "UserCreate": {
+        "required": [
+          "username",
+          "profile"
+        ],
+        "title": "UserCreate",
+        "type": "object",
+        "properties": {
+          "username": {
+            "title": "User name",
+            "type": "string"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "first_name": {
+            "title": "First name",
+            "type": "string"
+          },
+          "last_name": {
+            "title": "Last name",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is user active",
+            "type": "boolean"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "format": "email"
+          },
+          "profile": {
+            "title": "User Profile",
+            "type": "object",
+            "$ref": "#/components/schemas/UserProfileCreate"
+          }
+        }
+      },
+      "UserList": {
+        "title": "User",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer"
+          },
+          "username": {
+            "title": "User name",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "format": "email"
+          },
+          "first_name": {
+            "title": "First name",
+            "type": "string"
+          },
+          "last_name": {
+            "title": "Last name",
+            "type": "string"
+          },
+          "full_name": {
+            "title": "Last name",
+            "type": "string"
+          },
+          "is_staff": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "is_superuser": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "is_active": {
+            "title": "Is user active",
+            "type": "boolean"
+          },
+          "profile": {
+            "title": "User Profile",
+            "type": "object",
+            "$ref": "#/components/schemas/UserProfile"
+          },
+          "emm": {
+            "title": "EMM details",
+            "type": "object",
+            "$ref": "#/components/schemas/EMM",
+            "readOnly": true
+          },
+          "last_login": {
+            "title": "Last login",
+            "type": "string"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          },
+          "has_emm": {
+            "title": "Has EMM",
+            "type": "boolean"
+          }
+        }
+      },
+      "EMM": {
+        "title": "UserEMM",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer"
+          },
+          "user": {
+            "title": "User ID",
+            "type": "integer"
+          },
+          "account_identifier": {
+            "title": "Account Identifier",
+            "type": "string"
+          },
+          "account_type": {
+            "title": "Account Type",
+            "type": "string"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "google_user_id": {
+            "title": "Google User ID",
+            "type": "string"
+          },
+          "google_enterprise": {
+            "title": "Google Enterprise",
+            "type": "integer"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "created_on": {
+            "title": "Created On",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "title": "Updated On",
+            "type": "string",
+            "format": "date-time"
+          },
+          "authentication_token": {
+            "title": "Authentication Token",
+            "type": "object",
+            "$ref": "#/components/schemas/AuthenticationToken",
+            "readOnly": true
+          }
+        }
+      },
+      "AuthenticationToken": {
+        "title": "AuthenticationToken",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "updated_on": {
+            "title": "Updated On",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UserProfile": {
+        "title": "UserProfileInfo",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer"
+          },
+          "enterprise_user_id": {
+            "title": "Enterprise User ID",
+            "type": "string"
+          },
+          "authn_user_id": {
+            "title": "AuthN User ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "authn_connection_id": {
+            "title": "AuthN Connection ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "authz_role_id": {
+            "title": "AuthZ Role ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string",
+            "enum": [
+              "Shoonya Admin",
+              "Enterprise Admin",
+              "Enterprise User",
+              "Viewer",
+              "Group Admin",
+              "Group Viewer"
+            ]
+          },
+          "enterprise": {
+            "title": "Enterprise ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "is_customer": {
+            "title": "Is Customer",
+            "type": "boolean"
+          },
+          "is_endpoint_creator": {
+            "title": "Is Endpoint Creator",
+            "type": "boolean"
+          },
+          "created_on": {
+            "title": "Created On",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "title": "Updated On",
+            "type": "string",
+            "format": "date-time"
+          },
+          "setup_wizard_complete": {
+            "title": "Setup Wizard Complete",
+            "type": "boolean"
+          },
+          "default_password_changed": {
+            "title": "Default Password Changed",
+            "type": "boolean"
+          },
+          "is_developer": {
+            "title": "Is Developer",
+            "type": "boolean"
+          },
+          "can_factory_reset": {
+            "title": "Can Factory Reset",
+            "type": "boolean"
+          },
+          "groups": {
+            "title": "Groups",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "$ref": "#/components/schemas/Group"
+            }
+          }
+        }
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "title": "Group Name",
+            "type": "string"
+          },
+          "path": {
+            "title": "Group Path",
+            "type": "string"
+          },
+          "device_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "User": {
+        "title": "UserInfo",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer"
+          },
+          "username": {
+            "title": "User name",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "format": "email"
+          },
+          "first_name": {
+            "title": "First name",
+            "type": "string"
+          },
+          "last_name": {
+            "title": "Last name",
+            "type": "string"
+          },
+          "full_name": {
+            "title": "Last name",
+            "type": "string"
+          },
+          "is_staff": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "is_superuser": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "is_active": {
+            "title": "Is user active",
+            "type": "boolean"
+          },
+          "profile": {
+            "title": "User Profile",
+            "type": "object",
+            "$ref": "#/components/schemas/UserProfile"
+          },
+          "emm": {
+            "title": "EMM details",
+            "type": "object",
+            "$ref": "#/components/schemas/EMM",
+            "readOnly": true
+          },
+          "last_login": {
+            "title": "Last login",
+            "type": "string"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          },
+          "has_emm": {
+            "title": "Has EMM",
+            "type": "boolean"
+          },
+          "is_email_verified": {
+            "title": "Is Email Verified",
+            "type": "boolean"
           }
         }
       },
@@ -8001,6 +9013,15 @@
         "schema": {
           "type": "string",
           "format": "uuid"
+        }
+      },
+      "UserID": {
+        "name": "user_id",
+        "description": "User ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
         }
       },
       "GroupThumbnailID": {

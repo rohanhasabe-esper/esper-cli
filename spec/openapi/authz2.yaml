@@ -33,6 +33,88 @@
     }
   ],
   "paths": {
+    "/authz2/v1/users/{user_id}": {
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_User"
+        ],
+        "summary": "Update user role",
+        "description": "Update user's role",
+        "operationId": "updateDifferentUser",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AuthNUserID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDifferentUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User Updated Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "different-user"
+      }
+    },
     "/authz2/v1/users/{user_id}/groups": {
       "get": {
         "x-badges": [
@@ -963,6 +1045,304 @@
             "type": "string"
           }
         }
+      },
+      "User": {
+        "title": "UserInfo",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer"
+          },
+          "username": {
+            "title": "User name",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "format": "email"
+          },
+          "first_name": {
+            "title": "First name",
+            "type": "string"
+          },
+          "last_name": {
+            "title": "Last name",
+            "type": "string"
+          },
+          "full_name": {
+            "title": "Last name",
+            "type": "string"
+          },
+          "is_staff": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "is_superuser": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "is_active": {
+            "title": "Is user active",
+            "type": "boolean"
+          },
+          "profile": {
+            "title": "User Profile",
+            "type": "object",
+            "$ref": "#/components/schemas/UserProfile"
+          },
+          "emm": {
+            "title": "EMM details",
+            "type": "object",
+            "$ref": "#/components/schemas/EMM",
+            "readOnly": true
+          },
+          "last_login": {
+            "title": "Last login",
+            "type": "string"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          },
+          "has_emm": {
+            "title": "Has EMM",
+            "type": "boolean"
+          },
+          "is_email_verified": {
+            "title": "Is Email Verified",
+            "type": "boolean"
+          }
+        }
+      },
+      "EMM": {
+        "title": "UserEMM",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer"
+          },
+          "user": {
+            "title": "User ID",
+            "type": "integer"
+          },
+          "account_identifier": {
+            "title": "Account Identifier",
+            "type": "string"
+          },
+          "account_type": {
+            "title": "Account Type",
+            "type": "string"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "google_user_id": {
+            "title": "Google User ID",
+            "type": "string"
+          },
+          "google_enterprise": {
+            "title": "Google Enterprise",
+            "type": "integer"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "created_on": {
+            "title": "Created On",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "title": "Updated On",
+            "type": "string",
+            "format": "date-time"
+          },
+          "authentication_token": {
+            "title": "Authentication Token",
+            "type": "object",
+            "$ref": "#/components/schemas/AuthenticationToken",
+            "readOnly": true
+          }
+        }
+      },
+      "AuthenticationToken": {
+        "title": "AuthenticationToken",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "updated_on": {
+            "title": "Updated On",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UserProfile": {
+        "title": "UserProfileInfo",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer"
+          },
+          "enterprise_user_id": {
+            "title": "Enterprise User ID",
+            "type": "string"
+          },
+          "authn_user_id": {
+            "title": "AuthN User ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "authn_connection_id": {
+            "title": "AuthN Connection ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "authz_role_id": {
+            "title": "AuthZ Role ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string",
+            "enum": [
+              "Shoonya Admin",
+              "Enterprise Admin",
+              "Enterprise User",
+              "Viewer",
+              "Group Admin",
+              "Group Viewer"
+            ]
+          },
+          "enterprise": {
+            "title": "Enterprise ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "is_customer": {
+            "title": "Is Customer",
+            "type": "boolean"
+          },
+          "is_endpoint_creator": {
+            "title": "Is Endpoint Creator",
+            "type": "boolean"
+          },
+          "created_on": {
+            "title": "Created On",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "title": "Updated On",
+            "type": "string",
+            "format": "date-time"
+          },
+          "setup_wizard_complete": {
+            "title": "Setup Wizard Complete",
+            "type": "boolean"
+          },
+          "default_password_changed": {
+            "title": "Default Password Changed",
+            "type": "boolean"
+          },
+          "is_developer": {
+            "title": "Is Developer",
+            "type": "boolean"
+          },
+          "can_factory_reset": {
+            "title": "Can Factory Reset",
+            "type": "boolean"
+          },
+          "groups": {
+            "title": "Groups",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "$ref": "#/components/schemas/Group"
+            }
+          }
+        }
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "title": "Group Name",
+            "type": "string"
+          },
+          "path": {
+            "title": "Group Path",
+            "type": "string"
+          },
+          "device_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "UpdateDifferentUserRequest": {
+        "type": "object",
+        "properties": {
+          "authz_role_id": {
+            "title": "Custom role id. Required only if role is AuthZ Role User",
+            "type": "string",
+            "format": "uuid"
+          },
+          "can_factory_reset": {
+            "title": "If user should be able to factory reset or not",
+            "type": "boolean"
+          },
+          "has_all_group_access": {
+            "title": "If user has access to all groups or not. Required only if role is AuthZ Role User",
+            "type": "boolean"
+          },
+          "groups": {
+            "title": "List of group IDs. Can be empty if has_all_group_access is True or if the user role is not Group Admin/Group Viewer",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "role": {
+            "title": "Role. Role should be AuthZ Role User for custom role",
+            "type": "string",
+            "enum": [
+              "Shoonya Admin",
+              "Enterprise Admin",
+              "Enterprise User",
+              "Viewer",
+              "Group Admin",
+              "Group Viewer",
+              "AuthZ Role User"
+            ]
+          }
+        },
+        "required": [
+          "role",
+          "groups"
+        ]
       }
     },
     "parameters": {

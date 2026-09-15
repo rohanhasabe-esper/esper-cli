@@ -5161,6 +5161,73 @@
         "x-esper-scope-parent": "version"
       }
     },
+    "/v1/token-info/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Deprecated",
+            "color": "red"
+          }
+        ],
+        "tags": [
+          "0_Token (Deprecated)"
+        ],
+        "summary": "Token Information",
+        "description": "API to get resource information associated with your token like your enterprise, user etc",
+        "operationId": "getTokenInfo",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenInfoV1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "token-info"
+      }
+    },
     "/v1/enterprise/{enterprise_id}/directory_record/": {
       "get": {
         "x-badges": [
@@ -6820,6 +6887,84 @@
               "WIFI_MAC_ID",
               "ETHERNET_MAC_ID"
             ]
+          }
+        }
+      },
+      "TokenInfoV1": {
+        "required": [
+          "enterprise",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Token id",
+            "format": "integer",
+            "readOnly": true
+          },
+          "enterprise": {
+            "title": "Enterprise id",
+            "type": "string",
+            "description": "Id of the enterprise resource",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "user": {
+            "title": "User id",
+            "type": "string",
+            "description": "Id of the user resource",
+            "readOnly": true
+          },
+          "developer_app": {
+            "title": "Developer app id",
+            "type": "string",
+            "description": "Id of the developer app resource that you created using the esper dev console",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "source_refresh_token": {
+            "title": "Refresh token",
+            "type": "string",
+            "description": "The refresh token is used to refresh your expired API token",
+            "readOnly": true
+          },
+          "token": {
+            "title": "API Token",
+            "type": "string",
+            "description": "API token for accessing esper APIs",
+            "readOnly": true
+          },
+          "expires_on": {
+            "title": "API token expiry",
+            "type": "string",
+            "description": "Date and time of when your API token will get expired",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "scope": {
+            "title": "Scope of API token",
+            "type": "array",
+            "description": "This defines what access scopes does your API token has",
+            "readOnly": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "description": "Date and time of when this resource was created",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_on": {
+            "title": "Updated on",
+            "type": "string",
+            "description": "Date and time of when this resource was updated",
+            "format": "date-time",
+            "readOnly": true
           }
         }
       },

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/esper-io/esper-cli/internal/cmd/configure"
+	contextcmd "github.com/esper-io/esper-cli/internal/cmd/context"
 	"github.com/esper-io/esper-cli/internal/cmd/generated"
 	esperruntime "github.com/esper-io/esper-cli/internal/runtime"
 	"github.com/esper-io/esper-cli/internal/version"
@@ -31,6 +32,7 @@ func NewRootCommand() *cobra.Command {
 	flags.StringVar(&options.APIKey, "api-key", "", "Esper API key (overrides ESPER_API_KEY)")
 	generated.AddCommands(command, options)
 	command.AddCommand(configure.NewCommand(options))
+	command.AddCommand(contextcmd.NewCommand(options))
 	addVersionCommand(command, options)
 	for _, child := range command.Commands() {
 		if child.Name() != "api" {

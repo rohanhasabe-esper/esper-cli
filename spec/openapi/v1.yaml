@@ -1754,6 +1754,1204 @@
         "x-esper-scope-parent": "enterprise"
       }
     },
+    "/v1/enterprise/{enterprise_id}/wallpaper/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Wallpapers"
+        ],
+        "summary": "Get list of wallpapers",
+        "description": "Returns list of wallpapers",
+        "operationId": "getWallpapers",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "created_on_gt",
+            "in": "query",
+            "description": "Filter applications created after a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "created_on_lt",
+            "in": "query",
+            "description": "Filter applications created before a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "updated_on_gt",
+            "in": "query",
+            "description": "Filter applications updated after a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "updated_on_lt",
+            "in": "query",
+            "description": "Filter applications updated before a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Wallpaper"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "wallpaper",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Wallpapers"
+        ],
+        "summary": "Create wallpaper",
+        "description": "Returns instance of created wallpaper",
+        "operationId": "addWallpaper",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "image_file",
+                  "orientation"
+                ],
+                "properties": {
+                  "image_file": {
+                    "type": "string",
+                    "description": "Valid file to upload",
+                    "format": "binary"
+                  },
+                  "orientation": {
+                    "type": "string",
+                    "description": "Orientation of image e.g. landscape",
+                    "enum": [
+                      "portrait",
+                      "landscape"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wallpaper"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported media type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "wallpaper",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/wallpaper/{wallpaper_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Wallpapers"
+        ],
+        "summary": "Get instance of wallpaper",
+        "description": "Returns instance of wallpaper",
+        "operationId": "getWallpaper",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wallpaper_id",
+            "in": "path",
+            "description": "A UUID string identifying the wallpaper.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wallpaper"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "wallpaper"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Wallpapers"
+        ],
+        "summary": "Deletes instance of wallpaper",
+        "description": "Empty response",
+        "operationId": "deleteWallpaper",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wallpaper_id",
+            "in": "path",
+            "description": "A UUID string identifying the wallpaper.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "wallpaper"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/tile-icons/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Tile Icon"
+        ],
+        "summary": "Get List of Device Tile Icons",
+        "description": "Returns list of tile icons",
+        "operationId": "getTileIcons",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "created_on_gt",
+            "in": "query",
+            "description": "Filter tile icons created after a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "created_on_lt",
+            "in": "query",
+            "description": "Filter tile icons created before a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "updated_on_gt",
+            "in": "query",
+            "description": "Filter tile icons updated after a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "updated_on_lt",
+            "in": "query",
+            "description": "Filter tile icons updated before a given timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter tile icons by category.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "device_model",
+            "in": "query",
+            "description": "Filter tile icons by device model.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "custom",
+            "in": "query",
+            "description": "Filter custom tile icons.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TileIcon"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "tile-icon",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Tile Icon"
+        ],
+        "summary": "Create a  tile icon",
+        "description": "Create a tile icon.",
+        "operationId": "addTileIcon",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "icon_file",
+                  "device_model",
+                  "enterprise"
+                ],
+                "properties": {
+                  "icon_file": {
+                    "type": "string",
+                    "description": "Valid file to upload",
+                    "format": "binary"
+                  },
+                  "device_model": {
+                    "type": "string",
+                    "description": "Device model"
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "mobile",
+                      "tablet",
+                      "rugged",
+                      "pos",
+                      "digital_signage",
+                      "kiosk"
+                    ]
+                  },
+                  "custom": {
+                    "type": "boolean"
+                  },
+                  "enterprise": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "UUID string representing enterprise of tile icon"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TileIcon"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported media type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "tile-icon",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/tile-icons/{tileicons_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Tile Icon"
+        ],
+        "summary": "Get instance of a tile icon",
+        "description": "Get a tile icon.",
+        "operationId": "getTileIcon",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tileicons_id",
+            "in": "path",
+            "description": "A UUID string identifying the tile icon.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TileIcon"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "tile-icon"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Tile Icon"
+        ],
+        "summary": "Delete a tile icon",
+        "description": "Deletes a title icon",
+        "operationId": "deleteTileIcon",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tileicons_id",
+            "in": "path",
+            "description": "A UUID string identifying the tile icon.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "tile-icon"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/tile-icon-apply/": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Tile Icon"
+        ],
+        "summary": "Set a tile icon for a device",
+        "description": "Apply a tile icon to a device.",
+        "operationId": "applyTileIcon",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplyTileIcon"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplyTileIcon"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "apply",
+        "x-esper-noun": "tile-icon-apply"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/tile-icon-unapply/": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Tile Icon"
+        ],
+        "summary": "Removes tile icon for device",
+        "description": "Returns the model of the device(s)",
+        "operationId": "removeTileIcon",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "model"
+                ],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "Model of device"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "model"
+                  ],
+                  "properties": {
+                    "model": {
+                      "type": "string",
+                      "description": "Model of device"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "remove",
+        "x-esper-noun": "tile-icon-unapply"
+      }
+    },
     "/v1/enterprise/{enterprise_id}/report/location/": {
       "get": {
         "x-badges": [
@@ -6462,6 +7660,128 @@
               "integer",
               "null"
             ]
+          }
+        }
+      },
+      "ApplyTileIcon": {
+        "type": "object",
+        "required": [
+          "icon"
+        ],
+        "properties": {
+          "icon": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "apply_mode": {
+            "type": "string",
+            "enum": [
+              "devices",
+              "all_devices",
+              "groups",
+              "device_model"
+            ],
+            "default": "devices"
+          },
+          "device_model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "devices": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "maxItems": 100,
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "maxItems": 10,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "TileIcon": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "category": {
+            "type": "string"
+          },
+          "icon_file": {
+            "type": "string",
+            "format": "url"
+          },
+          "device_model": {
+            "type": "string"
+          },
+          "custom": {
+            "type": "boolean"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Wallpaper": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "enterprise": {
+            "type": "string"
+          },
+          "image_file": {
+            "type": "string",
+            "format": "url"
+          },
+          "thumbnail": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "url"
+          },
+          "orientation": {
+            "type": "string",
+            "enum": [
+              "portrait",
+              "landscape"
+            ]
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

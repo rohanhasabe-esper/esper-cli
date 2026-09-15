@@ -7480,6 +7480,300 @@
         "x-esper-noun": "emm-account"
       }
     },
+    "/v2/background-scripts/": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "blueprints_Background Scripts API"
+        ],
+        "description": "Create a new background script",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/blueprints_BackgroundScriptCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/blueprints_BackgroundScriptRead"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        201
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict - Background Script name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        409
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "background-script",
+        "summary": "Create background-script"
+      },
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "blueprints_Background Scripts API"
+        ],
+        "description": "Retrieve all background scripts for the tenant",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ordering",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Order the results by a specific field (-field for descending order). Valid fields are 'name', 'created_at', 'updated_at', 'created_by', 'updated_by'.\n"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter the results by name (partial match, case insensitive).\n"
+          },
+          {
+            "in": "query",
+            "name": "always_run",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter the results by always_run flag.\n"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Number of results to return per page.\n"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "The initial index from which to return the results.\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "The total number of background scripts"
+                        },
+                        "next": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "The link to retrieve the next set of objects in the result set"
+                        },
+                        "previous": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "The link to retrieve the previous set of objects in the result set"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/blueprints_BackgroundScriptRead"
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "background-script",
+        "summary": "List background-script"
+      }
+    },
+    "/v2/background-scripts/{background_script_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "blueprints_Background Scripts API"
+        ],
+        "description": "Retrieve a background script by ID. Includes the script content fetched from S3.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "background_script_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/blueprints_BackgroundScriptDetailRead"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        200
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Background Script not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        404
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "background-script",
+        "summary": "Get background-script"
+      }
+    },
     "/v2/devices/{id}/devicestate": {
       "put": {
         "x-badges": [
@@ -8240,6 +8534,142 @@
         "required": [
           "code",
           "message"
+        ]
+      },
+      "blueprints_BackgroundScriptDetailRead": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/blueprints_BackgroundScriptRead"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "script": {
+                "type": "string",
+                "description": "The script content fetched from S3"
+              }
+            },
+            "required": [
+              "script"
+            ]
+          }
+        ]
+      },
+      "blueprints_BackgroundScriptRead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the background script"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the background script"
+          },
+          "interpreter": {
+            "type": "string",
+            "description": "Interpreter used to run the script"
+          },
+          "always_run": {
+            "type": "boolean",
+            "description": "Whether the script runs continuously"
+          },
+          "frequency_in_mins": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Interval in minutes between script executions"
+          },
+          "timeout_in_mins": {
+            "type": "integer",
+            "description": "Maximum runtime in minutes before the script is terminated."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the background script. Empty string if not set."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the background script was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the background script was last updated"
+          },
+          "created_by": {
+            "type": "integer",
+            "description": "User ID who created the background script"
+          },
+          "updated_by": {
+            "type": "integer",
+            "description": "User ID who last updated the background script"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "interpreter",
+          "always_run",
+          "timeout_in_mins",
+          "created_at",
+          "updated_at",
+          "created_by",
+          "updated_by"
+        ]
+      },
+      "blueprints_BackgroundScriptCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Name of the background script"
+          },
+          "script": {
+            "type": "string",
+            "description": "The script content to be executed on devices"
+          },
+          "interpreter": {
+            "type": "string",
+            "maxLength": 50,
+            "default": "powershell",
+            "description": "Interpreter used to run the script. Currently only 'powershell' is supported."
+          },
+          "always_run": {
+            "type": "boolean",
+            "description": "Whether the script runs continuously. When true, frequency_in_mins must be null."
+          },
+          "frequency_in_mins": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Interval in minutes between script executions. Required when always_run is false, must be null when always_run is true."
+          },
+          "timeout_in_mins": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 60,
+            "description": "Maximum runtime in minutes before the script is terminated. Must be > 0. Defaults to 60 if omitted."
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300,
+            "description": "Optional description for the background script. Max 300 characters."
+          }
+        },
+        "required": [
+          "name",
+          "script",
+          "always_run"
         ]
       },
       "GoogleServiceAccountDetails": {

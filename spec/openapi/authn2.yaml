@@ -36,9 +36,405 @@
       "x-displayName": "Personal Access Token"
     }
   ],
-  "paths": {},
+  "paths": {
+    "/authn2/v0/tenant/{enterprise_id}/connection": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_SSO Connections"
+        ],
+        "summary": "List SSO connections",
+        "description": "List SSO connections of a tenant. Learn more about <a target=\"_blank\" href=\"https://help.esper.io/hc/en-us/articles/14266541959569-Introduction-to-User-Authentication\">SSO Connections</a>.\n",
+        "operationId": "getConnections",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/IsDefault"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tenant connections",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "connections": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CustomConnectionsListResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "List custom connections error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "connection",
+        "x-esper-scope-parent": "tenant"
+      }
+    },
+    "/authn2/v0/tenant/{enterprise_id}/connection/{connection_id}": {
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_SSO Connections"
+        ],
+        "summary": "Edit SSO connections",
+        "description": "Edit SSO connections",
+        "operationId": "editCustomConnection",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnterpriseID"
+          },
+          {
+            "$ref": "#/components/parameters/ConnectionID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomConnectionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated connection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomConnectionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "custom connection update error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenericErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "custom-connection"
+      }
+    }
+  },
   "components": {
-    "schemas": {},
-    "parameters": {}
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "title": "Messages describing the error",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "title": "Message describing the error",
+            "type": "string"
+          },
+          "status": {
+            "title": "alias name",
+            "type": "integer"
+          }
+        }
+      },
+      "CustomConnectionResponse": {
+        "title": "CustomConnectionResponse",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "id",
+            "type": "string"
+          },
+          "name": {
+            "title": "name",
+            "type": "string"
+          },
+          "display_name": {
+            "title": "display name",
+            "type": "string"
+          },
+          "strategy": {
+            "title": "strategy",
+            "enum": [
+              "samlp",
+              "oidc"
+            ],
+            "description": "Strategy:\n * `samlp` - SAML connection\n * `oidc` - OIDC connection\n"
+          },
+          "service_provider_acs_url": {
+            "title": "service provider ACS url",
+            "type": "string",
+            "format": "url"
+          },
+          "service_provider_entity_id": {
+            "title": "service provider entity id",
+            "type": "string"
+          },
+          "service_provider_logout_url": {
+            "title": "service provider logout url",
+            "type": "string"
+          },
+          "signing_certificate_link": {
+            "title": "signing certificate link",
+            "type": "string"
+          },
+          "callback_url": {
+            "title": "callback url",
+            "type": "string",
+            "format": "url"
+          },
+          "config": {
+            "type": "object",
+            "$ref": "#/components/schemas/CustomConnectionConfigResponse"
+          }
+        }
+      },
+      "CustomConnectionConfigResponse": {
+        "title": "CustomConnectionConfigResponse",
+        "type": "object",
+        "properties": {
+          "sign_in_url": {
+            "title": "Sign in url",
+            "type": "string",
+            "format": "url",
+            "description": "Required for SAML connection"
+          },
+          "disable_sign_out": {
+            "title": "Disable sign out",
+            "type": "boolean"
+          },
+          "sign_out_url": {
+            "title": "Sign out url",
+            "type": "string",
+            "format": "url"
+          },
+          "x509_certificate": {
+            "title": "x509 certificate",
+            "type": "string",
+            "description": "Required for SAML connection"
+          },
+          "issuer_url": {
+            "title": "Issuer url",
+            "type": "string",
+            "format": "url",
+            "description": "Required for OIDC connection"
+          },
+          "client_id": {
+            "title": "client id",
+            "type": "string",
+            "description": "Required for OIDC connection"
+          }
+        }
+      },
+      "CustomConnectionRequest": {
+        "title": "CustomConnectionRequest",
+        "type": "object",
+        "required": [
+          "display_name",
+          "strategy",
+          "config"
+        ],
+        "properties": {
+          "display_name": {
+            "title": "display name",
+            "type": "string"
+          },
+          "strategy": {
+            "title": "strategy",
+            "enum": [
+              "samlp",
+              "oidc"
+            ],
+            "description": "Strategy:\n * `samlp` - SAML connection\n * `oidc` - OIDC connection\n"
+          },
+          "config": {
+            "type": "object",
+            "$ref": "#/components/schemas/CustomConnectionConfigResponse"
+          }
+        }
+      },
+      "CustomConnectionsListResponse": {
+        "title": "CustomConnectionsListResponse",
+        "type": "object",
+        "properties": {
+          "connection_id": {
+            "title": "connection id",
+            "type": "string"
+          },
+          "connection": {
+            "type": "object",
+            "$ref": "#/components/schemas/CustomConnectionList"
+          }
+        }
+      },
+      "CustomConnectionList": {
+        "title": "CustomConnectionList",
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "name",
+            "type": "string"
+          },
+          "strategy": {
+            "title": "strategy",
+            "enum": [
+              "samlp",
+              "oidc"
+            ],
+            "description": "Strategy:\n * `samlp` - SAML connection\n * `oidc` - OIDC connection\n"
+          },
+          "is_default": {
+            "title": "is default",
+            "type": "boolean"
+          }
+        }
+      },
+      "GenericErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Either 'status' or 'code' will be present, but not both."
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Either 'status' or 'code' will be present, but not both."
+          },
+          "error": {
+            "type": "string",
+            "description": "Either 'error' or 'errors' will be present, but not both."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Either 'error' or 'errors' will be present, but not both."
+          },
+          "message": {
+            "title": "Message describing the error",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "ConnectionID": {
+        "name": "connection_id",
+        "description": "Connection ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "IsDefault": {
+        "name": "is_default",
+        "description": "Is Default",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "EnterpriseID": {
+        "name": "enterprise_id",
+        "description": "Enterprise ID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
   }
 }

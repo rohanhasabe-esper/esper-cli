@@ -8221,10 +8221,340 @@
         "x-esper-verb": "delete",
         "x-esper-noun": "tenant-app-version-artifact"
       }
+    },
+    "/v2/oem-config-schema": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Beta",
+            "color": "yellow"
+          }
+        ],
+        "security": [
+          {
+            "apps_management_apiKey": []
+          }
+        ],
+        "summary": "Get OEM Config Schema",
+        "description": "Retrieve the OEM config schema for a given OEM type and package name.\nReturns the latest active schema by default. Specify `version_code` to retrieve a specific version.\nSet `include_schema=false` to receive metadata only (avoids the large `schema_json` payload).\n",
+        "operationId": "getOEMConfigSchema",
+        "tags": [
+          "apps_management_OEM Config Schema"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "required": true,
+            "name": "Authorization",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Bearer token for authentication"
+          },
+          {
+            "in": "query",
+            "required": true,
+            "name": "oem_type",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ZEBRA",
+                "HONEYWELL",
+                "DATALOGIC",
+                "SAMSUNG",
+                "SUNMI"
+              ]
+            },
+            "description": "OEM manufacturer type",
+            "example": "ZEBRA"
+          },
+          {
+            "in": "query",
+            "required": true,
+            "name": "package_name",
+            "schema": {
+              "type": "string"
+            },
+            "description": "OEM config package name (e.g. com.zebra.oemconfig.common)",
+            "example": "com.zebra.oemconfig.common"
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "version_code",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Specific version code to retrieve. When omitted, returns the latest active schema.",
+            "example": "10"
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "include_schema",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "description": "Set to false to return metadata only, omitting the schema_json field (avoids large payload)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "When version_code is specified: public, max-age=3600 (response is immutable for that version). When version_code is omitted (latest lookup): not immutable — a newer upload can change the result; do not apply long-lived public caching."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "default": 200
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/apps_management_OEMConfigSchema"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request — missing or invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found — no schema found for the given oem_type, package_name, and version_code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "oem-config-schema"
+      }
+    },
+    "/v2/mdmserviceconfig": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Get MDM service configuration",
+        "description": "Unauthenticated discovery endpoint per Apple's [MDMServiceConfig](https://developer.apple.com/documentation/devicemanagement/providing-information-about-your-device-management-service) spec.\nReturns the URL a device uses to begin Automated Device Enrollment.\n",
+        "operationId": "getMDMServiceConfig",
+        "tags": [
+          "tenant_MDM Service Config"
+        ],
+        "responses": {
+          "200": {
+            "description": "MDM service configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "dep_enrollment_url": {
+                      "type": "string"
+                    },
+                    "dep_anchor_certs_url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tenant_Error_400_Bad_Data"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "mdm-service-config"
+      }
+    },
+    "/v2/mdmserviceconfig/anchor-certs": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "summary": "Get DEP anchor certificates",
+        "description": "Unauthenticated endpoint referenced by dep_anchor_certs_url. We use a\ntrusted SSL certificate and don't support custom anchor certs yet, so\nthis always returns an empty body.\n",
+        "operationId": "getDepAnchorCerts",
+        "tags": [
+          "tenant_MDM Service Config"
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty body (no custom anchor certificates configured)"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tenant_Error_400_Bad_Data"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "dep-anchor-cert"
+      }
     }
   },
   "components": {
     "schemas": {
+      "tenant_Error_400_Bad_Data": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 400
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "apps_management_OEMConfigSchema": {
+        "type": "object",
+        "description": "OEM config schema metadata and optional JSON schema content parsed from an OEM APK",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for this schema record"
+          },
+          "oem_type": {
+            "type": "string",
+            "enum": [
+              "ZEBRA",
+              "HONEYWELL",
+              "DATALOGIC",
+              "SAMSUNG",
+              "SUNMI"
+            ],
+            "description": "OEM manufacturer type"
+          },
+          "package_name": {
+            "type": "string",
+            "description": "OEM config package name",
+            "example": "com.zebra.oemconfig.common"
+          },
+          "version_name": {
+            "type": "string",
+            "description": "Human-readable version string from the APK manifest",
+            "example": "11.3.3.00"
+          },
+          "version_code": {
+            "type": "string",
+            "description": "Integer version code from the APK manifest",
+            "example": "10"
+          },
+          "schema_format": {
+            "type": "string",
+            "description": "Format of the parsed schema (e.g. MANAGED_CONFIGURATIONS)"
+          },
+          "parser_version": {
+            "type": "string",
+            "description": "Version of the internal parser that produced this schema"
+          },
+          "is_latest": {
+            "type": "boolean",
+            "description": "Whether this is the latest active schema for this oem_type + package_name"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE"
+            ],
+            "description": "Status of this schema record"
+          },
+          "schema_metadata": {
+            "type": "object",
+            "description": "Additional metadata produced by the parser (parser-specific)"
+          },
+          "schema_json": {
+            "type": "object",
+            "description": "Full parsed schema JSON. Omitted when include_schema=false."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when this schema was first persisted"
+          }
+        }
+      },
       "apps_management_ArtifactMutationResponse": {
         "type": "object",
         "description": "Identifies the artifact affected by an add/delete (identity-style, like\nthe app upload response) so the caller can refresh its view without a\nfull re-fetch.\n",

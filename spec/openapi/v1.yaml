@@ -1625,6 +1625,183 @@
         "x-esper-scope-parent": "enterprise"
       }
     },
+    "/v1/enterprise/{enterprise_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Company Settings"
+        ],
+        "summary": "Get your company settings",
+        "description": "Returns company settings. Formerly known as get your enterprise information.\n",
+        "operationId": "getEnterprise",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterpriseV1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "enterprise"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Company Settings"
+        ],
+        "summary": "Partially update company settings",
+        "description": "Returns updated company settings.\nFormerly known as partial update enterprise information.\n",
+        "operationId": "partialUpdateEnterprise",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseUpdateV1"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterpriseV1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "partial-update",
+        "x-esper-noun": "enterprise"
+      }
+    },
     "/v1/enterprise/{enterprise_id}/application/": {
       "get": {
         "x-badges": [
@@ -3581,6 +3758,207 @@
           "release_name": {
             "title": "Name of the release",
             "type": "string"
+          }
+        }
+      },
+      "EnterpriseUpdateV1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Id of the enterprise",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Enterprise Name",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the enterprise"
+          },
+          "registered_name": {
+            "title": "Registered name",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "Registered Name of the enterprise"
+          },
+          "registered_address": {
+            "title": "Registered address",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "Registered address of the enterprise."
+          },
+          "location": {
+            "title": "Enterprise location",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "City, State, Country location of the enterprise"
+          },
+          "zipcode": {
+            "title": "Enterprise zipcode",
+            "maxLength": 8,
+            "minLength": 1,
+            "type": "string",
+            "description": "Description of the enterprise"
+          },
+          "contact_person": {
+            "title": "Contact person",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Person who is the point of contact for the enterprise"
+          },
+          "contact_number": {
+            "title": "Contact number",
+            "maxLength": 20,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Contact number of the enterprise"
+          },
+          "contact_email": {
+            "title": "Contact email",
+            "maxLength": 254,
+            "minLength": 1,
+            "type": "string",
+            "description": "Contact email address of the enterprise",
+            "format": "email"
+          },
+          "wifi_lte_toggle_flag": {
+            "title": "Enable data saver mode",
+            "type": "boolean",
+            "description": "Will only be available if feature is enabled"
+          }
+        }
+      },
+      "EnterpriseV1": {
+        "required": [
+          "id",
+          "name",
+          "short_code"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Id of the enterprise",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the enterprise"
+          },
+          "short_code": {
+            "title": "Short code",
+            "maxLength": 10,
+            "minLength": 1,
+            "type": "string",
+            "description": "A short 10-char representation of the enterprise, separated by hyphens. Field is optional, as system will auto-generate a value if none is provided.",
+            "readOnly": true
+          },
+          "registered_name": {
+            "title": "Registered name of the enterprise",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "Registered Name of the enterprise"
+          },
+          "registered_address": {
+            "title": "Registered address",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "Registered address of the enterprise."
+          },
+          "location": {
+            "title": "Enterprise location",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "City, State, Country location of the enterprise"
+          },
+          "zipcode": {
+            "title": "Enterprise zipcode",
+            "maxLength": 8,
+            "minLength": 1,
+            "type": "string",
+            "description": "Zip code of enterprise location"
+          },
+          "contact_person": {
+            "title": "Contact person",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Person who is the point of contact for the enterprise"
+          },
+          "contact_number": {
+            "title": "Contact number",
+            "maxLength": 20,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Contact number of the enterprise"
+          },
+          "contact_email": {
+            "title": "Contact email",
+            "maxLength": 254,
+            "minLength": 1,
+            "type": "string",
+            "description": "Contact email address of the enterprise",
+            "format": "email"
+          },
+          "wifi_lte_toggle_flag": {
+            "title": "Enable data saver mode",
+            "type": "boolean",
+            "description": "Will only be available if feature is enabled"
+          },
+          "emm": {
+            "title": "Google EMM",
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "google_enterprise_id": {
+                "type": "string"
+              }
+            },
+            "description": "This field will have details about emm enrollment if the enterprise is emm enrolled",
+            "readOnly": true
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "description": "Date and time of when this resource was created",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_on": {
+            "title": "Updated on",
+            "type": "string",
+            "description": "Date and time of when this resource was updated",
+            "format": "date-time",
+            "readOnly": true
           }
         }
       },

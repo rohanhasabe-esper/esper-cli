@@ -209,6 +209,1422 @@
         "x-esper-noun": "application-minimal"
       }
     },
+    "/v1/enterprise/{enterprise_id}/alertchannels/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alerts"
+        ],
+        "summary": "List alert channels in enterprise",
+        "description": "Returns list of alert channels",
+        "operationId": "listAlertChannels",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter alert channels by name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AlertChannelsV1"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alerts"
+        ],
+        "summary": "Creates alert channel",
+        "description": "Returns instance of alert channel",
+        "operationId": "createAlertChannel",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlertChannelCreateReplaceV1"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertChannelsV1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/alertchannels/{alert_id}": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alerts"
+        ],
+        "summary": "Get alert channel",
+        "description": "Returns instance of alert channel",
+        "operationId": "getAlertChannel",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "alert_id",
+            "in": "path",
+            "description": "An integer identifying the alert channel.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertChannelsV1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alerts"
+        ],
+        "summary": "Update alert channel information",
+        "description": "Returns alert channel instance",
+        "operationId": "updateAlertChannel",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "alert_id",
+            "in": "path",
+            "description": "An integer identifying the alert channel.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlertChannelCreateReplaceV1"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertChannelsV1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alerts"
+        ],
+        "summary": "Partially updates alert channel information",
+        "description": "Returns alert channel instance",
+        "operationId": "patchAlertChannel",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "alert_id",
+            "in": "path",
+            "description": "An integer identifying the alert channel.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAlertChannelsV1"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertChannelsV1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "patch",
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alerts"
+        ],
+        "summary": "Delete an alert channel",
+        "description": "Empty response",
+        "operationId": "deleteAlertChannel",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying the enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "alert_id",
+            "in": "path",
+            "description": "An integer identifying the alert channel.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "alert-channel",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/alarmrules/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alarms"
+        ],
+        "summary": "Get list of alarm rules",
+        "description": "Returns list of alarm rules",
+        "operationId": "getAlarmRules",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter alarm rules by name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "description": "Filter alarm rules by description.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "is_active",
+            "in": "query",
+            "description": "Filter active alarm rules.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "created_on_gt",
+            "in": "query",
+            "description": "Filter alarm rules created after a given timestamp.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "created_on_lt",
+            "in": "query",
+            "description": "Filter alarm rules created before a given timestamp.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AlarmRule"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "alarm-rule",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alarms"
+        ],
+        "summary": "Creates instance of alarm rules",
+        "description": "Returns instance of alarm rules",
+        "operationId": "addAlarmRule",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlarmRuleCreateReplaceV1"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlarmRule"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "alarm-rule",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/alarmrules/{alarm_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alarms"
+        ],
+        "summary": "Get instance of alarm rule",
+        "description": "Returns instance of alarm rule",
+        "operationId": "getAlarmRule",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "alarm_id",
+            "in": "path",
+            "description": "A UUID string identifying the alarm ruleset.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlarmRule"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "alarm-rule",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alarms"
+        ],
+        "summary": "Update alarm rules",
+        "description": "Return instance of alarm rules",
+        "operationId": "updateAlarmRule",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "alarm_id",
+            "in": "path",
+            "description": "A UUID string identifying the alarm ruleset.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlarmRuleCreateReplaceV1"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlarmRule"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "alarm-rule",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alarms"
+        ],
+        "summary": "Partially updates alarm rules",
+        "description": "Returns instance of alarm rules",
+        "operationId": "patchAlarmRule",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "alarm_id",
+            "in": "path",
+            "description": "A UUID string identifying the alarm ruleset.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAlarmRule"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlarmRule"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "patch",
+        "x-esper-noun": "alarm-rule",
+        "x-esper-scope-parent": "enterprise"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alarms"
+        ],
+        "summary": "Deletes alarm rule",
+        "description": "Empty response",
+        "operationId": "deleteAlarmRule",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "alarm_id",
+            "in": "path",
+            "description": "A UUID string identifying the alarm ruleset.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "alarm-rule",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/alarmrules/{alarm_id}/alarmhistory/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Alarms"
+        ],
+        "summary": "Get history of alarm rule",
+        "description": "Returns instance of alarm rule history",
+        "operationId": "getAlarmHistory",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "alarm_id",
+            "in": "path",
+            "description": "A UUID string identifying the alarm ruleset.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "total",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AlarmHistory"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "get",
+        "x-esper-noun": "alarm-history",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
     "/v1/enterprise/{enterprise_id}/application/": {
       "get": {
         "x-badges": [
@@ -1660,6 +3076,475 @@
           "release_name": {
             "title": "Name of the release",
             "type": "string"
+          }
+        }
+      },
+      "AlarmHistory": {
+        "type": "object",
+        "properties": {
+          "device_name": {
+            "type": "string"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "group_id": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "lists group id's in uuid format"
+          },
+          "group_name": {
+            "type": "string"
+          },
+          "alert_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "latest_seen": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdateAlarmRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "enterprise": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "devices": {
+            "type": "array",
+            "items": {
+              "format": "string"
+            }
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "string"
+          },
+          "conditions": {
+            "type": "object",
+            "required": [
+              "value",
+              "unit",
+              "comparator"
+            ],
+            "properties": {
+              "value": {
+                "type": "number",
+                "format": "double"
+              },
+              "unit": {
+                "type": "string"
+              },
+              "comparator": {
+                "type": "string"
+              },
+              "toggle_state": {
+                "type": "boolean"
+              }
+            }
+          },
+          "action_emails": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "alert_channels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "realert_interval": {
+            "type": "integer"
+          },
+          "repeat_times": {
+            "type": "integer"
+          }
+        }
+      },
+      "AlarmRuleCreateReplaceV1": {
+        "type": "object",
+        "required": [
+          "enterprise",
+          "name",
+          "metric",
+          "conditions",
+          "realert_interval"
+        ],
+        "properties": {
+          "enterprise": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "devices": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "string"
+          },
+          "conditions": {
+            "type": "object",
+            "required": [
+              "value",
+              "unit",
+              "comparator"
+            ],
+            "properties": {
+              "value": {
+                "type": "number"
+              },
+              "unit": {
+                "type": "string",
+                "enum": [
+                  "Percent",
+                  "Count"
+                ]
+              },
+              "comparator": {
+                "type": "string",
+                "enum": [
+                  "GreaterThanThreshold",
+                  "GreaterThanOrEqualToThreshold",
+                  "LessThanThreshold",
+                  "LessThanOrEqualToThreshold",
+                  "Frequency"
+                ]
+              },
+              "toggle_state": {
+                "type": "boolean"
+              }
+            }
+          },
+          "action_emails": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "alert_channels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "realert_interval": {
+            "type": "integer"
+          },
+          "repeat_times": {
+            "type": "integer"
+          }
+        }
+      },
+      "AlarmRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "enterprise": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "devices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "device_name": {
+                  "type": "string"
+                },
+                "alias_name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "string"
+          },
+          "conditions": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number",
+                "format": "double"
+              },
+              "unit": {
+                "type": "string"
+              },
+              "comparator": {
+                "type": "string"
+              },
+              "toggle_state": {
+                "type": "boolean"
+              }
+            }
+          },
+          "action_emails": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "alert_channels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "realert_interval": {
+            "type": "integer"
+          },
+          "repeat_times": {
+            "type": "integer"
+          },
+          "trigger_count": {
+            "type": "integer"
+          },
+          "daily_trigger_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "UpdateAlertChannelsV1": {
+        "type": "object",
+        "properties": {
+          "properties": {
+            "type": "object",
+            "properties": {
+              "to_address": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "email"
+                }
+              }
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "description": "format of alert. e.g. email"
+          },
+          "enterprise": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "AlertChannelCreateReplaceV1": {
+        "type": "object",
+        "required": [
+          "enterprise",
+          "name",
+          "type",
+          "properties"
+        ],
+        "properties": {
+          "enterprise": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "to_address": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "email"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AlertChannelsV1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "to_address": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "email"
+                }
+              }
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "description": "format of alert. e.g. email"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "enterprise": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "linked_alerts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "alarm_name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },

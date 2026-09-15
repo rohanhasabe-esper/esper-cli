@@ -900,6 +900,536 @@
         "x-esper-scope-parent": "blueprint"
       }
     },
+    "/v2/devices/": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Get all devices in the tenant",
+        "description": "Returns all the devices in the tenant",
+        "tags": [
+          "3_Device V2"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "maximum": 1000
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "description": "Opaque cursor token for cursor-based pagination.\n- Use `start` to begin from the first page\n- Use the `next_cursor` value from previous response for subsequent pages\n- Use the `prev_cursor` value from previous response to navigate backward\n- When provided, offset parameter is ignored\n",
+            "schema": {
+              "type": "string",
+              "example": "start"
+            }
+          },
+          {
+            "in": "query",
+            "name": "ordering",
+            "description": "Field to order the results by. Prefix with '-' to reverse the order.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "alias",
+                "created_at",
+                "last_seen",
+                "model",
+                "os_version",
+                "name",
+                "serial",
+                "provisioned_on",
+                "battery_level",
+                "dpc_version",
+                "eea_version",
+                "is_gms",
+                "security_state",
+                "wifi_ssid",
+                "platform",
+                "template_name",
+                "policy_name",
+                "state"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "serial",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "udid",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "android_version",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "ios_version",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "ipados_version",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "tvos_version",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "windows_version",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "battery_level_gte",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "battery_level_lte",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "is_gms",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "active_connection",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "group_multi",
+            "description": "Filter by multiple group ID. Fetch the devices from groups matching with the IDs and its subgroup.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "group_multi_immediate",
+            "description": "Filter by multiple group IDs. Fetch the devices from groups matching with the IDs. Excludes devices in any subgroups.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "assigned_blueprint_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "current_blueprint_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "current_blueprint_version_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "current_blueprint_version_id_net",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "platform",
+            "description": "a csv list of platforms [ANDROID, APPLE, LINUX, WINDOWS]",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "os",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "iOS",
+                "iPadOS",
+                "tvOS",
+                "Android",
+                "Linux",
+                "Windows"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "device_source",
+            "description": "a csv list of device sources [ABM, NON_ABM]",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "managed_by",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "BLUEPRINT",
+                "TEMPLATE"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "template_multi",
+            "description": "a csv list of template names",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "policy_multi",
+            "description": "a csv list of policy names",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "description": "Search devices by multiOS -> Name, Serial, IMEI, Model, WiFi SSID, Apple UDID, ICCID1, ICCID2, Brand, Manufacturer, Hardware, WiFi MAC Address, SIM Operator, Network Operator and IP Address.",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "foundation_device_model_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "android_version_exact",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "foundation_major_version",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "foundation_minor_version",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "foundation_build_number",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "airwave_tenant_model_id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "airwave_build_id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "airwave_build_number",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "foundation_version",
+            "description": "Full foundation version string (either os_version.major.minor.build or eea_version)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "esper_agent_version_name",
+            "description": "Filter devices by Esper agent version name (DPC version)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "tags",
+            "description": "a csv list of tag ids",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "is_locked_down",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "global_device_id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device information for the Tenant.\nResponse format depends on pagination type used:\n- **Offset-based**: Returns `count`, `prev`, `next` (URLs), `results`\n- **Cursor-based**: Returns `results`, `next_cursor`, `prev_cursor`\n\nLive apps-envelope evidence: `.spec/cli-revamp/smoke-test.md`, Results 2026-08-25.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/OffsetPaginatedDeviceList"
+                        },
+                        {
+                          "$ref": "#/components/schemas/CursorPaginatedDeviceList"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "device",
+        "x-esper-response-envelope": "apps-envelope"
+      }
+    },
+    "/v2/devices/{id}": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Retrieve detailed device information.",
+        "description": "Get device details for particular device id",
+        "tags": [
+          "3_Device V2"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the device",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detailed information of the device",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/AppleDeviceV2"
+                        },
+                        {
+                          "$ref": "#/components/schemas/AndroidDeviceV2"
+                        },
+                        {
+                          "$ref": "#/components/schemas/LinuxDeviceV2"
+                        },
+                        {
+                          "$ref": "#/components/schemas/WindowsDeviceV2"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-response-envelope": "apps-envelope",
+        "x-esper-verb": "get",
+        "x-esper-noun": "device"
+      }
+    },
     "/v2/devices/{deviceId}/device-apps/": {
       "get": {
         "security": [
@@ -4089,6 +4619,34 @@
           }
         }
       },
+      "DeviceStateEnumAndroid": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The following are the device states and their descriptions:\n```\n* 0 = Device State is Unspecified\n* 1 = Online\n* 20 = Disabled (device has been factory reset or removed from the Esper Dashboard)\n* 30 = Beginning Provisioning\n* 40 = Configuring Google Play (still provisioning)\n* 50 = Applying Policies and Installing Applications (still provisioning)\n* 60 = Offline\n* 70 = Device is undergoing a Factory Reset (reset started from Dashboard)\n* 80 = Device Onboarding in Progress\n* 90 = Device Onboarding Failed\n* 100 = Device Onboarded in Esper\n* 110 = Android For Work Account added\n* 120 = Apps installed\n* 130 = Branding Processed\n* 140 = Permission Policy Processed\n* 150 = Device Policy Processed\n* 160 = Device Settings Processed\n* 170 = Security Policy Processed\n* 180 = Phone Policy Processed\n* 190 = Custom Settings Processed\n* 200 = Device is Registered\n```\n",
+        "enum": [
+          0,
+          1,
+          20,
+          30,
+          40,
+          50,
+          60,
+          70,
+          80,
+          90,
+          100,
+          110,
+          120,
+          130,
+          140,
+          150,
+          160,
+          170,
+          180,
+          190,
+          200
+        ]
+      },
       "Error_409_Conflict": {
         "type": "object",
         "properties": {
@@ -4174,6 +4732,1572 @@
           "message"
         ]
       },
+      "WindowsDeviceV2": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Esper generated name for the device"
+          },
+          "alias": {
+            "type": "string",
+            "description": "Alias/alternate name for the device"
+          },
+          "os": {
+            "type": "string",
+            "description": "Operating system for the device",
+            "enum": [
+              "Windows"
+            ]
+          },
+          "state": {
+            "$ref": "#/components/schemas/DeviceStateEnumWindows"
+          },
+          "platform": {
+            "type": "string",
+            "description": "Platform for the device",
+            "enum": [
+              "WINDOWS"
+            ]
+          },
+          "serial": {
+            "type": "string",
+            "description": "Serial number the device"
+          },
+          "os_version": {
+            "type": "string",
+            "description": "OS version the device"
+          },
+          "global_device_id": {
+            "type": "string",
+            "description": "Windows generated unique id for the device"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "group_id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "provisioned_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Array of UUIDs representing tags associated with the device"
+          },
+          "hardware_info": {
+            "type": "object",
+            "properties": {
+              "brand": {
+                "type": "string",
+                "description": "Device brand"
+              },
+              "model": {
+                "type": "string",
+                "description": "Device model"
+              },
+              "serial": {
+                "type": "string",
+                "description": "Device serial number"
+              },
+              "manufacturer": {
+                "type": "string",
+                "description": "Device manufacturer"
+              },
+              "hardware": {
+                "type": "string",
+                "description": "Hardware information"
+              }
+            }
+          },
+          "software_info": {
+            "type": "object",
+            "properties": {
+              "os_build_number": {
+                "type": "string",
+                "description": "OS build number"
+              },
+              "os_version": {
+                "type": "string",
+                "description": "OS version"
+              },
+              "os": {
+                "type": "string",
+                "description": "OS name"
+              },
+              "bootloader_version": {
+                "type": "string",
+                "description": "Bootloader version"
+              },
+              "kernel_architecture": {
+                "type": "string",
+                "description": "Kernel architecture"
+              },
+              "device_kernel_version": {
+                "type": "string",
+                "description": "Device kernel version"
+              },
+              "esper_agent_info": {
+                "type": "object",
+                "properties": {
+                  "version_code": {
+                    "type": "string",
+                    "description": "Esper agent version code"
+                  },
+                  "version_name": {
+                    "type": "string",
+                    "description": "Esper agent version name"
+                  }
+                }
+              }
+            }
+          },
+          "network_info": {
+            "type": "object",
+            "properties": {
+              "wifi_mac_address": {
+                "type": "string",
+                "description": "Wi-Fi MAC address"
+              },
+              "ethernet_mac_address": {
+                "type": "string",
+                "description": "Ethernet MAC address"
+              }
+            }
+          },
+          "memory_info": {
+            "type": "object",
+            "properties": {
+              "total_ram": {
+                "type": "string",
+                "description": "Total RAM in bytes"
+              },
+              "total_internal_storage": {
+                "type": "string",
+                "description": "Total internal storage in bytes"
+              },
+              "units": {
+                "type": "string",
+                "description": "Units used for the storage capacity"
+              }
+            }
+          },
+          "network_stats": {
+            "type": "object",
+            "properties": {
+              "dns_servers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "DNS servers"
+              },
+              "default_gateway": {
+                "type": "string",
+                "description": "Default gateway"
+              },
+              "ethernet_ip_address": {
+                "type": "string",
+                "description": "Ethernet IP address"
+              },
+              "current_active_connection": {
+                "type": "string",
+                "description": "The current active connection type"
+              },
+              "wifi_network_info": {
+                "type": "object",
+                "properties": {
+                  "wifi_ssid": {
+                    "type": "string",
+                    "description": "The SSID of the WiFi network"
+                  },
+                  "wifi_signal_strength": {
+                    "type": "integer",
+                    "description": "The signal strength of the WiFi network"
+                  },
+                  "wifi_ip_address": {
+                    "type": "string",
+                    "description": "The IP address of the WiFi network"
+                  }
+                }
+              },
+              "ip_address": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The IP address of the device"
+              }
+            }
+          },
+          "memory_stats": {
+            "type": "object",
+            "properties": {
+              "total_memory": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Total memory in bytes"
+              },
+              "total_internal_storage": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Total internal storage in bytes"
+              },
+              "available_ram": {
+                "type": "integer",
+                "format": "int64",
+                "description": "The available memory value"
+              },
+              "available_internal_storage": {
+                "type": "integer",
+                "format": "int64",
+                "description": "The available internal storage value"
+              },
+              "units": {
+                "type": "string",
+                "description": "The units used for the storage capacity"
+              }
+            }
+          },
+          "cpu_stats": {
+            "type": "object",
+            "properties": {
+              "cpu_counts": {
+                "type": "integer",
+                "description": "Number of CPU cores"
+              },
+              "cpu_cores": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "description": "CPU core usage percentages"
+              },
+              "cpu_temperature": {
+                "type": "number",
+                "format": "float",
+                "description": "CPU temperature"
+              }
+            }
+          },
+          "last_seen": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last time the device was seen"
+          },
+          "blueprint_info": {
+            "$ref": "#/components/schemas/WindowsBlueprintInfo"
+          },
+          "battery_stats": {
+            "type": "object",
+            "properties": {
+              "battery_level": {
+                "type": "number",
+                "description": "Current battery level of the device"
+              }
+            }
+          },
+          "provisioned_with": {
+            "type": "string",
+            "description": "Whether the device was provisioned with blueprint or template",
+            "enum": [
+              "BLUEPRINT"
+            ]
+          },
+          "is_seamless": {
+            "type": "boolean"
+          },
+          "windows_config": {
+            "type": "object",
+            "properties": {
+              "channel_uri": {
+                "type": "string",
+                "description": "Channel URI for the device"
+              },
+              "channel_updated_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Last updated time of the channel URI"
+              }
+            }
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "WindowsBlueprintInfo": {
+        "type": "object",
+        "properties": {
+          "assigned_blueprint_id": {
+            "type": "string",
+            "description": "Assigned blueprint id of the device"
+          },
+          "current_blueprint_id": {
+            "type": "string",
+            "description": "Current blueprint id of the blueprint assigned to the device"
+          },
+          "current_blueprint_version_id": {
+            "type": "string",
+            "description": "Current Version id of the blueprint assigned to the device"
+          },
+          "blueprint_upgrade_status": {
+            "type": "string",
+            "description": "The status of the blueprint upgrade on the device",
+            "enum": [
+              "NOT_APPLICABLE"
+            ]
+          }
+        }
+      },
+      "DeviceStateEnumWindows": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The following are the device states and their descriptions:\n```\n* 0 = Device State is Unspecified\n* 1 = Online/Active\n* 20 = Disabled (device has been factory reset or removed from the Esper Dashboard)\n* 70 = Device Wipe in Progress\n* 80 = Device Onboarding in Progress\n* 90 = Device Onboarding Failed\n* 100 = Device Onboarded in Esper\n* 200 = Device is Registered\n```\n",
+        "enum": [
+          0,
+          1,
+          20,
+          70,
+          80,
+          90,
+          100,
+          200
+        ]
+      },
+      "LinuxDeviceV2": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Esper generated name for the device"
+          },
+          "alias": {
+            "type": "string",
+            "description": "Alias/alternate name for the device"
+          },
+          "os": {
+            "type": "string",
+            "description": "Operating system for the device",
+            "enum": [
+              "ubuntu",
+              "Ubuntu",
+              "Linux"
+            ]
+          },
+          "state": {
+            "$ref": "#/components/schemas/DeviceStateEnumLinux"
+          },
+          "platform": {
+            "type": "string",
+            "description": "Platform for the device",
+            "enum": [
+              "LINUX"
+            ]
+          },
+          "serial": {
+            "type": "string",
+            "description": "Serial number the device"
+          },
+          "os_version": {
+            "type": "string",
+            "description": "OS version the device"
+          },
+          "global_device_id": {
+            "type": "string",
+            "description": "Esper generated unique id for the device"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "group_id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "provisioned_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Array of UUIDs representing tags associated with the device"
+          },
+          "hardware_info": {
+            "type": "object",
+            "properties": {
+              "brand": {
+                "type": "string",
+                "description": "Device brand"
+              },
+              "model": {
+                "type": "string",
+                "description": "Device model"
+              },
+              "serial": {
+                "type": "string",
+                "description": "Device serial number"
+              },
+              "manufacturer": {
+                "type": "string",
+                "description": "Device manufacturer"
+              },
+              "hardware": {
+                "type": "string",
+                "description": "Hardware information"
+              }
+            }
+          },
+          "software_info": {
+            "type": "object",
+            "properties": {
+              "supported_abi": {
+                "type": "string",
+                "description": "Supported ABI"
+              },
+              "os_build_time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "OS build time timestamp"
+              },
+              "os_build_number": {
+                "type": "string",
+                "description": "OS build number"
+              },
+              "os_version": {
+                "type": "string",
+                "description": "OS version"
+              },
+              "os": {
+                "type": "string",
+                "description": "OS name"
+              },
+              "os_platform": {
+                "type": "string",
+                "description": "OS platform"
+              },
+              "os_distribution": {
+                "type": "string",
+                "description": "OS distribution"
+              },
+              "bootloader_version": {
+                "type": "string",
+                "description": "Bootloader version"
+              },
+              "kernel_architecture": {
+                "type": "string",
+                "description": "Kernel architecture"
+              },
+              "device_kernel_version": {
+                "type": "string",
+                "description": "Device kernel version"
+              },
+              "last_boot_time": {
+                "type": "string",
+                "description": "Last boot time"
+              },
+              "display_resolution": {
+                "type": "string",
+                "description": "Display resolution"
+              },
+              "display_refresh_rate": {
+                "type": "string",
+                "description": "Display refresh rate"
+              },
+              "esper_agent_info": {
+                "type": "object",
+                "properties": {
+                  "version_code": {
+                    "type": "string",
+                    "description": "Esper agent version code"
+                  },
+                  "version_name": {
+                    "type": "string",
+                    "description": "Esper agent version name"
+                  }
+                }
+              }
+            }
+          },
+          "network_info": {
+            "type": "object",
+            "properties": {
+              "wifi_mac_address": {
+                "type": "string",
+                "description": "Wi-Fi MAC address"
+              },
+              "ethernet_mac_address": {
+                "type": "string",
+                "description": "Ethernet MAC address"
+              }
+            }
+          },
+          "memory_info": {
+            "type": "object",
+            "properties": {
+              "total_ram": {
+                "type": "string",
+                "description": "Total RAM in bytes"
+              },
+              "total_internal_storage": {
+                "type": "string",
+                "description": "Total internal storage in bytes"
+              },
+              "total_swap_memory": {
+                "type": "string",
+                "description": "Total swap memory in bytes"
+              },
+              "units": {
+                "type": "string",
+                "description": "Units used for the storage capacity"
+              }
+            }
+          },
+          "network_stats": {
+            "type": "object",
+            "properties": {
+              "dns_servers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "DNS servers"
+              },
+              "default_gateway": {
+                "type": "string",
+                "description": "Default gateway"
+              },
+              "ethernet_ip_address": {
+                "type": "string",
+                "description": "Ethernet IP address"
+              },
+              "current_active_connection": {
+                "type": "string",
+                "description": "The current active connection type"
+              },
+              "wifi_network_info": {
+                "type": "object",
+                "properties": {
+                  "wifi_ssid": {
+                    "type": "string",
+                    "description": "The SSID of the WiFi network"
+                  },
+                  "wifi_signal_strength": {
+                    "type": "integer",
+                    "description": "The signal strength of the WiFi network"
+                  },
+                  "wifi_ip_address": {
+                    "type": "string",
+                    "description": "The IP address of the WiFi network"
+                  }
+                }
+              },
+              "ip_address": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The IP address of the device"
+              }
+            }
+          },
+          "memory_stats": {
+            "type": "object",
+            "properties": {
+              "total_memory": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Total memory in bytes"
+              },
+              "total_internal_storage": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Total internal storage in bytes"
+              },
+              "total_swap_memory": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Total swap memory in bytes"
+              },
+              "available_ram": {
+                "type": "integer",
+                "format": "int64",
+                "description": "The available memory value"
+              },
+              "available_internal_storage": {
+                "type": "integer",
+                "format": "int64",
+                "description": "The available internal storage value"
+              },
+              "available_swap_memory": {
+                "type": "integer",
+                "format": "int64",
+                "description": "The available swap memory value"
+              },
+              "units": {
+                "type": "string",
+                "description": "The units used for the storage capacity"
+              }
+            }
+          },
+          "cpu_stats": {
+            "type": "object",
+            "properties": {
+              "cpu_counts": {
+                "type": "integer",
+                "description": "Number of CPU cores"
+              },
+              "cpu_cores": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "description": "CPU core usage percentages"
+              },
+              "cpu_temperature": {
+                "type": "number",
+                "format": "float",
+                "description": "CPU temperature"
+              },
+              "total_percent": {
+                "type": "number",
+                "format": "float",
+                "description": "Total CPU usage percentage"
+              }
+            }
+          },
+          "battery_stats": {
+            "type": "object",
+            "properties": {
+              "battery_present": {
+                "type": "boolean",
+                "description": "Whether battery is present"
+              },
+              "battery_state": {
+                "type": "string",
+                "description": "Battery state"
+              },
+              "battery_energy": {
+                "type": "number",
+                "format": "float",
+                "description": "Battery energy"
+              },
+              "battery_energy_full": {
+                "type": "number",
+                "format": "float",
+                "description": "Battery full energy"
+              },
+              "battery_energy_full_design": {
+                "type": "number",
+                "format": "float",
+                "description": "Battery design full energy"
+              },
+              "battery_level": {
+                "type": "number",
+                "format": "int32",
+                "description": "Battery level"
+              },
+              "battery_technology": {
+                "type": "string",
+                "description": "Battery technology"
+              },
+              "battery_voltage": {
+                "type": "number",
+                "format": "float",
+                "description": "Battery voltage"
+              },
+              "battery_health": {
+                "type": "number",
+                "format": "float",
+                "description": "Battery health percentage"
+              },
+              "battery_temperature": {
+                "type": "number",
+                "format": "float",
+                "description": "Battery temperature"
+              }
+            }
+          },
+          "location_stats": {
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "number",
+                "format": "float",
+                "description": "Device latitude"
+              },
+              "longitude": {
+                "type": "number",
+                "format": "float",
+                "description": "Device longitude"
+              },
+              "altitude": {
+                "type": "number",
+                "format": "float",
+                "description": "Device altitude"
+              },
+              "accuracy": {
+                "type": "number",
+                "format": "float",
+                "description": "Location accuracy"
+              }
+            }
+          },
+          "blueprint_info": {
+            "$ref": "#/components/schemas/LinuxBlueprintInfo"
+          },
+          "managed_by": {
+            "type": "string",
+            "description": "Whether the device is managed by blueprint or template",
+            "enum": [
+              "BLUEPRINT"
+            ]
+          },
+          "provisioned_with": {
+            "type": "string",
+            "description": "Whether the device was provisioned with blueprint or template",
+            "enum": [
+              "BLUEPRINT"
+            ]
+          },
+          "is_seamless": {
+            "type": "boolean"
+          },
+          "last_seen": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "LinuxBlueprintInfo": {
+        "type": "object",
+        "properties": {
+          "assigned_blueprint_id": {
+            "type": "string",
+            "description": "Assigned blueprint id of the device"
+          },
+          "current_blueprint_id": {
+            "type": "string",
+            "description": "Current blueprint id of the blueprint assigned to the device"
+          },
+          "current_blueprint_version_id": {
+            "type": "string",
+            "description": "Current Version id of the blueprint assigned to the device"
+          },
+          "blueprint_upgrade_status": {
+            "type": "string",
+            "description": "The status of the blueprint upgrade on the device",
+            "enum": [
+              "NOT_APPLICABLE"
+            ]
+          }
+        }
+      },
+      "DeviceStateEnumLinux": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The following are the device states and their descriptions:\n```\n* 0 = Device State is Unspecified\n* 1 = Online/Active\n* 20 = Disabled (device has been factory reset or removed from the Esper Dashboard)\n* 70 = Device Wipe in Progress\n* 80 = Device Onboarding in Progress\n* 90 = Device Onboarding Failed\n* 100 = Device Onboarded in Esper\n* 200 = Device is Registered\n```\n",
+        "enum": [
+          0,
+          1,
+          20,
+          70,
+          80,
+          90,
+          100,
+          200
+        ]
+      },
+      "AndroidDeviceV2": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Esper generated name for the device"
+          },
+          "alias": {
+            "type": "string",
+            "description": "Alias/alternate name for the device"
+          },
+          "os": {
+            "type": "string",
+            "description": "Operating system for the device",
+            "enum": [
+              "Android"
+            ]
+          },
+          "state": {
+            "$ref": "#/components/schemas/DeviceStateEnumAndroid"
+          },
+          "platform": {
+            "type": "string",
+            "description": "Platform for the device",
+            "enum": [
+              "ANDROID"
+            ]
+          },
+          "serial": {
+            "type": "string",
+            "description": "Serial number the device"
+          },
+          "os_version": {
+            "type": "string",
+            "description": "OS version the device"
+          },
+          "global_device_id": {
+            "type": "string",
+            "description": "Esper generated unique id for the device"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "group_id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "provisioned_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Array of UUIDs representing tags associated with the device"
+          },
+          "hardware_info": {
+            "$ref": "#/components/schemas/HardwareInfo"
+          },
+          "software_info": {
+            "$ref": "#/components/schemas/SoftwareInfo"
+          },
+          "network_info": {
+            "$ref": "#/components/schemas/NetworkInfo"
+          },
+          "memory_info": {
+            "$ref": "#/components/schemas/MemoryInfo"
+          },
+          "network_stats": {
+            "$ref": "#/components/schemas/NetworkStatsV2"
+          },
+          "location_stats": {
+            "$ref": "#/components/schemas/LocationStats"
+          },
+          "memory_stats": {
+            "$ref": "#/components/schemas/MemoryStats"
+          },
+          "blueprint_info": {
+            "$ref": "#/components/schemas/BlueprintInfo"
+          },
+          "battery_stats": {
+            "type": "object",
+            "properties": {
+              "battery_level": {
+                "type": "number",
+                "description": "Current battey level of the device"
+              }
+            }
+          },
+          "mqtt_topic": {
+            "type": "string",
+            "description": "MQTT topic"
+          },
+          "fcm_id": {
+            "type": "string"
+          },
+          "is_gms": {
+            "type": "boolean"
+          },
+          "dpc_version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "DPC (Device Policy Controller) version / Esper agent version name"
+          },
+          "eea_version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "EEA (Esper Enterprise Android) version"
+          },
+          "policy": {
+            "description": "Policy associated with the device",
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "policy_id": {
+                "type": "integer"
+              },
+              "policy_name": {
+                "type": "string"
+              }
+            }
+          },
+          "managed_by": {
+            "type": "string",
+            "description": "Whether the device is managed by blueprint or template",
+            "enum": [
+              "BLUEPRINT",
+              "TEMPLATE"
+            ]
+          },
+          "provisioned_with": {
+            "type": "string",
+            "description": "Whether the device was provisioned with blueprint or template",
+            "enum": [
+              "BLUEPRINT",
+              "TEMPLATE"
+            ]
+          },
+          "template_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the template the device is managed by"
+          },
+          "is_seamless": {
+            "type": "boolean"
+          },
+          "is_esper_managed": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "readOnly": true,
+            "description": "Indicates if the device is Esper managed"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BlueprintInfo": {
+        "type": "object",
+        "properties": {
+          "assigned_blueprint_id": {
+            "type": "string",
+            "description": "Assigned blueprint id of the device"
+          },
+          "current_blueprint_id": {
+            "type": "string",
+            "description": "Current blueprint id of the blueprint assigned to the device"
+          },
+          "current_blueprint_version_id": {
+            "type": "string",
+            "description": "Current Version id of the blueprint assigned to the device"
+          },
+          "blueprint_upgrade_status": {
+            "type": "string",
+            "description": "The status of the blueprint upgrade on the device",
+            "enum": [
+              "UPGRADABLE",
+              "UPGRADE_INITIATED",
+              "UPGRADE_FAILED",
+              "UPGRADED",
+              "NOT_UPGRADABLE",
+              "NOT_APPLICABLE"
+            ]
+          }
+        }
+      },
+      "MemoryStats": {
+        "type": "object",
+        "properties": {
+          "available_ram": {
+            "type": "integer",
+            "description": "The available memory value"
+          },
+          "available_internal_storage": {
+            "type": "integer",
+            "description": "The available internal storage value"
+          },
+          "os_occupied_storage": {
+            "type": "integer",
+            "description": "The OS occupied storage value"
+          }
+        }
+      },
+      "LocationStats": {
+        "type": "object",
+        "properties": {
+          "altitude": {
+            "type": "string",
+            "description": "The altitude value"
+          },
+          "latitude": {
+            "type": "string",
+            "description": "The latitude value"
+          },
+          "longitude": {
+            "type": "string",
+            "description": "The longitude value"
+          }
+        }
+      },
+      "NetworkStatsV2": {
+        "type": "object",
+        "properties": {
+          "current_active_connection": {
+            "type": "string",
+            "description": "The current active connection type"
+          },
+          "wifi_network_info": {
+            "type": "object",
+            "properties": {
+              "wifi_ssid": {
+                "type": "string",
+                "description": "The SSID of the WiFi network"
+              },
+              "wifi_signal_strength": {
+                "type": "integer",
+                "description": "The signal strength of the WiFi network on a scale of 0 to 5"
+              }
+            }
+          },
+          "cellular_network_info": {
+            "type": "object",
+            "properties": {
+              "network_type": {
+                "type": "string",
+                "description": "The network type of the cellular network - null, 2G, 3G, 4G LTE"
+              }
+            }
+          },
+          "ip_address": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The IP address of the device"
+          }
+        }
+      },
+      "MemoryInfo": {
+        "type": "object",
+        "properties": {
+          "total_ram": {
+            "type": "string",
+            "description": "Total ram capacity for the device"
+          },
+          "total_internal_storage": {
+            "type": "string",
+            "description": "The total internal storage capacity of the device"
+          },
+          "units": {
+            "type": "string",
+            "description": "The units used for the storage capacity"
+          },
+          "internal_storage_binary_prefix": {
+            "type": "string",
+            "description": "(Specific to Android devices)"
+          }
+        }
+      },
+      "NetworkInfo": {
+        "type": "object",
+        "properties": {
+          "imei1": {
+            "type": "string",
+            "description": "The IMEI number of the device"
+          },
+          "imei2": {
+            "type": "string",
+            "description": "The IMEI number of the device"
+          },
+          "wifi_mac_address": {
+            "type": "string",
+            "description": "The wifi mac address of the device"
+          },
+          "ethernet_mac_address": {
+            "type": "string",
+            "description": "The ethernet mac address of the device"
+          },
+          "iccid1": {
+            "type": "string",
+            "description": "The ICCID number of the device"
+          },
+          "iccid2": {
+            "type": "string",
+            "description": "The ICCID number of the device"
+          },
+          "phone_number_1": {
+            "type": "string",
+            "description": "The phone number of the device"
+          },
+          "phone_number_2": {
+            "type": "string",
+            "description": "The phone number of the device"
+          },
+          "network_type": {
+            "type": "string",
+            "description": "The network type of the device",
+            "enum": [
+              "CELLULAR",
+              "ETHERNET",
+              "WI-FI",
+              "OTHER"
+            ]
+          }
+        }
+      },
+      "SoftwareInfo": {
+        "type": "object",
+        "properties": {
+          "os_version": {
+            "type": "string",
+            "description": "The OS version number of the device"
+          },
+          "os_build_number": {
+            "type": "string",
+            "description": "The OS build number of the device"
+          },
+          "bootloader_version": {
+            "type": "string",
+            "description": "The bootloader version of the device"
+          },
+          "security_path_level": {
+            "type": "string",
+            "description": "The security path level of the device"
+          },
+          "device_kernel_version": {
+            "type": "string",
+            "description": "The kernel version of the device"
+          },
+          "eea_version": {
+            "type": "string",
+            "description": "EEA (Esper Enterprise Android) version"
+          },
+          "esper_agent_info": {
+            "type": "object",
+            "properties": {
+              "version_code": {
+                "type": "string",
+                "description": "Esper agent version code"
+              },
+              "version_name": {
+                "type": "string",
+                "description": "Esper agent version name"
+              }
+            }
+          },
+          "foundation_info": {
+            "$ref": "#/components/schemas/FoundationInfo"
+          },
+          "airwave_info": {
+            "$ref": "#/components/schemas/AirwaveInfo"
+          }
+        }
+      },
+      "AirwaveInfo": {
+        "type": "object",
+        "properties": {
+          "build_number": {
+            "type": "integer",
+            "description": "The airwave OS build number of the device"
+          },
+          "tenant_model_id": {
+            "type": "string",
+            "description": "The airwave tenant model id of the device"
+          },
+          "build_id": {
+            "type": "string",
+            "description": "The airwave build id of the device"
+          },
+          "esper_ota_manager_version_code": {
+            "type": "integer",
+            "description": "The Esper OTA Manager version code"
+          },
+          "esper_ota_manager_version_name": {
+            "type": "string",
+            "description": "The Esper OTA Manager version name"
+          }
+        }
+      },
+      "FoundationInfo": {
+        "type": "object",
+        "properties": {
+          "major_version": {
+            "type": "string",
+            "description": "The foundation OS build major version of the device"
+          },
+          "minor_version": {
+            "type": "string",
+            "description": "The foundation OS build minor version of the device"
+          },
+          "build_number": {
+            "type": "string",
+            "description": "The foundation OS build number of the device"
+          },
+          "project_name": {
+            "type": "string",
+            "description": "The foundation project name of the device"
+          },
+          "build_flavor": {
+            "type": "string",
+            "description": "The foundation OS build flavor of the device"
+          },
+          "variant": {
+            "type": "string",
+            "description": "The foundation variant of the device"
+          },
+          "foundation_device_model_id": {
+            "type": "string",
+            "description": "The foundation device model id of the device"
+          }
+        }
+      },
+      "HardwareInfo": {
+        "type": "object",
+        "properties": {
+          "brand": {
+            "type": "string",
+            "description": "The brand of the device"
+          },
+          "model": {
+            "type": "string",
+            "description": "The model of the device"
+          },
+          "model_number": {
+            "type": "string",
+            "description": "The model number of the device"
+          },
+          "serial": {
+            "type": "string",
+            "description": "The serial number of the device"
+          },
+          "manufacturer": {
+            "type": "string",
+            "description": "The manufacturer number of the device"
+          },
+          "hardware": {
+            "type": "string",
+            "description": "The hardware information of the device"
+          },
+          "device_baseband_version": {
+            "type": "string",
+            "description": "The device baseband version of the device"
+          }
+        }
+      },
+      "AppleDeviceV2": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Esper generated name for the device"
+          },
+          "alias": {
+            "type": "string",
+            "description": "Alias/alternate name for the device"
+          },
+          "os": {
+            "type": "string",
+            "description": "Operating system for the device",
+            "enum": [
+              "iOS",
+              "iPadOS",
+              "tvOS"
+            ]
+          },
+          "state": {
+            "$ref": "#/components/schemas/DeviceStateEnumApple"
+          },
+          "platform": {
+            "type": "string",
+            "description": "Platform for the device",
+            "enum": [
+              "APPLE"
+            ]
+          },
+          "serial": {
+            "type": "string",
+            "description": "Serial number the device"
+          },
+          "os_version": {
+            "type": "string",
+            "description": "OS version the device"
+          },
+          "global_device_id": {
+            "type": "string",
+            "description": "Esper generated unique id for the device"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "group_id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Array of UUIDs representing tags associated with the device"
+          },
+          "hardware_info": {
+            "$ref": "#/components/schemas/HardwareInfo"
+          },
+          "software_info": {
+            "$ref": "#/components/schemas/SoftwareInfo"
+          },
+          "network_info": {
+            "$ref": "#/components/schemas/NetworkInfo"
+          },
+          "memory_info": {
+            "$ref": "#/components/schemas/MemoryInfo"
+          },
+          "blueprint_info": {
+            "$ref": "#/components/schemas/BlueprintInfo"
+          },
+          "udid": {
+            "type": "string",
+            "description": "UDID as provided by apple"
+          },
+          "dep_profile": {
+            "type": "string",
+            "description": "DEP profile applied to device"
+          },
+          "dep_profile_push_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dep_profile_assign_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dep_profile_status": {
+            "type": "string",
+            "description": "DEP profile applied to device",
+            "enum": [
+              "empty",
+              "assigned",
+              "pushed",
+              "removed"
+            ]
+          },
+          "enrolment_info": {
+            "type": "object",
+            "properties": {
+              "enrolment_id": {
+                "type": "string",
+                "description": "The per-enrollment identifier for the device"
+              },
+              "enrolment_user_id": {
+                "type": "string",
+                "description": "The per-enrollment identifier for the user"
+              }
+            }
+          },
+          "last_seen": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tokens": {
+            "type": "object",
+            "properties": {
+              "push_magic": {
+                "type": "string"
+              },
+              "push_token": {
+                "type": "string"
+              },
+              "device_token": {
+                "type": "string"
+              }
+            }
+          },
+          "is_supervised": {
+            "type": "boolean"
+          },
+          "device_source": {
+            "type": "string",
+            "description": "Source of device onboarding",
+            "enum": [
+              "ABM",
+              "NON_ABM"
+            ]
+          },
+          "managed_by": {
+            "type": "string",
+            "description": "Whether the device is managed by blueprint or template",
+            "enum": [
+              "BLUEPRINT"
+            ]
+          },
+          "provisioned_with": {
+            "type": "string",
+            "description": "Whether the device was provisioned with blueprint or template",
+            "enum": [
+              "BLUEPRINT"
+            ]
+          },
+          "provisioned_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_seamless": {
+            "type": "boolean"
+          },
+          "is_locked_down": {
+            "type": "boolean"
+          },
+          "is_ddm_enabled": {
+            "type": "boolean",
+            "description": "Whether Declarative Device Management is enabled for this device"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "memory_stats": {
+            "type": "object",
+            "properties": {
+              "total_memory": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Total memory in bytes"
+              },
+              "total_internal_storage": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Total internal storage in bytes"
+              },
+              "available_ram": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Available RAM in bytes"
+              },
+              "available_internal_storage": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Available internal storage in bytes"
+              }
+            }
+          },
+          "battery_stats": {
+            "type": "object",
+            "properties": {
+              "battery_level": {
+                "type": "number",
+                "description": "Current battery level of the device"
+              }
+            }
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "DeviceStateEnumApple": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The following are the device states and their descriptions:\n```\n* 0 = Device State is Unspecified\n* 1 = Online/Active\n* 20 = Disabled (device has been factory reset or removed from the Esper Dashboard)\n* 70 = Device is undergoing a Factory Reset (reset started from Dashboard)\n* 80 = Device Onboarding in Progress\n* 90 = Device Onboarding Failed\n* 100 = Device Onboarded in Esper\n* 200 = Device is Registered\n```\n",
+        "enum": [
+          0,
+          1,
+          20,
+          70,
+          80,
+          90,
+          100,
+          200
+        ]
+      },
       "Error_500_Internal_Server_Error": {
         "type": "object",
         "properties": {
@@ -4233,6 +6357,97 @@
           "code",
           "message"
         ]
+      },
+      "CursorPaginatedDeviceList": {
+        "type": "object",
+        "description": "Response format for cursor-based pagination",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndroidDeviceV2"
+                },
+                {
+                  "$ref": "#/components/schemas/AppleDeviceV2"
+                },
+                {
+                  "$ref": "#/components/schemas/LinuxDeviceV2"
+                },
+                {
+                  "$ref": "#/components/schemas/WindowsDeviceV2"
+                }
+              ]
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Opaque cursor token for fetching the next page. Null if no more results.",
+            "example": "eyJzdiI6W3siYyI6InVwZGF0ZWRfYXQiLCJ2IjoiMjAyNi0wMy0xMVQwNzozNjowMS45NDM3NDlaIiwibyI6IkRFU0MifV0sInV2IjoiMTM5NzQwMjYtYTQzNS00ZDk5LWEyOWItM2E0Y2Y0MTZmODFhIn0="
+          },
+          "prev_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Opaque cursor token for navigating to the previous page. Pass this value as the `cursor` query parameter to paginate backward. Null when already on the first page."
+          },
+          "has_more": {
+            "type": "boolean",
+            "description": "Indicates if there are more results after the current page"
+          },
+          "has_prev": {
+            "type": "boolean",
+            "description": "Indicates if there are results before the current page"
+          }
+        }
+      },
+      "OffsetPaginatedDeviceList": {
+        "type": "object",
+        "description": "Response format for offset-based pagination",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "Total number of devices matching the query"
+          },
+          "prev": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "URL to the previous page of results"
+          },
+          "next": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "URL to the next page of results"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndroidDeviceV2"
+                },
+                {
+                  "$ref": "#/components/schemas/AppleDeviceV2"
+                },
+                {
+                  "$ref": "#/components/schemas/LinuxDeviceV2"
+                },
+                {
+                  "$ref": "#/components/schemas/WindowsDeviceV2"
+                }
+              ]
+            }
+          }
+        }
       },
       "BlueprintV2Put": {
         "allOf": [

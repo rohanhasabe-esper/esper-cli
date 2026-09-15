@@ -1,1 +1,40 @@
-{"info":{"title":"ESPER API REFERENCE - authz2","version":"1.0.0","x-esper-generation":"authz2","x-esper-auth":"bearer"},"paths":{},"components":{"schemas":{},"parameters":{}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ESPER API REFERENCE - authz2",
+    "version": "1.0.0",
+    "x-esper-generation": "authz2",
+    "x-esper-auth": "bearer"
+  },
+  "servers": [
+    {
+      "url": "https://{foo}-api.esper.cloud/api",
+      "variables": {
+        "foo": {
+          "default": "develop",
+          "description": "Custom end point"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "0_User",
+      "description": "APIs for User Management",
+      "externalDocs": {
+        "description": "Find out more about User management",
+        "url": "https://help.esper.io/hc/en-us/articles/12656615814929"
+      },
+      "x-displayName": "User"
+    },
+    {
+      "name": "0_Roles",
+      "x-displayName": "Roles"
+    }
+  ],
+  "paths": {},
+  "components": {
+    "schemas": {},
+    "parameters": {}
+  }
+}

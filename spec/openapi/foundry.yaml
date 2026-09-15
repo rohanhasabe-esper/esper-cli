@@ -1,1 +1,39 @@
-{"info":{"title":"ESPER API REFERENCE - foundry","version":"1.0.0","x-esper-generation":"foundry","x-esper-auth":"bearer"},"paths":{},"components":{"schemas":{},"parameters":{}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ESPER API REFERENCE - foundry",
+    "version": "1.0.0",
+    "x-esper-generation": "foundry",
+    "x-esper-auth": "bearer"
+  },
+  "servers": [
+    {
+      "url": "https://{foo}-api.esper.cloud/api",
+      "variables": {
+        "foo": {
+          "default": "develop",
+          "description": "Custom end point"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "9_FoundryBuilds",
+      "x-displayName": "FoundryBuilds"
+    },
+    {
+      "name": "9_FoundryDeviceModels",
+      "x-displayName": "FoundryDeviceModels"
+    },
+    {
+      "name": "9_FoundryEvents",
+      "x-displayName": "FoundryEvents"
+    }
+  ],
+  "paths": {},
+  "components": {
+    "schemas": {},
+    "parameters": {}
+  }
+}

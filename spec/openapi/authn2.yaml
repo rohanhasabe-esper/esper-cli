@@ -1,1 +1,44 @@
-{"info":{"title":"ESPER API REFERENCE - authn2","version":"1.0.0","x-esper-generation":"authn2","x-esper-auth":"bearer"},"paths":{},"components":{"schemas":{},"parameters":{}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ESPER API REFERENCE - authn2",
+    "version": "1.0.0",
+    "x-esper-generation": "authn2",
+    "x-esper-auth": "bearer"
+  },
+  "servers": [
+    {
+      "url": "https://{foo}-api.esper.cloud/api",
+      "variables": {
+        "foo": {
+          "default": "develop",
+          "description": "Custom end point"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "0_User",
+      "description": "APIs for User Management",
+      "externalDocs": {
+        "description": "Find out more about User management",
+        "url": "https://help.esper.io/hc/en-us/articles/12656615814929"
+      },
+      "x-displayName": "User"
+    },
+    {
+      "name": "0_SSO Connections",
+      "x-displayName": "SSO Connections"
+    },
+    {
+      "name": "0_Personal Access Token",
+      "x-displayName": "Personal Access Token"
+    }
+  ],
+  "paths": {},
+  "components": {
+    "schemas": {},
+    "parameters": {}
+  }
+}

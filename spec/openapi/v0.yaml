@@ -1,1 +1,1411 @@
-{"info":{"title":"ESPER API REFERENCE - v0","version":"1.0.0","x-esper-generation":"v0","x-esper-auth":"bearer"},"paths":{},"components":{"schemas":{},"parameters":{}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ESPER API REFERENCE - v0",
+    "version": "1.0.0",
+    "x-esper-generation": "v0",
+    "x-esper-auth": "bearer"
+  },
+  "servers": [
+    {
+      "url": "https://{foo}-api.esper.cloud/api",
+      "variables": {
+        "foo": {
+          "default": "develop",
+          "description": "Custom end point"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "0_Application",
+      "description": "APIs for application management",
+      "externalDocs": {
+        "description": "Find out more about application management",
+        "url": "https://help.esper.io/hc/en-us/articles/12652127923857"
+      },
+      "x-displayName": "Application"
+    },
+    {
+      "name": "0_Token (Deprecated)",
+      "description": "⚠️ **Deprecation Notice:** The following APIs will soon be deprecated. Use the console to manage API keys instead.\n",
+      "externalDocs": {
+        "description": "Find out more about API Key generation",
+        "url": "https://help.esper.io/hc/en-us/articles/12656959508497"
+      },
+      "x-displayName": "Token (Deprecated)"
+    },
+    {
+      "name": "0_Commands V2",
+      "description": "Commands V2.0 provides advanced device commands capabilities like queuing, support for offline devices, dynamic device set for commands and command history. Commands 2.0 is in active development and we will add support for all the commands soon",
+      "externalDocs": {
+        "description": "Find out more about commands V2.0",
+        "url": "https://help.esper.io/hc/en-us/articles/12524618746129"
+      },
+      "x-displayName": "Commands V2"
+    },
+    {
+      "name": "0_Geofence",
+      "description": "APIs for geofence management",
+      "externalDocs": {
+        "description": "Find out more about Geofence",
+        "url": "https://help.esper.io/hc/en-us/articles/12655621844753"
+      },
+      "x-displayName": "Geofence"
+    },
+    {
+      "name": "0_Content",
+      "description": "APIs to manage files",
+      "externalDocs": {
+        "description": "Find out more about Content management",
+        "url": "https://help.esper.io/hc/en-us/articles/12655910179473"
+      },
+      "x-displayName": "Content"
+    },
+    {
+      "name": "3_Device",
+      "description": "APIs to retrieve information about the device or delete the device.",
+      "x-displayName": "Device"
+    },
+    {
+      "name": "3_Device Heartbeat",
+      "description": "APIs to retrieve information about device's heartbeat which contains the last seen details.",
+      "x-displayName": "Device Heartbeat"
+    },
+    {
+      "name": "3_Operations",
+      "description": "APIs to get information about operations",
+      "x-displayName": "Operations"
+    },
+    {
+      "name": "3_DeviceOperations",
+      "description": "APIs to get information about device operations",
+      "x-displayName": "DeviceOperations"
+    },
+    {
+      "name": "4_VPP License Management",
+      "description": "APIs for managing VPP licenses for apps. Learn more about [VPP licenses](https://help.esper.io/hc/en-us/articles/20361103311761-Setting-Up-Apple-MDM-Management).",
+      "x-displayName": "VPP License Management"
+    },
+    {
+      "name": "5_Command Request",
+      "description": "APIs to view and manage command requests. Learn more about [commands](https://help.esper.io/hc/en-us/articles/16036992814609-Commonly-Used-APIs#h_01H2GZ8WM86BSQBGXE998QY8SM) or how to [schedule a command](https://help.esper.io/hc/en-us/articles/16036992814609-Commonly-Used-APIs#h_01H2GZ8WM86BSQBGXE998QY8SM).\n\nScheduled commands are currently compatible with Android devices.",
+      "x-displayName": "Command Request"
+    },
+    {
+      "name": "5_Command Status",
+      "description": "APIs to view, filter, and manage command requests.",
+      "x-displayName": "Command Status"
+    },
+    {
+      "name": "7_DEP Sync Request",
+      "description": "APIs to create and access DEP sync request information. Use DEP sync to sync the information from your Apple Business Manager account to the Esper console.",
+      "x-displayName": "DEP Sync Request"
+    },
+    {
+      "name": "8_APNs certificate",
+      "description": "APIs for managing APNS certificates. Learn more about [APNS certificates](https://help.esper.io/hc/en-us/articles/20361103311761-Setting-Up-Apple-MDM-Management)",
+      "x-displayName": "APNs certificate"
+    },
+    {
+      "name": "8_DEP Tokens",
+      "description": "APIs to create and access DEP tokens. Learn more about [DEP tokens](https://help.esper.io/hc/en-us/articles/20361103311761-Setting-Up-Apple-MDM-Management)",
+      "x-displayName": "DEP Tokens"
+    },
+    {
+      "name": "8_VPP Token Management",
+      "description": "APIs to create, access, and delete VPP tokens. Learn more about [VPP tokens](https://help.esper.io/hc/en-us/articles/20361103311761-Setting-Up-Apple-MDM-Management).",
+      "x-displayName": "VPP Token Management"
+    },
+    {
+      "name": "10_Reports API",
+      "description": "APIs for managing reports.<br /> Currently supports [App Reports](https://help.esper.io/hc/en-us/articles/27379366650257-App-Reports).",
+      "x-displayName": "Reports API"
+    },
+    {
+      "name": "tenant_DEP Profile",
+      "description": "APIs to create and manage DEP profiles. Learn more about [DEP profiles](https://help.esper.io/hc/en-us/articles/20361103311761-Setting-Up-Apple-MDM-Management)",
+      "x-displayName": "DEP Profile"
+    }
+  ],
+  "paths": {
+    "/v0/enterprise/{enterprise_id}/emm/{emm_id}/product/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "List Google Play applications",
+        "description": "Returns list of Google Play applications",
+        "operationId": "getGoogleApps",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "google_product_id",
+            "in": "query",
+            "description": "filter by Google product id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "package_name",
+            "in": "query",
+            "description": "filter by package name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "created_on",
+            "in": "query",
+            "description": "filter by date app created",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "updated_on",
+            "in": "query",
+            "description": "filter by date app updated",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GoogleProduct"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "product",
+        "x-esper-scope-parent": "emm"
+      },
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Post a Google play application",
+        "description": "Returns instance of Google application",
+        "operationId": "addGoogleApp",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleProduct"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoogleProduct"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "add",
+        "x-esper-noun": "product",
+        "x-esper-scope-parent": "emm"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/emm/{emm_id}/product/{product_id}": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Get application information",
+        "description": "Returns application instance",
+        "operationId": "getAppInfo",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "A string identifying the product.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoogleProduct"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "app-info"
+      },
+      "put": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Update application instance",
+        "description": "Returns application instance",
+        "operationId": "updateAppInfo",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "A string identifying the product.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "icon_url": {
+                    "type": "string",
+                    "format": "url"
+                  },
+                  "is_active": {
+                    "title": "Is Active",
+                    "type": "boolean"
+                  },
+                  "updated_on": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "min_sdk_version": {
+                    "title": "Minimum SDK Version",
+                    "type": "integer"
+                  },
+                  "unapproved": {
+                    "type": "boolean",
+                    "title": "Unapproving an app deletes it"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoogleProduct"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "update",
+        "x-esper-noun": "app-info"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Patch application instance",
+        "description": "Returns application instance",
+        "operationId": "patchAppInfo",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "A string identifying the product.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "icon_url": {
+                    "type": "string",
+                    "format": "url"
+                  },
+                  "is_active": {
+                    "title": "Is Active",
+                    "type": "boolean"
+                  },
+                  "updated_on": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "min_sdk_version": {
+                    "title": "Minimum SDK Version",
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchGoogleProduct"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "patch",
+        "x-esper-noun": "app-info"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Delete application instance",
+        "description": "Empty response",
+        "operationId": "deleteAppInstance",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "A string identifying the product.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "app-instance"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/emm/{emm_id}/product/{product_id}/install/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "List product installations",
+        "description": "Returns list of product installations",
+        "operationId": "listProducts",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "emm_id",
+            "in": "path",
+            "description": "An integer representing the ID of enterprise.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "A string identifying the product.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "google_product",
+            "in": "query",
+            "description": "Filter by Google product",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "google_device",
+            "in": "query",
+            "description": "Filter by Google device",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "install_state",
+            "in": "query",
+            "description": "Filter by install state",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version_code",
+            "in": "query",
+            "description": "Filter by version code",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "created_on_gt",
+            "in": "query",
+            "description": "filter installations created after a given timestamp",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "created_on_lt",
+            "in": "query",
+            "description": "filter installations created before a given timestamp",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "is_active",
+            "in": "query",
+            "description": "filter by active installations",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GoogleProductInstall"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "install",
+        "x-esper-scope-parent": "product"
+      }
+    },
+    "/apps/v0/vpp": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Get VPP License List",
+        "description": "API to get a list of VPP licenses with the given VPP token",
+        "tags": [
+          "4_VPP License Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "response code",
+                      "default": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "response message"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "description": "number of results returned"
+                        },
+                        "prev": {
+                          "type": "string",
+                          "description": "URL for previous page of results"
+                        },
+                        "next": {
+                          "type": "string",
+                          "description": "URL for next page of results"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "oneOf": [
+                              {
+                                "$ref": "#/components/schemas/VPPLicense"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "list",
+        "x-esper-noun": "app-vpp"
+      }
+    },
+    "/apps/v0/vpp/{appId}": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "summary": "Get VPP License Info about an App",
+        "description": "API to get information about the VPP license for a given app",
+        "tags": [
+          "4_VPP License Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "response code",
+                      "default": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "response message"
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/VPPLicense"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "app-vpp"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VPPLicense": {
+        "type": "object",
+        "properties": {
+          "app_id": {
+            "type": "string"
+          },
+          "assigned_count": {
+            "type": "integer"
+          },
+          "available_count": {
+            "type": "integer"
+          },
+          "pricing_param": {
+            "type": "string"
+          },
+          "supported_platforms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "Error_500_Internal_Server_Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 500
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "Error_401_Unauthorized": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 401
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "GoogleProductInstall": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "enterprise": {
+            "type": "string"
+          },
+          "device": {
+            "type": "string"
+          },
+          "install_state": {
+            "type": "string"
+          },
+          "version_code": {
+            "type": "string"
+          },
+          "install_type": {
+            "type": "integer",
+            "title": "install type- default 0, EMM 1"
+          },
+          "is_force_install": {
+            "type": "boolean"
+          },
+          "reason_details": {
+            "type": "string"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "objects": {
+            "type": "object"
+          }
+        }
+      },
+      "PatchGoogleProduct": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "icon_url": {
+            "type": "string",
+            "format": "url"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "min_sdk_version": {
+            "type": "string"
+          },
+          "google_product_id": {
+            "type": "string"
+          },
+          "package_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "google_enterprise": {
+            "type": "integer"
+          }
+        }
+      },
+      "GoogleProduct": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "icon_url": {
+            "type": "string",
+            "format": "url"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string"
+          },
+          "unapproved": {
+            "type": "boolean"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_on": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "min_sdk_version": {
+            "type": "string"
+          },
+          "google_product_id": {
+            "type": "string"
+          },
+          "package_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "google_enterprise": {
+            "type": "integer"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "title": "Messages describing the error",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "title": "Message describing the error",
+            "type": "string"
+          },
+          "status": {
+            "title": "alias name",
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "parameters": {}
+  }
+}

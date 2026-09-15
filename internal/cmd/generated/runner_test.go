@@ -633,9 +633,6 @@ func TestMergedCommandUseFollowsPrimaryRoute(t *testing.T) {
 }
 
 func TestCommandLongHelpListsOlderAPIGenerations(t *testing.T) {
-	original := generatedOperations
-	generatedOperations = []Operation{{Command: []string{"api", "legacy", "application", "list"}, Noun: "application", Verb: "list"}}
-	t.Cleanup(func() { generatedOperations = original })
 	operations := []Operation{{Command: []string{"application", "list"}, Noun: "application", Verb: "list"}}
 	help := commandLongHelp("List applications", operations)
 	if !strings.Contains(help, "Other API generations:") || !strings.Contains(help, "espercli api legacy application list") {

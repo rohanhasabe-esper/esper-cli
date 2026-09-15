@@ -1,1 +1,1689 @@
-{"info":{"title":"ESPER API REFERENCE - v1","version":"1.0.0","x-esper-generation":"v1","x-esper-auth":"bearer"},"paths":{},"components":{"schemas":{},"parameters":{}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ESPER API REFERENCE - v1",
+    "version": "1.0.0",
+    "x-esper-generation": "v1",
+    "x-esper-auth": "bearer"
+  },
+  "servers": [
+    {
+      "url": "https://{foo}-api.esper.cloud/api",
+      "variables": {
+        "foo": {
+          "default": "develop",
+          "description": "Custom end point"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "0_Company Settings",
+      "description": "The Company Settings API manage the account information set up for your organization. Formerly known as Enterprise Information. ",
+      "externalDocs": {
+        "description": "Find out more about Company Settings",
+        "url": "https://help.esper.io/hc/en-us/articles/12656541757457-Introduction-to-Company-Settings"
+      },
+      "x-displayName": "Company Settings"
+    },
+    {
+      "name": "0_Application",
+      "description": "APIs for application management",
+      "externalDocs": {
+        "description": "Find out more about application management",
+        "url": "https://help.esper.io/hc/en-us/articles/12652127923857"
+      },
+      "x-displayName": "Application"
+    },
+    {
+      "name": "0_Application V1",
+      "description": "APIs for application management",
+      "x-displayName": "Application V1"
+    },
+    {
+      "name": "0_AndroidDevice",
+      "description": "APIs for android device management",
+      "externalDocs": {
+        "description": "Find out more about device management",
+        "url": "https://help.esper.io/hc/en-us/articles/12523891684369"
+      },
+      "x-displayName": "AndroidDevice"
+    },
+    {
+      "name": "0_Token (Deprecated)",
+      "description": "⚠️ **Deprecation Notice:** The following APIs will soon be deprecated. Use the console to manage API keys instead.\n",
+      "externalDocs": {
+        "description": "Find out more about API Key generation",
+        "url": "https://help.esper.io/hc/en-us/articles/12656959508497"
+      },
+      "x-displayName": "Token (Deprecated)"
+    },
+    {
+      "name": "0_Directory Record",
+      "description": "APIs for Directory Record management. These APIs are only available to the customers using the new Onboarding experience.",
+      "x-displayName": "Directory Record"
+    },
+    {
+      "name": "0_Tile Icon",
+      "description": "APIs to manage tile icons. Tile icons allow Templates-based users to apply a icons to devices.\n",
+      "x-displayName": "Tile Icon"
+    },
+    {
+      "name": "0_Alerts",
+      "x-displayName": "Alerts"
+    },
+    {
+      "name": "0_Alarms",
+      "x-displayName": "Alarms"
+    },
+    {
+      "name": "0_Wallpapers",
+      "x-displayName": "Wallpapers"
+    },
+    {
+      "name": "0_Device Telemetry",
+      "x-displayName": "Device Telemetry"
+    },
+    {
+      "name": "geofence_Geofences",
+      "x-displayName": "Geofences"
+    },
+    {
+      "name": "geofence_Device State",
+      "x-displayName": "Device State"
+    }
+  ],
+  "paths": {
+    "/v1/enterprise/{enterprise_id}/applications-minimal/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application"
+        ],
+        "summary": "Gets minimum information regarding application",
+        "description": "Returns id and package name of application",
+        "operationId": "getMinAppInfo",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "package_name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "application-minimal"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/application/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application V1"
+        ],
+        "summary": "List apps in enterprise",
+        "description": "Returns Application list",
+        "operationId": "getAllApplicationsV1",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "application_name",
+            "in": "query",
+            "description": "filter by application name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "package_name",
+            "in": "query",
+            "description": "filter by package name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "package_name_exact",
+            "in": "query",
+            "description": "filter by package name (exact match)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "has_uploaded_version",
+            "in": "query",
+            "description": "Returns applications having atleast one version uploaded",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "filter by category",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "supported_sdk",
+            "in": "query",
+            "description": "filter by supported sdk versions",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "is_active",
+            "in": "query",
+            "description": "filter by active applications",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "is_hidden",
+            "in": "query",
+            "description": "filter default esper apps",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "created_on_gt",
+            "in": "query",
+            "description": "filter applications created after a given timestamp",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "created_on_lt",
+            "in": "query",
+            "description": "filter applications created before a given timestamp",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "updated_on_gt",
+            "in": "query",
+            "description": "filter applications updated after a given timestamp",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "updated_on_lt",
+            "in": "query",
+            "description": "filter applications updated before a given timestamp",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ApplicationV1"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "application",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/application/{application_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application V1"
+        ],
+        "summary": "Get application information",
+        "description": "Returns Application instance",
+        "operationId": "getApplicationv1",
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "description": "A UUID string identifying this application.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationV1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "application"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application V1"
+        ],
+        "summary": "Delete an application",
+        "description": "Empty response",
+        "operationId": "deleteApplicationV1",
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "description": "A UUID string identifying this application.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "application"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/application/{application_id}/version/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application V1"
+        ],
+        "summary": "List App versions",
+        "description": "Returns AppVersion list",
+        "operationId": "getAppVersionsV1",
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "description": "A UUID string identifying this application.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version_code",
+            "in": "query",
+            "description": "filter by version code",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "build_number",
+            "in": "query",
+            "description": "filter by build number",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "is_g_play",
+            "in": "query",
+            "description": "filter google play applications",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "approval_status",
+            "in": "query",
+            "description": "filter by approval status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AVAILABLE",
+                "ACCEPTED",
+                "APPROVED",
+                "REJECTED"
+              ]
+            }
+          },
+          {
+            "name": "is_enabled",
+            "in": "query",
+            "description": "filter by enabled versions",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "is_default",
+            "in": "query",
+            "description": "filter by default versions",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "created_on_gt",
+            "in": "query",
+            "description": "filter applications created after a given timestamp",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "created_on_lt",
+            "in": "query",
+            "description": "filter applications created before a given timestamp",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "updated_on_gt",
+            "in": "query",
+            "description": "filter applications updated after a given timestamp",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "updated_on_lt",
+            "in": "query",
+            "description": "filter applications updated before a given timestamp",
+            "schema": {
+              "type": "string",
+              "format": "datetime"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Return results from this index.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "ordering",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Order result set by field name.\n* installed_count: order by asc\n* -installed_count: order by desc\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AppVersionV1"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "version",
+        "x-esper-scope-parent": "application"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/application/{application_id}/version/{version_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application V1"
+        ],
+        "summary": "Get app version information",
+        "description": "Returns AppVersion instance",
+        "operationId": "getAppVersionV1",
+        "parameters": [
+          {
+            "name": "version_id",
+            "in": "path",
+            "description": "A UUID string identifying this app version.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "application_id",
+            "in": "path",
+            "description": "A UUID string identifying this application.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppVersionV1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "app-version"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application V1"
+        ],
+        "summary": "Delete app version",
+        "description": "Empty response",
+        "operationId": "deleteAppVersionV1",
+        "parameters": [
+          {
+            "name": "version_id",
+            "in": "path",
+            "description": "A UUID string identifying this app version.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "application_id",
+            "in": "path",
+            "description": "A UUID string identifying this application.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request_id",
+            "in": "query",
+            "description": "If this value exists in cache, delete the application and cache entry.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No request id is provided and the application is linked to one or more templates. Returns a request_id. Call with this request id to delete the resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppVersionDelete"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "app-version"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application V1"
+        ],
+        "summary": "Patch an App version instance",
+        "operationId": "patchAppVersionV1",
+        "parameters": [
+          {
+            "name": "version_id",
+            "in": "path",
+            "description": "A UUID string identifying this app version.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "application_id",
+            "in": "path",
+            "description": "A UUID string identifying this application.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "release_name": {
+                    "title": "Release name",
+                    "type": "string",
+                    "description": "Name of the Release"
+                  },
+                  "is_default": {
+                    "title": "Is Default",
+                    "type": "boolean",
+                    "description": "Is the app version the deafult"
+                  },
+                  "min_sdk_version": {
+                    "title": "Minimum SDK version",
+                    "type": "string",
+                    "description": "Version number of minimum SDK version that supports this app version"
+                  },
+                  "build_number": {
+                    "title": "Build Number",
+                    "type": "string",
+                    "description": "Build number of this app version"
+                  },
+                  "version_code": {
+                    "title": "Version Code",
+                    "type": "string",
+                    "description": "Verion code of this app version"
+                  },
+                  "approval_status": {
+                    "title": "Approval Status",
+                    "type": "string",
+                    "description": "Approval status of this app version",
+                    "enum": [
+                      "AVAILABLE",
+                      "ACCEPTED",
+                      "APPROVED",
+                      "REJECTED"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppVersionV1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "patch",
+        "x-esper-noun": "app-version"
+      }
+    },
+    "/v1/enterprise/{enterprise_id}/application/{application_id}/version/{version_id}/installdevices": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Application V1"
+        ],
+        "summary": "List install devices",
+        "description": "Returns list of devices with the specified app version installed",
+        "operationId": "getInstallDevicesV1",
+        "parameters": [
+          {
+            "name": "version_id",
+            "in": "path",
+            "description": "A UUID string identifying this app version.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "application_id",
+            "in": "path",
+            "description": "A UUID string identifying this application.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "A search term, search based on device name, device alias_name, group name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InstallDevices"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "installdevice",
+        "x-esper-scope-parent": "version"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "InstallDevices": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_name": {
+            "title": "Device name",
+            "type": "string"
+          },
+          "alias_name": {
+            "title": "alias name",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "group_name": {
+            "title": "Group name",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "AppVersionDelete": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "title": "Request id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "templates": {
+            "type": "array",
+            "description": "List of linked templates to an app version",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "title": "Id",
+                  "type": "integer",
+                  "description": "Id of the linked template"
+                },
+                "name": {
+                  "title": "Name",
+                  "type": "string",
+                  "description": "Name of the linked template"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AppVersionV1": {
+        "title": "Application Version V1",
+        "required": [
+          "enterprise",
+          "version_code"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "installed_count": {
+            "title": "Installed count",
+            "type": "integer",
+            "readOnly": true
+          },
+          "is_g_play": {
+            "title": "Is google play",
+            "type": "boolean"
+          },
+          "app_file": {
+            "title": "App file url",
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "url"
+          },
+          "app_icon": {
+            "title": "App icon url",
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "url"
+          },
+          "version_code": {
+            "title": "Version code",
+            "maxLength": 50,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "build_number": {
+            "title": "Build number",
+            "maxLength": 100,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "min_sdk_version": {
+            "title": "Minimum sdk version",
+            "maxLength": 10,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "enterprise": {
+            "title": "Enterprise URL",
+            "type": "string",
+            "format": "url"
+          },
+          "application": {
+            "title": "Application URL",
+            "type": "string",
+            "format": "url"
+          },
+          "release_name": {
+            "title": "Name of the release",
+            "maxLength": 255,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "release_comments": {
+            "title": "Release comments",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "approval_status": {
+            "title": "Approval Status",
+            "maxLength": 50,
+            "type": "string",
+            "default": "APPROVED",
+            "enum": [
+              "AVAILABLE",
+              "ACCEPTED",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "release_date": {
+            "title": "Release date",
+            "type": "string",
+            "format": "date-time"
+          },
+          "size_in_mb": {
+            "title": "Size in mb",
+            "type": "number"
+          },
+          "is_default": {
+            "title": "Is default",
+            "type": "boolean",
+            "default": false
+          },
+          "created_on": {
+            "title": "Created on",
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "ApplicationV1": {
+        "required": [
+          "application_name",
+          "enterprise",
+          "package_name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "latest_version": {
+            "$ref": "#/components/schemas/ApplicationVersionV1"
+          },
+          "application_name": {
+            "title": "Application name",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          },
+          "package_name": {
+            "title": "Package name",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "readOnly": true
+          },
+          "is_hidden": {
+            "title": "Is hidden",
+            "type": "boolean"
+          },
+          "enterprise": {
+            "title": "Enterprise",
+            "type": "string",
+            "format": "url"
+          }
+        }
+      },
+      "ApplicationVersionV1": {
+        "title": "Application Version V1",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "version_code": {
+            "title": "Version code",
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "build_number": {
+            "title": "Build number",
+            "maxLength": 100,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hash_string": {
+            "title": "Hash string",
+            "type": "string"
+          },
+          "min_sdk_version": {
+            "title": "Min sdk version",
+            "maxLength": 10,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "target_sdk_version": {
+            "title": "Target sdk version",
+            "maxLength": 10,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "icon_url": {
+            "title": "Url for the icon",
+            "type": "string",
+            "format": "url"
+          },
+          "release_name": {
+            "title": "Name of the release",
+            "type": "string"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "title": "Messages describing the error",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "title": "Message describing the error",
+            "type": "string"
+          },
+          "status": {
+            "title": "alias name",
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "parameters": {}
+  }
+}

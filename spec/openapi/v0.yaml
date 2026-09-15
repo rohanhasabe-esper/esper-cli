@@ -1389,6 +1389,890 @@
         "x-esper-noun": "status"
       }
     },
+    "/v0/enterprise/{enterprise_id}/content/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Content"
+        ],
+        "summary": "List content",
+        "description": "Get all files in a tenant",
+        "operationId": "getAllContent",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Seach by tags, description",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "count",
+                    "results"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "next": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "previous": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "url"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Content"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "limit-offset",
+        "x-esper-verb": "list",
+        "x-esper-noun": "content",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/content/{content_id}/": {
+      "get": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Content"
+        ],
+        "summary": "Get content information",
+        "description": "Get information about a file",
+        "operationId": "getContent",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "description": "A UUID string identifying a content instance.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "content"
+      },
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Content"
+        ],
+        "summary": "Delete Content",
+        "description": "Delete content.",
+        "operationId": "deleteContent",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "description": "A UUID string identifying a content instance.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "content"
+      },
+      "patch": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Content"
+        ],
+        "summary": "Patch a content instance",
+        "operationId": "patchContent",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "description": "A UUID string identifying a content instance.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tags": {
+                    "title": "Tags",
+                    "type": "array",
+                    "description": "Tags for the content",
+                    "items": {
+                      "maxLength": 255,
+                      "type": "string"
+                    }
+                  },
+                  "description": {
+                    "title": "Description",
+                    "type": "string",
+                    "description": "Description of the content"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported media type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-codegen-request-body-name": "data",
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "patch",
+        "x-esper-noun": "content"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/content/upload/": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Content"
+        ],
+        "summary": "Upload new content",
+        "description": "Uploaded content to Esper",
+        "operationId": "postContent",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "key"
+                ],
+                "properties": {
+                  "key": {
+                    "type": "string",
+                    "description": "Valid file to upload",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported media type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "content",
+        "x-esper-scope-parent": "enterprise"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/content/remote-file/": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Content"
+        ],
+        "summary": "Upload file to Remote File Manager",
+        "description": "Upload file through SCAPI server to REMOTE_FILE_MANAGER bucket. Files are automatically deleted after 1 day.",
+        "operationId": "uploadRemoteFile",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "description": "The file to upload (max 50MB)",
+                    "format": "binary"
+                  },
+                  "filename": {
+                    "type": "string",
+                    "description": "Custom filename (optional, defaults to uploaded file name)"
+                  },
+                  "content_type": {
+                    "type": "string",
+                    "description": "MIME type of the file (optional, auto-detected)"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file_key": {
+                      "type": "string",
+                      "description": "Unique storage key for the file",
+                      "example": "123/files/document_abc123.pdf"
+                    },
+                    "bucket": {
+                      "type": "string",
+                      "description": "Storage bucket name",
+                      "example": "REMOTE_FILE_MANAGER"
+                    },
+                    "file_size": {
+                      "type": "integer",
+                      "description": "Size of uploaded file in bytes",
+                      "example": 1048576
+                    },
+                    "content_type": {
+                      "type": "string",
+                      "description": "Detected/validated MIME type",
+                      "example": "application/pdf"
+                    },
+                    "auto_delete_after_minutes": {
+                      "type": "integer",
+                      "description": "When file will be auto-deleted",
+                      "example": 1440
+                    },
+                    "download_url": {
+                      "type": "string",
+                      "description": "Pre-signed URL for downloading the file",
+                      "example": "https://s3.amazonaws.com/REMOTE_FILE_MANAGER/123/files/document_abc123.pdf?AWSAccessKeyId=..."
+                    },
+                    "download_expires_in": {
+                      "type": "integer",
+                      "description": "Download URL expiration time in seconds",
+                      "example": 3600
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "No file provided"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "File too large (max 50MB)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "File size exceeds maximum allowed size of 52428800 bytes"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Failed to upload file"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "upload",
+        "x-esper-noun": "remote-file"
+      }
+    },
+    "/v0/enterprise/{enterprise_id}/content/remote-file/generate_download_url/": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "tags": [
+          "0_Content"
+        ],
+        "summary": "Generate download URL for existing file",
+        "description": "Generate a pre-signed download URL for an existing file in REMOTE_FILE_MANAGER bucket",
+        "operationId": "generateDownloadUrl",
+        "parameters": [
+          {
+            "name": "enterprise_id",
+            "in": "path",
+            "description": "A UUID string identifying this enterprise.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "file_key"
+                ],
+                "properties": {
+                  "file_key": {
+                    "type": "string",
+                    "description": "The storage key of the file to download",
+                    "example": "123/files/document_abc123.pdf"
+                  },
+                  "expires_in": {
+                    "type": "integer",
+                    "description": "URL expiration time in seconds (optional, default 3600)",
+                    "default": 3600,
+                    "minimum": 60,
+                    "maximum": 86400
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Download URL generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file_key": {
+                      "type": "string",
+                      "description": "The storage key of the file",
+                      "example": "123/files/document_abc123.pdf"
+                    },
+                    "download_url": {
+                      "type": "string",
+                      "description": "Pre-signed URL for downloading the file",
+                      "example": "https://s3.amazonaws.com/REMOTE_FILE_MANAGER/123/files/document_abc123.pdf?AWSAccessKeyId=..."
+                    },
+                    "expires_in": {
+                      "type": "integer",
+                      "description": "URL expiration time in seconds",
+                      "example": 3600
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "file_key is required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, no permission to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Failed to generate download URL"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "generate",
+        "x-esper-noun": "download"
+      }
+    },
     "/v0/enterprise/{enterprise_id}/device/{device_id}/command-history/": {
       "get": {
         "x-badges": [
@@ -4621,6 +5505,120 @@
             "description": "Last updated timestamp of command",
             "format": "date-time",
             "readOnly": true
+          }
+        }
+      },
+      "Content": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer",
+            "description": "Unique content Identifier",
+            "readOnly": true
+          },
+          "download_url": {
+            "title": "Content download URL",
+            "type": "string",
+            "description": "URL to download the content",
+            "format": "url"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "description": "Name of the content"
+          },
+          "key": {
+            "title": "Key",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          },
+          "is_dir": {
+            "title": "Is Directory",
+            "type": "boolean",
+            "default": false
+          },
+          "kind": {
+            "title": "Content kind",
+            "maxLength": 255,
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The mime type of the content"
+          },
+          "hash": {
+            "title": "Content Hash",
+            "type": "string",
+            "description": "Hash string of the content"
+          },
+          "size": {
+            "title": "Content Size",
+            "maxLength": 255,
+            "type": "string",
+            "description": "Size of the content in bytes"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string",
+            "description": "Path to the content"
+          },
+          "permissions": {
+            "title": "Permissions",
+            "type": "string",
+            "description": "The permssion string for the content"
+          },
+          "tags": {
+            "title": "Content tags",
+            "type": "array",
+            "description": "Tags for the content",
+            "items": {
+              "maxLength": 255,
+              "type": "string"
+            }
+          },
+          "description": {
+            "title": "Content description",
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Description for the content"
+          },
+          "created": {
+            "title": "Created on",
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "modified": {
+            "title": "Modified on",
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "enterprise": {
+            "title": "Enterprise",
+            "type": "string",
+            "description": "URL of the enterprise resource",
+            "format": "url"
+          },
+          "owner": {
+            "title": "Owner",
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "username": {
+                "type": "string"
+              }
+            },
+            "description": "Owner of the content"
           }
         }
       },

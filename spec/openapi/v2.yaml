@@ -7589,10 +7589,599 @@
         "x-esper-verb": "update",
         "x-esper-noun": "devicestate"
       }
+    },
+    "/v2/itunesapps/{appId}/refresh-version": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "security": [
+          {
+            "apps_management_apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "appId",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The internal Esper app id (UUID) of the VPP app"
+          }
+        ],
+        "summary": "Force refresh of VPP app version metadata",
+        "description": "Synchronously re-fetches the latest iTunes metadata for a single VPP\napp under the caller's tenant and persists it. Same write path as the\ndaily VPP version cron, scoped to one (tenant, app_id). Returns\nthe refreshed app details so the UI can render without a follow-up GET.\n",
+        "tags": [
+          "apps_management_VPP App Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/apps_management_ItunesAppInfoV2"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request (invalid app_id or missing headers)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found (no vpp_app_ids row for the tenant + app_id, or app not found in iTunes)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "refresh-version",
+        "x-esper-scope-parent": "itunesapp"
+      }
+    },
+    "/v2/tenant-apps/{appId}/versions/{versionId}/artifacts": {
+      "post": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "security": [
+          {
+            "apps_management_apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "appId",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "required": true,
+            "name": "versionId",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "summary": "Add an artifact to a UWP app version",
+        "description": "Uploads a per-version artifact (a UWP framework dependency or signing\ncertificate) for a TENANT_WINDOWS_UWP app version.\n",
+        "tags": [
+          "apps_management_Tenant Apps"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "artifact_type",
+                  "file"
+                ],
+                "properties": {
+                  "artifact_type": {
+                    "type": "string",
+                    "enum": [
+                      "UWP_DEPENDENCY",
+                      "UWP_CERTIFICATE"
+                    ],
+                    "description": "The kind of artifact being uploaded."
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The artifact file. For UWP_DEPENDENCY a .msix/.appx package;\nfor UWP_CERTIFICATE a .cer signing certificate.\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/apps_management_ArtifactMutationResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found (the app version does not exist)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-response-envelope": "apps-envelope",
+        "x-esper-verb": "create",
+        "x-esper-noun": "artifact",
+        "x-esper-scope-parent": "version"
+      }
+    },
+    "/v2/tenant-apps/{appId}/versions/{versionId}/artifacts/{artifactId}": {
+      "delete": {
+        "x-badges": [
+          {
+            "name": "Stable",
+            "color": "green"
+          }
+        ],
+        "security": [
+          {
+            "apps_management_apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "appId",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "required": true,
+            "name": "versionId",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "required": true,
+            "name": "artifactId",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The id of the artifact to delete."
+          }
+        ],
+        "summary": "Delete an artifact from a UWP app version",
+        "description": "Deletes a per-version artifact (dependency or certificate) by its id,\nremoving both its stored file and its record.\n",
+        "tags": [
+          "apps_management_Tenant Apps"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/apps_management_ArtifactMutationResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apps_management_Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-response-envelope": "apps-envelope",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "tenant-app-version-artifact"
+      }
     }
   },
   "components": {
     "schemas": {
+      "apps_management_ArtifactMutationResponse": {
+        "type": "object",
+        "description": "Identifies the artifact affected by an add/delete (identity-style, like\nthe app upload response) so the caller can refresh its view without a\nfull re-fetch.\n",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The affected artifact's id."
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The app version the artifact belongs to."
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "artifact_type": {
+            "type": "string",
+            "enum": [
+              "UWP_DEPENDENCY",
+              "UWP_CERTIFICATE"
+            ],
+            "description": "The artifact discriminator."
+          },
+          "file_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The artifact's original filename."
+          },
+          "metadata": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/apps_management_AppVersionArtifactMetadata"
+              }
+            ]
+          }
+        }
+      },
+      "apps_management_AppVersionArtifactMetadata": {
+        "type": "object",
+        "description": "Type-specific attributes of an artifact. All fields are optional; only\nthose relevant to the artifact's type are populated.\n",
+        "properties": {
+          "package_family_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The dependency package's own package family name (UWP_DEPENDENCY)."
+          },
+          "package_dependency_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The <PackageDependency Name> declared by the main package manifest (UWP_DEPENDENCY)."
+          },
+          "min_version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The minimum required version declared by the main package manifest (UWP_DEPENDENCY)."
+          },
+          "version_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The actual version of the uploaded dependency package (UWP_DEPENDENCY)."
+          },
+          "architecture": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The dependency package architecture, e.g. x64, x86, arm64 (UWP_DEPENDENCY)."
+          },
+          "cert_thumbprint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "SHA1 thumbprint of the signing certificate (UWP_CERTIFICATE)."
+          }
+        }
+      },
+      "apps_management_Error_500_Internal_Server_Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 500
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "apps_management_Error_404_Not_Found": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 404
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "apps_management_Error_401_Unauthorized": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 401
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "apps_management_Error_400_Bad_Data": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "default": 400
+          },
+          "message": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "apps_management_ItunesAppInfoV2": {
+        "type": "object",
+        "properties": {
+          "app_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "App ID in UUID format"
+          },
+          "apple_app_id": {
+            "type": "string",
+            "description": "App ID from Apple"
+          },
+          "app_version_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "current version of the app in UUID format"
+          },
+          "apple_app_version": {
+            "type": "string",
+            "description": "current version of the app"
+          },
+          "app_name": {
+            "type": "string",
+            "description": "name of the app"
+          },
+          "icon_url": {
+            "type": "string",
+            "description": "url of the app's icon"
+          },
+          "developer": {
+            "type": "string",
+            "description": "developer of the app"
+          },
+          "itunes_url": {
+            "type": "string",
+            "description": "URL for the app on the iTunes store"
+          },
+          "genres": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "genre of the app"
+            }
+          },
+          "device_families": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "devices the app is compatible with"
+            }
+          },
+          "bundle_id": {
+            "type": "string",
+            "description": "bundle ID of the app"
+          },
+          "price": {
+            "type": "number",
+            "description": "price of the app"
+          },
+          "app_size": {
+            "type": "integer",
+            "description": "size of the app"
+          },
+          "minimum_os_version": {
+            "type": "string",
+            "description": "minimum OS version required for the app"
+          },
+          "description": {
+            "type": "string",
+            "description": "description of the app"
+          },
+          "last_updated_date": {
+            "type": "string",
+            "description": "date the app was last updated"
+          },
+          "pricing_param": {
+            "type": "string",
+            "description": "pricing parameter"
+          }
+        }
+      },
       "device_Error_500_Internal_Server_Error": {
         "type": "object",
         "properties": {

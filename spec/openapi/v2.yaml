@@ -5247,6 +5247,312 @@
         "x-esper-response-envelope": "apps-envelope"
       }
     },
+    "/v2/provisioning-profiles": {
+      "post": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Upload provisioning profile for a tenant",
+        "description": "API to upload and validate iOS provisioning profiles for app distribution",
+        "tags": [
+          "4_Provisioning Profiles"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ProvisioningProfileUploadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/ProvisioningProfileUploadResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "create",
+        "x-esper-noun": "provisioning-profile",
+        "x-esper-response-envelope": "apps-envelope"
+      },
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "number",
+              "description": "Maximum number of provisioning profiles to return",
+              "default": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "number",
+              "description": "Number of provisioning profiles to skip",
+              "default": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "app_identifier",
+            "schema": {
+              "type": "string",
+              "description": "Filter by bundle identifier of the associated app"
+            }
+          },
+          {
+            "in": "query",
+            "name": "profile_type",
+            "schema": {
+              "type": "string",
+              "description": "Filter by profile type",
+              "enum": [
+                "development",
+                "ad-hoc",
+                "app-store",
+                "enterprise"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "team_id",
+            "schema": {
+              "type": "string",
+              "description": "Filter by Apple Developer Team identifier"
+            }
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string",
+              "description": "Search in provisioning profile names and identifiers"
+            }
+          }
+        ],
+        "summary": "Get provisioning profiles for a tenant",
+        "description": "API to retrieve a list of iOS provisioning profiles with download URLs and pagination",
+        "tags": [
+          "4_Provisioning Profiles"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "description": "Total number of provisioning profiles"
+                        },
+                        "prev": {
+                          "type": "string",
+                          "description": "URL for previous page of results"
+                        },
+                        "next": {
+                          "type": "string",
+                          "description": "URL for next page of results"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/ProvisioningProfileWithDownloadResponse"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "apps-envelope",
+        "x-esper-verb": "list",
+        "x-esper-noun": "provisioning-profile",
+        "x-esper-response-envelope": "apps-envelope"
+      }
+    },
+    "/v2/provisioning-profiles/{id}": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Unique identifier for the provisioning profile"
+            }
+          }
+        ],
+        "summary": "Get provisioning profile by ID",
+        "description": "API to retrieve a specific iOS provisioning profile by its ID with download URL",
+        "tags": [
+          "4_Provisioning Profiles"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/ProvisioningProfileWithDownloadResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "provisioning-profile",
+        "x-esper-response-envelope": "apps-envelope"
+      }
+    },
     "/v2/provisioning-profiles/{id}/versions": {
       "get": {
         "security": [
@@ -5378,6 +5684,202 @@
         "x-esper-pagination": "apps-envelope",
         "x-esper-verb": "list",
         "x-esper-noun": "version",
+        "x-esper-scope-parent": "provisioning-profile",
+        "x-esper-response-envelope": "apps-envelope"
+      }
+    },
+    "/v2/provisioning-profiles/{id}/versions/{versionId}": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Unique identifier for the provisioning profile"
+            }
+          },
+          {
+            "in": "path",
+            "required": true,
+            "name": "versionId",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Unique identifier for the specific version of the provisioning profile"
+            }
+          }
+        ],
+        "summary": "Get provisioning profile version by ID",
+        "description": "API to retrieve a specific version of an iOS provisioning profile by profile ID and version ID with download URL",
+        "tags": [
+          "4_Provisioning Profiles"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/ProvisioningProfileVersionWithDownloadResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": false,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "get",
+        "x-esper-noun": "provisioning-profile-version",
+        "x-esper-scope-parent": "provisioning-profile",
+        "x-esper-response-envelope": "apps-envelope"
+      },
+      "delete": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Unique identifier for the provisioning profile"
+            }
+          },
+          {
+            "in": "path",
+            "required": true,
+            "name": "versionId",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Unique identifier for the specific version of the provisioning profile to delete"
+            }
+          }
+        ],
+        "summary": "Delete provisioning profile version by ID",
+        "description": "API to delete a specific version of an iOS provisioning profile by profile ID and version ID. Returns the deleted version information.",
+        "tags": [
+          "4_Provisioning Profiles"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "$ref": "#/components/schemas/ProvisioningProfileVersionWithDownloadResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_400_Bad_Data"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_401_Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_404_Not_Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_500_Internal_Server_Error"
+                }
+              }
+            }
+          }
+        },
+        "x-esper-destructive": true,
+        "x-esper-pagination": "none",
+        "x-esper-verb": "delete",
+        "x-esper-noun": "provisioning-profile-version",
         "x-esper-scope-parent": "provisioning-profile",
         "x-esper-response-envelope": "apps-envelope"
       }
@@ -7566,6 +8068,103 @@
             "example": "https://s3.amazonaws.com/bucket/provisioning-profiles/version.mobileprovision?signature=abc123"
           }
         }
+      },
+      "ProvisioningProfileWithDownloadResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProvisioningProfileUploadResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "download_url": {
+                "type": "string",
+                "format": "uri",
+                "description": "Signed URL for downloading the provisioning profile file",
+                "example": "https://s3.amazonaws.com/bucket/provisioning-profiles/profile.mobileprovision?signature=abc123"
+              }
+            }
+          }
+        ]
+      },
+      "ProvisioningProfileUploadResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the provisioning profile"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for this specific version of the profile"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the provisioning profile"
+          },
+          "team_identifier": {
+            "type": "string",
+            "description": "Apple Developer Team identifier"
+          },
+          "app_identifier": {
+            "type": "string",
+            "description": "Bundle identifier of the associated app"
+          },
+          "profile_type": {
+            "type": "string",
+            "description": "Type of profile (development, distribution, etc.)",
+            "enum": [
+              "development",
+              "ad-hoc",
+              "app-store",
+              "enterprise"
+            ]
+          },
+          "expiration_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the provisioning profile expires"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Tenant that owns this provisioning profile"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the provisioning profile was first created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this version was last updated"
+          },
+          "created_by": {
+            "type": "string",
+            "description": "User who created the provisioning profile"
+          },
+          "updated_by": {
+            "type": "string",
+            "description": "User who created this version"
+          }
+        }
+      },
+      "ProvisioningProfileUploadRequest": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Provisioning profile file (.mobileprovision)"
+          }
+        },
+        "required": [
+          "file"
+        ]
       },
       "Webclip": {
         "type": "object",

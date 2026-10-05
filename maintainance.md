@@ -178,6 +178,16 @@ generation cannot represent. Follow existing examples such as `configure`,
 
 ## 6. Verify and release
 
+Secure ADB must remain compatible with existing device certificates. The CLI
+entry point sets `//go:debug x509negativeserial=1` because Python/OpenSSL accepts
+trusted certificates with negative serials. This changes certificate parsing,
+not trust: Secure ADB still verifies signatures, chains, expiry, and server-auth
+usage against the API-provided certificate bundle. Do not replace that check
+with unverified TLS or temporarily mutate `GODEBUG` during a connection.
+An explicit environment `GODEBUG=x509negativeserial=0` overrides the executable
+default. Verify the packaged binary's `DefaultGODEBUG` build setting and run
+the Secure ADB certificate compatibility and chain tests when changing Go versions.
+
 ```sh
 go run ./tools/codegen
 go run ./tools/skillgen --check

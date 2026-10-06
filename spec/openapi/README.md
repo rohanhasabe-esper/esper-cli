@@ -41,7 +41,7 @@ any platform-only operation present in an older overlay, and records the public
 operation keys in `manifest.json`. `tools/contractcheck` rejects a generated
 operation missing from that manifest.
 
-`secureadb` is a hand-written Python-parity command and the sole exception to
+`secureadb` is a manually added workflow command and the sole exception to
 the generated API-operation boundary. Its Remote ADB calls are internal to the
 command; they do not produce generated `remoteadb` API commands.
 
